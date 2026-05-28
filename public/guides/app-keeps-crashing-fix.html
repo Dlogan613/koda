@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>App Keeps Crashing? Here's What to Do | Koda</title>
+  <meta name="description" content="App crashing or freezing on your iPhone, Android, or computer? Follow these step-by-step fixes to stop apps from crashing — no tech skills needed." />
+  <meta name="keywords" content="app keeps crashing, app crashing fix, app freezing, force close app, why does my app keep crashing, app not working" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://kodahelp.com/guides/app-keeps-crashing-fix.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://kodahelp.com/guides/app-keeps-crashing-fix.html" />
+  <meta property="og:title" content="App Keeps Crashing? Here's What to Do" />
+  <meta property="og:description" content="Step-by-step fixes to stop apps from crashing on iPhone, Android, or computer." />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="App Keeps Crashing? Here's What to Do" />
+  <meta name="twitter:description" content="Step-by-step fixes to stop apps from crashing on iPhone, Android, or computer." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: #0F1117; color: #F0F0F0; -webkit-font-smoothing: antialiased; }
+    a { color: #52E09C; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    header { background: #0F1117; border-bottom: 1px solid #2A2D3A; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+    .logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+    .logo-icon { width: 32px; height: 32px; border-radius: 10px; background: linear-gradient(135deg, #52E09C 0%, #2DB87A 100%); display: flex; align-items: center; justify-content: center; color: #0A1A12; font-weight: 800; font-size: 15px; box-shadow: 0 0 12px rgba(82,224,156,0.3); }
+    .logo-name { font-size: 16px; font-weight: 700; color: #F0F0F0; letter-spacing: -0.35px; }
+    .container { max-width: 720px; margin: 0 auto; padding: 52px 24px 80px; }
+    .breadcrumb { font-size: 13px; color: #8B8FA8; margin-bottom: 28px; }
+    .breadcrumb a { color: #8B8FA8; }
+    .breadcrumb a:hover { color: #52E09C; }
+    h1 { font-size: 38px; font-weight: 800; color: #F0F0F0; letter-spacing: -1px; line-height: 1.15; margin-bottom: 14px; }
+    .meta { font-size: 13px; color: #8B8FA8; margin-bottom: 32px; }
+    .intro { font-size: 17px; color: #C0C3D4; line-height: 1.75; margin-bottom: 40px; padding: 20px 24px; background: #1A1D27; border: 1px solid #2A2D3A; border-left: 3px solid #52E09C; border-radius: 0 12px 12px 0; }
+    h2 { font-size: 21px; font-weight: 700; color: #F0F0F0; margin: 40px 0 16px; letter-spacing: -0.3px; }
+    .steps { display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
+    .step { display: flex; gap: 16px; background: #1A1D27; border: 1px solid #2A2D3A; border-radius: 12px; padding: 18px 20px; }
+    .step-num { width: 28px; height: 28px; border-radius: 50%; background: rgba(82,224,156,0.1); border: 1px solid rgba(82,224,156,0.3); color: #52E09C; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .step-body h3 { font-size: 15px; font-weight: 600; color: #F0F0F0; margin-bottom: 6px; }
+    .step-body p { font-size: 14.5px; color: #C0C3D4; line-height: 1.65; }
+    code { background: #0F1117; color: #52E09C; padding: 2px 7px; border-radius: 5px; font-family: 'SF Mono', monospace; font-size: 0.87em; border: 1px solid #2A2D3A; }
+    p { font-size: 15px; color: #C0C3D4; line-height: 1.75; margin-bottom: 16px; }
+    ul, ol { padding-left: 20px; margin-bottom: 16px; }
+    li { font-size: 15px; color: #C0C3D4; line-height: 1.7; margin-bottom: 6px; }
+    .tip { background: rgba(82,224,156,0.05); border: 1px solid rgba(82,224,156,0.2); border-radius: 10px; padding: 16px 20px; margin: 24px 0; font-size: 14.5px; color: #A8FCD8; line-height: 1.65; }
+    .tip strong { color: #52E09C; }
+    .cta-box { background: #1A1D27; border: 1px solid #2A2D3A; border-radius: 16px; padding: 36px; text-align: center; margin-top: 52px; }
+    .cta-box h2 { margin: 0 0 10px; font-size: 22px; }
+    .cta-box p { margin: 0 0 24px; }
+    .cta-btn { display: inline-flex; align-items: center; gap: 8px; background: #52E09C; color: #0A1A12; font-weight: 700; font-size: 15px; padding: 14px 28px; border-radius: 999px; box-shadow: 0 0 20px rgba(82,224,156,0.3); transition: background 0.15s, box-shadow 0.15s; }
+    .cta-btn:hover { background: #6EEAAA; box-shadow: 0 0 32px rgba(82,224,156,0.5); text-decoration: none; }
+    footer { border-top: 1px solid #2A2D3A; padding: 28px 24px; text-align: center; font-size: 13px; color: #8B8FA8; }
+    footer a { color: #8B8FA8; }
+    footer a:hover { color: #52E09C; }
+    @media (max-width: 600px) { h1 { font-size: 28px; } .container { padding: 36px 18px 60px; } .cta-box { padding: 24px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="https://kodahelp.com" class="logo">
+      <div class="logo-icon">K</div>
+      <span class="logo-name">Koda</span>
+    </a>
+  </header>
+
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="https://kodahelp.com">Home</a> &rsaquo; <a href="https://kodahelp.com">Guides</a> &rsaquo; Fix App Crashing
+    </div>
+
+    <h1>App Keeps Crashing? Here's What to Do</h1>
+    <p class="meta">5 min read &nbsp;·&nbsp; Works on iPhone, Android, Windows, and Mac</p>
+
+    <div class="intro">
+      An app that keeps crashing or freezing is one of the most common tech problems — and one of the most fixable. Whether it's happening on your phone, tablet, or computer, there's a clear order of things to try. Work through these steps and you'll almost certainly solve it without needing any technical knowledge.
+    </div>
+
+    <h2>Step-by-Step Fix</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Force close the app and reopen it</h3>
+          <p><strong>iPhone:</strong> Swipe up from the bottom of the screen and pause to see your open apps. Swipe up on the crashing app to close it. Then tap its icon to reopen. <strong>Android:</strong> Tap the square button to see recent apps, swipe the app away, then reopen. <strong>Computer:</strong> Fully quit the app (don't just close the window) and reopen it fresh.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Check for an app update</h3>
+          <p><strong>iPhone:</strong> Open the App Store, tap your profile icon in the top right, and scroll down to see available updates. <strong>Android:</strong> Open the Play Store, tap your profile icon, then <strong>Manage apps &amp; device</strong> to find updates. <strong>Computer:</strong> Check the app's own menu for "Check for Updates." A bug in the current version is often the direct cause of crashes, and the update fixes it.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Restart your device</h3>
+          <p>A full restart clears the device's memory and closes background processes that may be conflicting with the app. This fixes the majority of crashing issues that persisted through steps 1 and 2. After restarting, open the app before anything else and see if the problem is gone.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>Check your storage space</h3>
+          <p>Apps crash when a device runs out of storage. <strong>iPhone:</strong> Go to <strong>Settings &rsaquo; General &rsaquo; iPhone Storage</strong>. <strong>Android:</strong> Go to <strong>Settings &rsaquo; Storage</strong>. <strong>Windows/Mac:</strong> Check how much free space is on your drive. If you have less than 1–2GB free, the app may not have enough room to run. Free up space by deleting unused apps, photos, or files.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h3>Clear the app's cache (Android)</h3>
+          <p>On Android, go to <strong>Settings &rsaquo; Apps</strong>, find the crashing app, tap <strong>Storage &amp; cache</strong>, and tap <strong>Clear Cache</strong>. This removes temporary files the app has saved that may have become corrupted. Your data and account stay intact — only temporary files are removed.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <h3>Delete and reinstall the app</h3>
+          <p>If nothing else has worked, uninstall the app completely and reinstall it fresh from the App Store or Play Store. This gives the app a completely clean slate. Note: for apps that store data locally (games, some tools), you may lose saved progress unless the app backs up to the cloud.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip">
+      <strong>Good to know:</strong> If the app crashes for everyone — not just you — it's a server-side issue on the developer's end and there's nothing you can do but wait. Check Twitter/X or <a href="https://downdetector.com" target="_blank" rel="noopener">downdetector.com</a> to see if others are reporting the same problem.
+    </div>
+
+    <h2>When to Contact the App Developer</h2>
+    <p>If the app crashes consistently after a reinstall and it's not a widespread outage, it may be a bug specific to your device or operating system version. Most apps have a "Report a Bug" or "Contact Support" option in their settings. Include details about your device model and what you were doing when it crashed — this helps developers fix the problem faster.</p>
+
+    <div class="cta-box">
+      <h2>Not sure which step to try first?</h2>
+      <p>Tell Koda which app is crashing and what device you're on — and get a personalised fix in minutes.</p>
+      <a href="https://kodahelp.com" class="cta-btn">Get instant help from Koda &rarr;</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 <a href="https://kodahelp.com">Koda</a> &nbsp;&middot;&nbsp; <a href="https://kodahelp.com">AI Tech Support</a></p>
+  </footer>
+</body>
+</html>

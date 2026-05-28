@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Printer Not Printing? Here's How to Fix It | Koda</title>
+  <meta name="description" content="Printer not printing? Whether it's offline, stuck, or just won't respond — follow this step-by-step guide to fix your printer on Windows or Mac in minutes." />
+  <meta name="keywords" content="printer not printing, printer offline fix, printer stuck, fix printer Windows, fix printer Mac, clear print queue" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://kodahelp.com/guides/printer-not-printing-fix.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://kodahelp.com/guides/printer-not-printing-fix.html" />
+  <meta property="og:title" content="Printer Not Printing? Here's How to Fix It" />
+  <meta property="og:description" content="Step-by-step guide to fix a printer that won't print on Windows or Mac." />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Printer Not Printing? Here's How to Fix It" />
+  <meta name="twitter:description" content="Step-by-step guide to fix a printer that won't print on Windows or Mac." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: #0F1117; color: #F0F0F0; -webkit-font-smoothing: antialiased; }
+    a { color: #52E09C; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    header { background: #0F1117; border-bottom: 1px solid #2A2D3A; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+    .logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+    .logo-icon { width: 32px; height: 32px; border-radius: 10px; background: linear-gradient(135deg, #52E09C 0%, #2DB87A 100%); display: flex; align-items: center; justify-content: center; color: #0A1A12; font-weight: 800; font-size: 15px; box-shadow: 0 0 12px rgba(82,224,156,0.3); }
+    .logo-name { font-size: 16px; font-weight: 700; color: #F0F0F0; letter-spacing: -0.35px; }
+    .container { max-width: 720px; margin: 0 auto; padding: 52px 24px 80px; }
+    .breadcrumb { font-size: 13px; color: #8B8FA8; margin-bottom: 28px; }
+    .breadcrumb a { color: #8B8FA8; }
+    .breadcrumb a:hover { color: #52E09C; }
+    h1 { font-size: 38px; font-weight: 800; color: #F0F0F0; letter-spacing: -1px; line-height: 1.15; margin-bottom: 14px; }
+    .meta { font-size: 13px; color: #8B8FA8; margin-bottom: 32px; }
+    .intro { font-size: 17px; color: #C0C3D4; line-height: 1.75; margin-bottom: 40px; padding: 20px 24px; background: #1A1D27; border: 1px solid #2A2D3A; border-left: 3px solid #52E09C; border-radius: 0 12px 12px 0; }
+    h2 { font-size: 21px; font-weight: 700; color: #F0F0F0; margin: 40px 0 16px; letter-spacing: -0.3px; }
+    .steps { display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
+    .step { display: flex; gap: 16px; background: #1A1D27; border: 1px solid #2A2D3A; border-radius: 12px; padding: 18px 20px; }
+    .step-num { width: 28px; height: 28px; border-radius: 50%; background: rgba(82,224,156,0.1); border: 1px solid rgba(82,224,156,0.3); color: #52E09C; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .step-body h3 { font-size: 15px; font-weight: 600; color: #F0F0F0; margin-bottom: 6px; }
+    .step-body p { font-size: 14.5px; color: #C0C3D4; line-height: 1.65; }
+    code { background: #0F1117; color: #52E09C; padding: 2px 7px; border-radius: 5px; font-family: 'SF Mono', monospace; font-size: 0.87em; border: 1px solid #2A2D3A; }
+    p { font-size: 15px; color: #C0C3D4; line-height: 1.75; margin-bottom: 16px; }
+    ul, ol { padding-left: 20px; margin-bottom: 16px; }
+    li { font-size: 15px; color: #C0C3D4; line-height: 1.7; margin-bottom: 6px; }
+    .tip { background: rgba(82,224,156,0.05); border: 1px solid rgba(82,224,156,0.2); border-radius: 10px; padding: 16px 20px; margin: 24px 0; font-size: 14.5px; color: #A8FCD8; line-height: 1.65; }
+    .tip strong { color: #52E09C; }
+    .cta-box { background: #1A1D27; border: 1px solid #2A2D3A; border-radius: 16px; padding: 36px; text-align: center; margin-top: 52px; }
+    .cta-box h2 { margin: 0 0 10px; font-size: 22px; }
+    .cta-box p { margin: 0 0 24px; }
+    .cta-btn { display: inline-flex; align-items: center; gap: 8px; background: #52E09C; color: #0A1A12; font-weight: 700; font-size: 15px; padding: 14px 28px; border-radius: 999px; box-shadow: 0 0 20px rgba(82,224,156,0.3); transition: background 0.15s, box-shadow 0.15s; }
+    .cta-btn:hover { background: #6EEAAA; box-shadow: 0 0 32px rgba(82,224,156,0.5); text-decoration: none; }
+    footer { border-top: 1px solid #2A2D3A; padding: 28px 24px; text-align: center; font-size: 13px; color: #8B8FA8; }
+    footer a { color: #8B8FA8; }
+    footer a:hover { color: #52E09C; }
+    @media (max-width: 600px) { h1 { font-size: 28px; } .container { padding: 36px 18px 60px; } .cta-box { padding: 24px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="https://kodahelp.com" class="logo">
+      <div class="logo-icon">K</div>
+      <span class="logo-name">Koda</span>
+    </a>
+  </header>
+
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="https://kodahelp.com">Home</a> &rsaquo; <a href="https://kodahelp.com">Guides</a> &rsaquo; Fix Printer Not Printing
+    </div>
+
+    <h1>Printer Not Printing? Here's How to Fix It</h1>
+    <p class="meta">6 min read &nbsp;·&nbsp; Works with HP, Canon, Epson, Brother, and most common printers</p>
+
+    <div class="intro">
+      Your printer says it's ready, but nothing comes out. Or it shows as "offline" even though it's clearly on. Printer problems are maddeningly common, but they almost always come down to a few specific issues — a stuck print queue, an outdated driver, or a connection problem. Here's how to fix them.
+    </div>
+
+    <h2>Step-by-Step Fix</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Check the basics first</h3>
+          <p>Make sure the printer is turned on (the power light should be solid, not blinking). Check that the paper tray has paper and that the ink or toner cartridges aren't empty — most printers show a warning light when ink is low. Also confirm the USB cable is firmly plugged in on both ends, or that the printer is on the same WiFi network as your computer.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Restart both the printer and your computer</h3>
+          <p>Turn the printer completely off using its power button, wait 30 seconds, then turn it back on. Do the same with your computer. This clears temporary errors that prevent printing and resolves the problem about 30% of the time on its own.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Clear the print queue</h3>
+          <p><strong>Windows:</strong> Click the Start menu and search for <strong>Printers &amp; scanners</strong>. Click your printer, then <strong>Open print queue</strong>. Select all documents and click <strong>Cancel</strong>. <strong>Mac:</strong> Go to <strong>System Settings &rsaquo; Printers &amp; Scanners</strong>, click your printer, then <strong>Open Print Queue</strong> and delete all jobs. A stuck job at the top of the queue often blocks everything behind it.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>Set your printer as the default</h3>
+          <p><strong>Windows:</strong> Go to <strong>Settings &rsaquo; Bluetooth &amp; devices &rsaquo; Printers &amp; scanners</strong>, click your printer, and select <strong>Set as default</strong>. <strong>Mac:</strong> Go to <strong>System Settings &rsaquo; Printers &amp; Scanners</strong> and set the default printer in the dropdown. Sometimes documents silently send to an old or virtual printer instead of yours.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h3>Update or reinstall the printer driver</h3>
+          <p>Visit your printer manufacturer's website (hp.com, canon.com, epson.com, etc.), search for your printer model, and download the latest driver. Uninstall the old driver first through <strong>Settings &rsaquo; Apps</strong>, then install the new one. Outdated drivers are a very common cause of printers suddenly stopping.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <h3>Run the printer troubleshooter (Windows only)</h3>
+          <p>Go to <strong>Settings &rsaquo; System &rsaquo; Troubleshoot &rsaquo; Other troubleshooters</strong> and run the <strong>Printer</strong> troubleshooter. It automatically detects and fixes common driver and spooler issues that would otherwise require manual steps.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip">
+      <strong>WiFi printer tip:</strong> If your printer connects via WiFi, make sure it's on the same network as your computer — not a separate "guest" network. Print a network configuration page from the printer's menu to confirm its IP address.
+    </div>
+
+    <h2>If Nothing Works</h2>
+    <p>If you've been through all six steps and the printer still isn't working, try removing the printer entirely from your computer and adding it back fresh. On Windows, go to <strong>Printers &amp; scanners</strong>, click your printer, and select <strong>Remove device</strong>. Then click <strong>Add a printer or scanner</strong> to reinstall it. This gives your computer a completely clean connection to the printer.</p>
+
+    <div class="cta-box">
+      <h2>Still stuck? Talk to Koda.</h2>
+      <p>Tell Koda which printer you have and what it's doing — and get personalized instructions to fix it in minutes.</p>
+      <a href="https://kodahelp.com" class="cta-btn">Get instant help from Koda &rarr;</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 <a href="https://kodahelp.com">Koda</a> &nbsp;&middot;&nbsp; <a href="https://kodahelp.com">AI Tech Support</a></p>
+  </footer>
+</body>
+</html>

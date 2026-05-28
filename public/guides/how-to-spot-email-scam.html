@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to Tell If an Email Is a Scam or Phishing | Koda</title>
+  <meta name="description" content="Learn exactly how to spot a phishing or scam email before you click anything. Real warning signs, examples, and what to do if you already clicked a suspicious link." />
+  <meta name="keywords" content="how to spot email scam, phishing email, is this email a scam, email fraud, fake email, phishing warning signs" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://kodahelp.com/guides/how-to-spot-email-scam.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://kodahelp.com/guides/how-to-spot-email-scam.html" />
+  <meta property="og:title" content="How to Tell If an Email Is a Scam or Phishing" />
+  <meta property="og:description" content="Real warning signs that tell you an email is a scam — and what to do if you already clicked." />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="How to Tell If an Email Is a Scam or Phishing" />
+  <meta name="twitter:description" content="Real warning signs that tell you an email is a scam — and what to do if you already clicked." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: #0F1117; color: #F0F0F0; -webkit-font-smoothing: antialiased; }
+    a { color: #52E09C; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    header { background: #0F1117; border-bottom: 1px solid #2A2D3A; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+    .logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+    .logo-icon { width: 32px; height: 32px; border-radius: 10px; background: linear-gradient(135deg, #52E09C 0%, #2DB87A 100%); display: flex; align-items: center; justify-content: center; color: #0A1A12; font-weight: 800; font-size: 15px; box-shadow: 0 0 12px rgba(82,224,156,0.3); }
+    .logo-name { font-size: 16px; font-weight: 700; color: #F0F0F0; letter-spacing: -0.35px; }
+    .container { max-width: 720px; margin: 0 auto; padding: 52px 24px 80px; }
+    .breadcrumb { font-size: 13px; color: #8B8FA8; margin-bottom: 28px; }
+    .breadcrumb a { color: #8B8FA8; }
+    .breadcrumb a:hover { color: #52E09C; }
+    h1 { font-size: 38px; font-weight: 800; color: #F0F0F0; letter-spacing: -1px; line-height: 1.15; margin-bottom: 14px; }
+    .meta { font-size: 13px; color: #8B8FA8; margin-bottom: 32px; }
+    .intro { font-size: 17px; color: #C0C3D4; line-height: 1.75; margin-bottom: 40px; padding: 20px 24px; background: #1A1D27; border: 1px solid #2A2D3A; border-left: 3px solid #52E09C; border-radius: 0 12px 12px 0; }
+    h2 { font-size: 21px; font-weight: 700; color: #F0F0F0; margin: 40px 0 16px; letter-spacing: -0.3px; }
+    .warning-card { background: #1A1D27; border: 1px solid #2A2D3A; border-radius: 12px; padding: 18px 20px; margin-bottom: 12px; display: flex; gap: 14px; align-items: flex-start; }
+    .warn-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+    .warn-body h3 { font-size: 15px; font-weight: 600; color: #F0F0F0; margin-bottom: 5px; }
+    .warn-body p { font-size: 14.5px; color: #C0C3D4; line-height: 1.6; margin: 0; }
+    .steps { display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
+    .step { display: flex; gap: 16px; background: #1A1D27; border: 1px solid #2A2D3A; border-radius: 12px; padding: 18px 20px; }
+    .step-num { width: 28px; height: 28px; border-radius: 50%; background: rgba(82,224,156,0.1); border: 1px solid rgba(82,224,156,0.3); color: #52E09C; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .step-body h3 { font-size: 15px; font-weight: 600; color: #F0F0F0; margin-bottom: 6px; }
+    .step-body p { font-size: 14.5px; color: #C0C3D4; line-height: 1.65; }
+    code { background: #0F1117; color: #52E09C; padding: 2px 7px; border-radius: 5px; font-family: 'SF Mono', monospace; font-size: 0.87em; border: 1px solid #2A2D3A; }
+    p { font-size: 15px; color: #C0C3D4; line-height: 1.75; margin-bottom: 16px; }
+    ul, ol { padding-left: 20px; margin-bottom: 16px; }
+    li { font-size: 15px; color: #C0C3D4; line-height: 1.7; margin-bottom: 6px; }
+    .tip { background: rgba(82,224,156,0.05); border: 1px solid rgba(82,224,156,0.2); border-radius: 10px; padding: 16px 20px; margin: 24px 0; font-size: 14.5px; color: #A8FCD8; line-height: 1.65; }
+    .tip strong { color: #52E09C; }
+    .warning { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.25); border-radius: 10px; padding: 16px 20px; margin: 24px 0; font-size: 14.5px; color: #FCA5A5; line-height: 1.65; }
+    .warning strong { color: #F87171; }
+    .cta-box { background: #1A1D27; border: 1px solid #2A2D3A; border-radius: 16px; padding: 36px; text-align: center; margin-top: 52px; }
+    .cta-box h2 { margin: 0 0 10px; font-size: 22px; }
+    .cta-box p { margin: 0 0 24px; }
+    .cta-btn { display: inline-flex; align-items: center; gap: 8px; background: #52E09C; color: #0A1A12; font-weight: 700; font-size: 15px; padding: 14px 28px; border-radius: 999px; box-shadow: 0 0 20px rgba(82,224,156,0.3); transition: background 0.15s, box-shadow 0.15s; }
+    .cta-btn:hover { background: #6EEAAA; box-shadow: 0 0 32px rgba(82,224,156,0.5); text-decoration: none; }
+    footer { border-top: 1px solid #2A2D3A; padding: 28px 24px; text-align: center; font-size: 13px; color: #8B8FA8; }
+    footer a { color: #8B8FA8; }
+    footer a:hover { color: #52E09C; }
+    @media (max-width: 600px) { h1 { font-size: 28px; } .container { padding: 36px 18px 60px; } .cta-box { padding: 24px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="https://kodahelp.com" class="logo">
+      <div class="logo-icon">K</div>
+      <span class="logo-name">Koda</span>
+    </a>
+  </header>
+
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="https://kodahelp.com">Home</a> &rsaquo; <a href="https://kodahelp.com">Guides</a> &rsaquo; Spot Email Scams
+    </div>
+
+    <h1>How to Tell If an Email Is a Scam or Phishing</h1>
+    <p class="meta">6 min read &nbsp;·&nbsp; Applies to Gmail, Outlook, Apple Mail, and all email services</p>
+
+    <div class="intro">
+      Phishing emails — fake emails designed to steal your password or financial information — are now incredibly convincing. They can look exactly like emails from Apple, your bank, Amazon, or PayPal. But they always leave clues. Once you know what to look for, you'll spot them immediately every time.
+    </div>
+
+    <h2>7 Warning Signs an Email Is a Scam</h2>
+
+    <div class="warning-card">
+      <div class="warn-icon">📧</div>
+      <div class="warn-body">
+        <h3>The sender's email address doesn't match the company</h3>
+        <p>An email might say "Apple Support" in the display name, but look at the actual email address — it might be something like <code>support@apple-helpdesk-secure.net</code>. Real Apple emails only come from <code>@apple.com</code>. Always click on the sender name to expand and reveal the actual email address.</p>
+      </div>
+    </div>
+
+    <div class="warning-card">
+      <div class="warn-icon">🚨</div>
+      <div class="warn-body">
+        <h3>Urgent or threatening language</h3>
+        <p>Scammers create panic to make you act without thinking: "Your account will be suspended in 24 hours," "Immediate action required," "Unusual sign-in activity detected." Legitimate companies rarely threaten immediate consequences via email. When you feel rushed, slow down instead.</p>
+      </div>
+    </div>
+
+    <div class="warning-card">
+      <div class="warn-icon">🔗</div>
+      <div class="warn-body">
+        <h3>Links that go somewhere unexpected</h3>
+        <p>Hover your mouse over any link in the email (don't click — just hover). The actual URL it goes to will appear in the bottom of your browser or as a tooltip. If the link text says "verify your account" but the URL shows something like <code>http://secure-paypa1.net/login</code>, it's a scam.</p>
+      </div>
+    </div>
+
+    <div class="warning-card">
+      <div class="warn-icon">📎</div>
+      <div class="warn-body">
+        <h3>Unexpected attachments</h3>
+        <p>Never open an attachment you weren't expecting — especially files ending in <code>.exe</code>, <code>.zip</code>, <code>.docm</code>, or <code>.xlsm</code>. Even PDFs can contain malicious code. If a company wants you to review a document, they'll typically direct you to log in to your account directly to find it.</p>
+      </div>
+    </div>
+
+    <div class="warning-card">
+      <div class="warn-icon">✍️</div>
+      <div class="warn-body">
+        <h3>Spelling mistakes or odd phrasing</h3>
+        <p>Professional companies proofread their emails. While modern scam emails are getting better, watch for awkward phrasing, inconsistent capitalisation, or sentences that just feel slightly "off." Trust your gut — if something reads strangely, it probably is.</p>
+      </div>
+    </div>
+
+    <div class="warning-card">
+      <div class="warn-icon">💳</div>
+      <div class="warn-body">
+        <h3>Requests for payment or personal information</h3>
+        <p>No legitimate company will ask for your password, full credit card number, or Social Security number via email. Banks never ask you to confirm account details by replying to an email. If an email asks for this, it's a scam — full stop.</p>
+      </div>
+    </div>
+
+    <div class="warning-card">
+      <div class="warn-icon">🎁</div>
+      <div class="warn-body">
+        <h3>You "won" something you didn't enter</h3>
+        <p>Prize notifications, lottery winnings, and inheritance emails are classic scams. If you didn't enter a competition, you didn't win. These emails aim to get you to pay a small "processing fee" or hand over personal details to claim your "prize."</p>
+      </div>
+    </div>
+
+    <div class="warning">
+      <strong>Already clicked a link?</strong> Don't enter any information on the page it opened. Close the tab immediately. If you entered a password, change it right away on the real website. If you entered payment information, contact your bank to flag potential fraud.
+    </div>
+
+    <h2>When You're Not Sure: Verify Directly</h2>
+    <p>If you get an email claiming to be from your bank, Apple, Amazon, or any service you use — and you're not 100% sure it's real — don't click anything in the email. Instead, open a new browser tab and go directly to the company's website by typing the address yourself. Log in and check if there are any real notifications or issues with your account. This one habit will protect you from nearly every phishing attempt.</p>
+
+    <div class="tip">
+      <strong>Report phishing:</strong> In Gmail, click the three dots next to the email and select <strong>Report phishing</strong>. In Outlook, select the email and click <strong>Report &rsaquo; Report Phishing</strong>. This helps protect others from the same scam.
+    </div>
+
+    <div class="cta-box">
+      <h2>Not sure if an email is real?</h2>
+      <p>Describe it to Koda — the sender, the subject, and what it's asking — and get an instant second opinion.</p>
+      <a href="https://kodahelp.com" class="cta-btn">Get instant help from Koda &rarr;</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 <a href="https://kodahelp.com">Koda</a> &nbsp;&middot;&nbsp; <a href="https://kodahelp.com">AI Tech Support</a></p>
+  </footer>
+</body>
+</html>
