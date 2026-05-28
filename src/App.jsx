@@ -36,68 +36,140 @@ const PROBLEMS = [
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
 
+/* ── Theme variables ── */
+:root {
+  --bg:             #0F1117;
+  --surface:        #1A1D27;
+  --surface-2:      #22253A;
+  --border:         #2A2D3A;
+  --accent:         #52E09C;
+  --accent-h:       #6EEAAA;
+  --accent-glow:    rgba(82,224,156,0.08);
+  --accent-glow-lg: rgba(82,224,156,0.25);
+  --accent-border:  rgba(82,224,156,0.3);
+  --text:           #F0F0F0;
+  --text-muted:     #8B8FA8;
+  --text-mid:       #C0C3D4;
+  --text-faint:     #3A3D4E;
+  --user-bg:        #52E09C;
+  --user-text:      #0A1A12;
+  --koda-bg:        #22253A;
+  --koda-text:      #F0F0F0;
+  --input-bg:       #1A1D27;
+  --logo-g:         linear-gradient(135deg, #52E09C 0%, #2DB87A 100%);
+  --logo-text:      #0A1A12;
+  --send-bg:        #52E09C;
+  --send-text:      #0F1117;
+  --shadow:         rgba(0,0,0,0.35);
+  --shadow-sm:      rgba(0,0,0,0.2);
+  --scrollbar:      #2A2D3A;
+  --scrollbar-h:    #3A3D4E;
+  --placeholder:    #4A4D5E;
+}
+
+:root.light {
+  --bg:             #F8F7F4;
+  --surface:        #FFFFFF;
+  --surface-2:      #F3F1EC;
+  --border:         #E8E6E1;
+  --accent:         #2D6A4F;
+  --accent-h:       #1B4332;
+  --accent-glow:    rgba(45,106,79,0.08);
+  --accent-glow-lg: rgba(45,106,79,0.18);
+  --accent-border:  rgba(45,106,79,0.35);
+  --text:           #1A1814;
+  --text-muted:     #7A7468;
+  --text-mid:       #4A4640;
+  --text-faint:     #B0A898;
+  --user-bg:        #2D6A4F;
+  --user-text:      #FFFFFF;
+  --koda-bg:        #FFFFFF;
+  --koda-text:      #1A1814;
+  --input-bg:       #F3F1EC;
+  --logo-g:         linear-gradient(135deg, #40916C 0%, #2D6A4F 100%);
+  --logo-text:      #FFFFFF;
+  --send-bg:        #2D6A4F;
+  --send-text:      #FFFFFF;
+  --shadow:         rgba(0,0,0,0.07);
+  --shadow-sm:      rgba(0,0,0,0.04);
+  --scrollbar:      #D4D0C8;
+  --scrollbar-h:    #C0B8B0;
+  --placeholder:    #A8A29E;
+}
+
+/* ── Reset & base ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #0F1117;
-  color: #F0F0F0;
+  background: var(--bg);
+  color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 #root { height: 100%; display: flex; flex-direction: column; }
 
+/* Smooth theme transitions on everything except keyframe-animated elements */
+body * {
+  transition:
+    background-color 0.28s ease,
+    border-color     0.28s ease,
+    color            0.22s ease,
+    box-shadow       0.28s ease,
+    fill             0.22s ease;
+}
+.k-msg-in, .k-dot, .k-online-dot { transition: none !important; }
+
 /* --- Chip --- */
 .k-chip {
   display: flex; align-items: center; gap: 12px;
   padding: 14px 16px; border-radius: 16px;
-  border: 1px solid #2A2D3A; background: #1A1D27;
+  border: 1px solid var(--border); background: var(--surface);
   cursor: pointer; text-align: left; width: 100%;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+  box-shadow: 0 1px 3px var(--shadow-sm);
   font-family: 'Inter', sans-serif;
 }
 .k-chip:hover {
   transform: translateY(-2px);
-  border-color: rgba(82,224,156,0.35);
-  border-left-color: #52E09C;
-  background: rgba(82,224,156,0.04);
-  box-shadow: -2px 0 10px rgba(82,224,156,0.15), 0 6px 20px rgba(0,0,0,0.4);
+  border-color: var(--accent-border);
+  border-left-color: var(--accent);
+  background: var(--accent-glow);
+  box-shadow: -2px 0 10px var(--accent-glow), 0 6px 20px var(--shadow);
 }
-.k-chip:active { transform: translateY(-1px); transition-duration: 0.06s; }
+.k-chip:active { transform: translateY(-1px); }
 
 /* --- Textarea --- */
 .k-input {
   flex: 1; border: none; outline: none; resize: none;
   font-family: 'Inter', sans-serif; font-size: 15px;
-  line-height: 1.55; color: #F0F0F0; background: transparent;
+  line-height: 1.55; color: var(--text); background: transparent;
   max-height: 180px; display: block;
 }
-.k-input::placeholder { color: #4A4D5E; }
+.k-input::placeholder { color: var(--placeholder); }
 
-/* --- Input wrapper focus glow --- */
+/* --- Input wrapper --- */
 .k-input-bar {
-  display: flex; align-items: flex-end; gap: 10;
-  background: #1A1D27; border-radius: 999px;
-  border: 1px solid #2A2D3A;
+  display: flex; align-items: flex-end; gap: 10px;
+  background: var(--input-bg); border-radius: 999px;
+  border: 1px solid var(--border);
   padding: 12px 12px 12px 20px;
-  transition: border-color 0.15s, box-shadow 0.15s;
 }
 .k-input-bar:focus-within {
-  border-color: #52E09C;
-  box-shadow: 0 0 0 3px rgba(82,224,156,0.12);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
 /* --- Send button --- */
 .k-send {
   width: 38px; height: 38px; border-radius: 50%; border: none;
-  background: #52E09C; color: #0F1117; cursor: pointer; flex-shrink: 0;
+  background: var(--send-bg); color: var(--send-text);
+  cursor: pointer; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  transition: background 0.14s, transform 0.12s, box-shadow 0.14s;
-  box-shadow: 0 0 12px rgba(82,224,156,0.35);
+  box-shadow: 0 0 12px var(--accent-border);
   font-weight: 700;
 }
-.k-send:hover { background: #6EEAAA; box-shadow: 0 0 20px rgba(82,224,156,0.5); transform: scale(1.06); }
-.k-send:active { transform: scale(0.96); transition-duration: 0.06s; }
+.k-send:hover { background: var(--accent-h); box-shadow: 0 0 20px var(--accent-glow-lg); transform: scale(1.06); }
+.k-send:active { transform: scale(0.96); }
 
 /* --- Quick reply chips --- */
 .k-qr {
@@ -106,31 +178,36 @@ body {
 }
 .k-qr-chip {
   padding: 8px 18px; border-radius: 999px;
-  border: 1px solid #52E09C; background: #1A1D27;
-  color: #52E09C; font-family: 'Inter', sans-serif;
-  font-size: 13.5px; font-weight: 500; cursor: pointer;
-  transition: background 0.14s, box-shadow 0.14s, transform 0.1s;
-  line-height: 1;
+  border: 1px solid var(--accent); background: var(--surface);
+  color: var(--accent); font-family: 'Inter', sans-serif;
+  font-size: 13.5px; font-weight: 500; cursor: pointer; line-height: 1;
 }
 .k-qr-chip:hover {
-  background: rgba(82,224,156,0.1);
-  box-shadow: 0 0 12px rgba(82,224,156,0.2);
+  background: var(--accent-glow);
+  box-shadow: 0 0 12px var(--accent-glow);
   transform: translateY(-1px);
 }
-.k-qr-chip:active, .k-qr-chip.picked {
-  background: #52E09C; color: #0F1117; transform: translateY(0);
-}
+.k-qr-chip:active, .k-qr-chip.picked { background: var(--accent); color: var(--send-text); transform: translateY(0); }
 
 /* --- New chat button --- */
 .k-new-chat {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 7px 14px; border-radius: 8px;
-  border: 1px solid #2A2D3A; background: #1A1D27;
+  border: 1px solid var(--border); background: var(--surface);
   font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500;
-  color: #8B8FA8; cursor: pointer;
-  transition: background 0.13s, border-color 0.13s, color 0.13s;
+  color: var(--text-muted); cursor: pointer;
 }
-.k-new-chat:hover { background: #22263A; border-color: #3A3D4E; color: #F0F0F0; }
+.k-new-chat:hover { background: var(--surface-2); border-color: var(--accent-border); color: var(--text); }
+
+/* --- Theme toggle --- */
+.k-theme-btn {
+  width: 36px; height: 36px; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--text-muted); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.k-theme-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
 
 /* --- Messages scroll area --- */
 .k-messages {
@@ -140,8 +217,8 @@ body {
 }
 .k-messages::-webkit-scrollbar { width: 4px; }
 .k-messages::-webkit-scrollbar-track { background: transparent; }
-.k-messages::-webkit-scrollbar-thumb { background: #2A2D3A; border-radius: 4px; }
-.k-messages::-webkit-scrollbar-thumb:hover { background: #3A3D4E; }
+.k-messages::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: 4px; }
+.k-messages::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-h); }
 
 /* --- Animations --- */
 @keyframes fadeUp {
@@ -156,50 +233,58 @@ body {
 }
 .k-dot {
   width: 6px; height: 6px; border-radius: 50%;
-  background: #52E09C; display: inline-block;
+  background: var(--accent); display: inline-block;
   animation: dotPulse 1.4s ease-in-out infinite;
 }
 .k-dot:nth-child(2) { animation-delay: 0.18s; }
 .k-dot:nth-child(3) { animation-delay: 0.36s; }
 
 @keyframes onlinePulse {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(82,224,156,0.5), 0 0 5px rgba(82,224,156,0.4);
-    transform: scale(1);
-  }
-  50% {
-    box-shadow: 0 0 0 5px rgba(82,224,156,0), 0 0 14px rgba(82,224,156,0.65);
-    transform: scale(1.15);
-  }
+  0%, 100% { box-shadow: 0 0 0 0 var(--accent-border), 0 0 5px var(--accent-glow); transform: scale(1); }
+  50%       { box-shadow: 0 0 0 5px transparent, 0 0 14px var(--accent-glow-lg); transform: scale(1.15); }
 }
 .k-online-dot {
-  width: 8px; height: 8px; border-radius: 50%; background: #52E09C;
+  width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
   animation: onlinePulse 2.2s ease-in-out infinite; flex-shrink: 0;
 }
 
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.k-toast {
+  position: fixed; bottom: 24px; right: 24px; z-index: 200;
+  background: var(--surface); border: 1px solid var(--border);
+  border-left: 3px solid var(--accent); border-radius: 10px;
+  padding: 9px 16px; font-size: 12.5px; font-weight: 500;
+  color: var(--accent); display: flex; align-items: center; gap: 7px;
+  box-shadow: 0 4px 20px var(--shadow); animation: toastIn 0.2s ease forwards;
+  font-family: 'Inter', sans-serif; pointer-events: none;
+}
+
 /* --- Markdown inside AI bubbles --- */
-.md strong { font-weight: 600; color: #F0F0F0; }
-.md em     { font-style: italic; color: #C0C3D4; }
+.md strong { font-weight: 600; color: var(--text); }
+.md em     { font-style: italic; color: var(--text-mid); }
 .md code {
-  background: #0F1117; color: #52E09C;
+  background: var(--bg); color: var(--accent);
   padding: 2px 7px; border-radius: 5px;
   font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
-  font-size: 0.86em; border: 1px solid #2A2D3A; white-space: nowrap;
+  font-size: 0.86em; border: 1px solid var(--border); white-space: nowrap;
 }
 .md     { text-align: left !important; }
 .md ul  { padding-left: 20px !important; margin: 6px 0; text-align: left !important; list-style-type: disc !important; list-style-position: outside !important; }
 .md ol  { padding-left: 20px !important; margin: 6px 0; text-align: left !important; list-style-type: decimal !important; list-style-position: outside !important; }
-.md li  { margin-bottom: 5px; line-height: 1.65; color: #D8DBF0; text-align: left !important; display: list-item !important; }
-.md p   { margin: 0 0 8px; color: #D8DBF0; text-align: left !important; }
+.md li  { margin-bottom: 5px; line-height: 1.65; color: var(--text-mid); text-align: left !important; display: list-item !important; }
+.md p   { margin: 0 0 8px; color: var(--text-mid); text-align: left !important; }
 .md p:last-child { margin: 0; }
-.md .hd { font-weight: 700; margin: 10px 0 5px; color: #F0F0F0; }
+.md .hd { font-weight: 700; margin: 10px 0 5px; color: var(--text); }
 .md .hd:first-child { margin-top: 0; }
 
 /* --- Responsive --- */
 @media (max-width: 600px) {
   .land-chips     { grid-template-columns: 1fr 1fr !important; }
-  .land-title     { font-size: 38px !important; letter-spacing: -1px !important; }
-  .land-title-2   { font-size: 38px !important; }
+  .land-title     { font-size: 36px !important; letter-spacing: -1px !important; }
+  .land-title-2   { font-size: 36px !important; }
   .land-sub       { font-size: 15px !important; }
   .land-wrap      { padding: 32px 18px 40px !important; }
   .k-messages     { padding: 20px 0 16px !important; }
@@ -236,9 +321,7 @@ function renderMarkdown(text) {
   while (i < lines.length) {
     const line = lines[i];
     if (/^#{1,3} /.test(line)) {
-      nodes.push(
-        <div key={i} className="hd">{renderInline(line.replace(/^#{1,3} /, ''), `h${i}`)}</div>
-      );
+      nodes.push(<div key={i} className="hd">{renderInline(line.replace(/^#{1,3} /, ''), `h${i}`)}</div>);
       i++;
     } else if (/^[-*] /.test(line)) {
       const items = [];
@@ -264,9 +347,7 @@ function renderMarkdown(text) {
   return <div className="md">{nodes}</div>;
 }
 
-/* ── AI-generated quick reply buttons ──────────────────────────────── */
-
-/* ── Quick reply chips ──────────────────────────────────────────────── */
+/* ── Quick replies ──────────────────────────────────────────────────── */
 
 function QuickReplies({ options, onSelect }) {
   const [picked, setPicked] = useState(null);
@@ -278,11 +359,7 @@ function QuickReplies({ options, onSelect }) {
   return (
     <div className="k-qr">
       {options.map(opt => (
-        <button
-          key={opt}
-          className={'k-qr-chip' + (picked === opt ? ' picked' : '')}
-          onClick={() => pick(opt)}
-        >
+        <button key={opt} className={'k-qr-chip' + (picked === opt ? ' picked' : '')} onClick={() => pick(opt)}>
           {opt}
         </button>
       ))}
@@ -290,17 +367,17 @@ function QuickReplies({ options, onSelect }) {
   );
 }
 
-/* ── Components ─────────────────────────────────────────────────────── */
+/* ── Shared components ──────────────────────────────────────────────── */
 
 function KodaLogo({ size = 32, r = 10 }) {
   return (
     <div style={{
       width: size, height: size, borderRadius: r, flexShrink: 0,
-      background: 'linear-gradient(135deg, #52E09C 0%, #2DB87A 100%)',
+      background: 'var(--logo-g)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      color: '#0A1A12', fontWeight: 800, fontFamily: "'Inter', sans-serif",
+      color: 'var(--logo-text)', fontWeight: 800, fontFamily: "'Inter', sans-serif",
       fontSize: Math.round(size * 0.46), letterSpacing: '-0.5px',
-      userSelect: 'none', boxShadow: '0 0 12px rgba(82,224,156,0.3)',
+      userSelect: 'none', boxShadow: '0 0 12px var(--accent-border)',
     }}>K</div>
   );
 }
@@ -309,7 +386,7 @@ function OnlineIndicator() {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
       <span className="k-online-dot" />
-      <span style={{ fontSize: 12.5, fontWeight: 500, color: '#52E09C', letterSpacing: '0.02em' }}>
+      <span style={{ fontSize: 12.5, fontWeight: 500, color: 'var(--accent)', letterSpacing: '0.02em' }}>
         Online
       </span>
     </div>
@@ -322,10 +399,11 @@ function ThinkingIndicator() {
       <KodaLogo size={26} r={8} />
       <div style={{
         display: 'flex', alignItems: 'center', gap: 5,
-        background: '#1A1D27', border: '1px solid #2A2D3A',
+        background: 'var(--surface)', border: '1px solid var(--border)',
         padding: '10px 14px', borderRadius: '5px 16px 16px 16px',
+        boxShadow: '0 2px 8px var(--shadow-sm)',
       }}>
-        <span style={{ fontSize: 13, color: '#8B8FA8', marginRight: 6, fontStyle: 'italic' }}>
+        <span style={{ fontSize: 13, color: 'var(--text-muted)', marginRight: 6, fontStyle: 'italic' }}>
           Koda is thinking
         </span>
         <span className="k-dot" />
@@ -345,19 +423,18 @@ function MessageBubble({ msg }) {
     }}>
       {!isUser && <KodaLogo size={26} r={8} />}
       <div style={{
-        maxWidth: '75%',
-        padding: '12px 16px',
+        maxWidth: '75%', padding: '12px 16px',
         borderRadius: isUser ? '18px 18px 5px 18px' : '5px 18px 18px 18px',
-        background: isUser ? '#52E09C' : '#22253A',
-        borderTop:    isUser ? 'none' : '1px solid #2A2D3A',
-        borderRight:  isUser ? 'none' : '1px solid #2A2D3A',
-        borderBottom: isUser ? 'none' : '1px solid #2A2D3A',
-        borderLeft:   isUser ? 'none' : '3px solid #52E09C',
-        color: isUser ? '#0A1A12' : '#F0F0F0',
+        background:   isUser ? 'var(--user-bg)'   : 'var(--koda-bg)',
+        borderTop:    isUser ? 'none' : '1px solid var(--border)',
+        borderRight:  isUser ? 'none' : '1px solid var(--border)',
+        borderBottom: isUser ? 'none' : '1px solid var(--border)',
+        borderLeft:   isUser ? 'none' : '3px solid var(--accent)',
+        color:        isUser ? 'var(--user-text)' : 'var(--koda-text)',
         fontSize: 15, lineHeight: 1.7,
         boxShadow: isUser
-          ? '0 0 20px rgba(82,224,156,0.2), 0 4px 12px rgba(0,0,0,0.3)'
-          : '0 2px 8px rgba(0,0,0,0.25)',
+          ? '0 0 20px var(--accent-glow), 0 4px 12px var(--shadow-sm)'
+          : '0 2px 8px var(--shadow-sm)',
         wordBreak: 'break-word', fontWeight: isUser ? 500 : 400,
       }}>
         {isUser ? msg.content : renderMarkdown(msg.content)}
@@ -371,8 +448,7 @@ function MessageBubble({ msg }) {
 function Landing({ onChipClick, onSubmit }) {
   const [val, setVal] = useState('');
   const ref = useRef(null);
-
-  const go = () => { if (val.trim()) onSubmit(val.trim()); };
+  const go  = () => { if (val.trim()) onSubmit(val.trim()); };
   const onKey = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); go(); } };
 
   return (
@@ -387,14 +463,12 @@ function Landing({ onChipClick, onSubmit }) {
           <span style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             padding: '6px 16px 6px 10px', borderRadius: 999,
-            background: 'rgba(82,224,156,0.08)',
-            border: '1px solid rgba(82,224,156,0.25)',
-            color: '#52E09C', fontSize: 12.5, fontWeight: 500, letterSpacing: '0.03em',
+            background: 'var(--accent-glow)', border: '1px solid var(--accent-border)',
+            color: 'var(--accent)', fontSize: 12.5, fontWeight: 500, letterSpacing: '0.03em',
           }}>
             <span style={{
-              width: 7, height: 7, borderRadius: '50%',
-              background: '#52E09C', display: 'inline-block',
-              boxShadow: '0 0 8px rgba(82,224,156,0.8)',
+              width: 7, height: 7, borderRadius: '50%', background: 'var(--accent)',
+              display: 'inline-block', boxShadow: '0 0 8px var(--accent-glow-lg)',
             }} />
             AI Tech Support — Always On
           </span>
@@ -403,19 +477,19 @@ function Landing({ onChipClick, onSubmit }) {
         {/* Headline with radial glow */}
         <div style={{
           position: 'relative', marginBottom: 22,
-          background: 'radial-gradient(ellipse 60% 40% at 50% 40%, rgba(82,224,156,0.06) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse 60% 40% at 50% 40%, var(--accent-glow) 0%, transparent 70%)',
           paddingTop: 8, paddingBottom: 4,
         }}>
           <h1 className="land-title" style={{
-            fontSize: 64, fontWeight: 800, color: '#F0F0F0', textAlign: 'center',
+            fontSize: 64, fontWeight: 800, color: 'var(--text)', textAlign: 'center',
             letterSpacing: '-2px', lineHeight: 1.05, marginBottom: 4,
           }}>
             Fix any tech problem.
           </h1>
           <h1 className="land-title-2" style={{
-            fontSize: 64, fontWeight: 800, color: '#52E09C', textAlign: 'center',
+            fontSize: 64, fontWeight: 800, color: 'var(--accent)', textAlign: 'center',
             letterSpacing: '-2px', lineHeight: 1.05,
-            textShadow: '0 0 40px rgba(82,224,156,0.35)',
+            textShadow: '0 0 40px var(--accent-glow-lg)',
           }}>
             In minutes.
           </h1>
@@ -423,47 +497,36 @@ function Landing({ onChipClick, onSubmit }) {
 
         {/* Subline */}
         <p className="land-sub" style={{
-          fontSize: 17, color: '#8B8FA8', textAlign: 'center',
+          fontSize: 17, color: 'var(--text-muted)', textAlign: 'center',
           lineHeight: 1.7, fontWeight: 400, marginBottom: 48,
         }}>
           Describe what's wrong. Koda figures it out and guides you<br />through the fix, step by step.
         </p>
 
         {/* Chips */}
-        <div className="land-chips" style={{
-          display: 'grid', gridTemplateColumns: '1fr 1fr',
-          gap: 10, marginBottom: 24,
-        }}>
+        <div className="land-chips" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 24 }}>
           {PROBLEMS.map(p => (
             <button key={p.id} className="k-chip" onClick={() => onChipClick(p)}>
-              <span style={{
-                fontSize: 16, lineHeight: 1, padding: '5px 7px',
-                background: '#0F1117', borderRadius: 8, flexShrink: 0,
-              }}>
+              <span style={{ fontSize: 16, lineHeight: 1, padding: '5px 7px', background: 'var(--bg)', borderRadius: 8, flexShrink: 0 }}>
                 {p.icon}
               </span>
-              <span style={{ fontSize: 13.5, fontWeight: 500, color: '#E0E3F0', flex: 1, letterSpacing: '-0.1px' }}>
+              <span style={{ fontSize: 13.5, fontWeight: 500, color: 'var(--text)', flex: 1, letterSpacing: '-0.1px' }}>
                 {p.label}
               </span>
-              <span style={{ color: '#3A3D4E', fontSize: 14, flexShrink: 0 }}>→</span>
+              <span style={{ color: 'var(--text-faint)', fontSize: 14, flexShrink: 0 }}>→</span>
             </button>
           ))}
         </div>
 
         {/* Input bar */}
-        <div className="k-input-bar" style={{ marginBottom: 14 }}>
+        <div className="k-input-bar" style={{ marginBottom: 14, borderRadius: 16 }}>
           <textarea
-            ref={ref}
-            className="k-input"
-            rows={1}
+            ref={ref} className="k-input" rows={1}
             placeholder="What's going on with your device?"
-            value={val}
-            onChange={e => setVal(e.target.value)}
-            onKeyDown={onKey}
+            value={val} onChange={e => setVal(e.target.value)} onKeyDown={onKey}
           />
           <button className="k-send" onClick={go}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="22" y1="2" x2="11" y2="13" />
               <polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor" stroke="none" />
             </svg>
@@ -471,7 +534,7 @@ function Landing({ onChipClick, onSubmit }) {
         </div>
 
         {/* Footer note */}
-        <p style={{ textAlign: 'center', fontSize: 12.5, color: '#3A3D4E', letterSpacing: '0.02em' }}>
+        <p style={{ textAlign: 'center', fontSize: 12.5, color: 'var(--text-faint)', letterSpacing: '0.02em' }}>
           No account needed · Instant answers · Completely free
         </p>
 
@@ -499,7 +562,6 @@ function Chat({ messages, loading, onSend, quickReplies }) {
 
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-
       {/* Messages */}
       <div className="k-messages" style={{ paddingLeft: 0, paddingRight: 0 }}>
         <div className="msgs-inner" style={{ padding: '0 24px', display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -511,42 +573,31 @@ function Chat({ messages, loading, onSend, quickReplies }) {
 
       {/* Quick replies */}
       {quickReplies.length > 0 && (
-        <div style={{ background: '#0F1117', paddingTop: 12, borderTop: '1px solid #2A2D3A' }}>
-          <QuickReplies
-            key={messages.length}
-            options={quickReplies}
-            onSelect={(text) => { onSend(text); }}
-          />
+        <div style={{ background: 'var(--bg)', paddingTop: 12, borderTop: '1px solid var(--border)' }}>
+          <QuickReplies key={messages.length} options={quickReplies} onSelect={(text) => { onSend(text); }} />
         </div>
       )}
 
       {/* Input bar */}
       <div className="chat-input-row" style={{
         padding: quickReplies.length > 0 ? '4px 24px 28px' : '14px 24px 28px',
-        background: '#0F1117',
-        borderTop: quickReplies.length > 0 ? 'none' : '1px solid #2A2D3A',
+        background: 'var(--bg)',
+        borderTop: quickReplies.length > 0 ? 'none' : '1px solid var(--border)',
       }}>
         <div className="k-input-bar" style={{ maxWidth: 760, margin: '0 auto', borderRadius: 16 }}>
           <textarea
-            ref={inputRef}
-            className="k-input"
-            rows={1}
-            placeholder="Reply to Koda…"
-            value={val}
-            onChange={e => setVal(e.target.value)}
-            onKeyDown={onKey}
-            disabled={loading}
+            ref={inputRef} className="k-input" rows={1}
+            placeholder="Reply to Koda…" value={val}
+            onChange={e => setVal(e.target.value)} onKeyDown={onKey} disabled={loading}
           />
           <button className="k-send" onClick={go}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="22" y1="2" x2="11" y2="13" />
               <polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor" stroke="none" />
             </svg>
           </button>
         </div>
       </div>
-
     </div>
   );
 }
@@ -554,13 +605,62 @@ function Chat({ messages, loading, onSend, quickReplies }) {
 /* ── App root ───────────────────────────────────────────────────────── */
 
 export default function App() {
-  const [view,         setView]         = useState('landing');
-  const [messages,     setMessages]     = useState([]);
+  // ── Theme — detect system pref, persist to localStorage, apply to <html> immediately
+  const [theme, setTheme] = useState(() => {
+    try {
+      const saved = localStorage.getItem('koda-theme');
+      if (saved) { document.documentElement.className = saved; return saved; }
+      const pref = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      document.documentElement.className = pref;
+      return pref;
+    } catch { return 'dark'; }
+  });
+
+  useEffect(() => {
+    document.documentElement.className = theme;
+    localStorage.setItem('koda-theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
+
+  // ── Conversation state — restore from localStorage on mount
+  const [messages, setMessages] = useState(() => {
+    try {
+      const s = localStorage.getItem('koda-messages');
+      return s ? JSON.parse(s) : [];
+    } catch { return []; }
+  });
+
+  const [view, setView] = useState(() => {
+    try {
+      const s = localStorage.getItem('koda-messages');
+      return s && JSON.parse(s).length > 0 ? 'chat' : 'landing';
+    } catch { return 'landing'; }
+  });
+
   const [loading,      setLoading]      = useState(false);
   const [quickReplies, setQuickReplies] = useState([]);
+  const [savedPing,    setSavedPing]    = useState(false);
 
-  const generateButtons = async (kodaMessage) => {
+  // ── Persist messages to localStorage and show "saved" toast
+  useEffect(() => {
+    if (messages.length === 0) return;
+    try { localStorage.setItem('koda-messages', JSON.stringify(messages)); } catch {}
+    setSavedPing(true);
+    const t = setTimeout(() => setSavedPing(false), 2000);
+    return () => clearTimeout(t);
+  }, [messages]);
+
+  // ── Generate context-aware quick-reply buttons using full conversation history
+  const generateButtons = async (kodaMessage, history = []) => {
     try {
+      // Summarise the last 8 messages so buttons stay contextually relevant
+      const context = history.slice(-8)
+        .map(m => `${m.role === 'user' ? 'User' : 'Koda'}: ${m.content.slice(0, 180)}`)
+        .join('\n');
+
+      const userContent = `Conversation so far:\n${context}\n\nKoda's latest message:\n"${kodaMessage}"\n\nOutput the JSON buttons object. Study the history — if the user's device/platform is already established, never show device-choice buttons again. Make buttons progressively more specific as the conversation develops.`;
+
       const res = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
@@ -572,12 +672,12 @@ export default function App() {
         body: JSON.stringify({
           model: 'claude-haiku-4-5-20251001',
           max_tokens: 150,
-          system: 'You output ONLY a JSON object — no explanation, no markdown, no extra text. Format: {"buttons":["label1","label2"]}. Rules: 2–4 buttons, each label 1–5 words, match the question asked. If no buttons make sense return {"buttons":[]}.',
-          messages: [{ role: 'user', content: `A tech support assistant just sent this message to a user:\n\n"${kodaMessage}"\n\nOutput the JSON buttons object now.` }],
+          system: 'You output ONLY a JSON object — no explanation, no markdown, no extra text. Format: {"buttons":["label1","label2"]}. Rules: 2–4 buttons, each label 1–5 words, contextually match what was just asked. Never repeat information the user already provided. If no buttons make sense return {"buttons":[]}.',
+          messages: [{ role: 'user', content: userContent }],
         }),
       });
-      const data = await res.json();
-      const raw  = data.content?.[0]?.text ?? '';
+      const data  = await res.json();
+      const raw   = data.content?.[0]?.text ?? '';
       const match = raw.match(/\{[\s\S]*"buttons"[\s\S]*\}/);
       const json  = match ? JSON.parse(match[0]) : { buttons: [] };
       setQuickReplies(Array.isArray(json.buttons) ? json.buttons.slice(0, 4) : []);
@@ -586,6 +686,7 @@ export default function App() {
     }
   };
 
+  // ── Send a message
   const sendMessage = async (content, history = messages) => {
     const updated = [...history, { role: 'user', content }];
     setMessages(updated);
@@ -612,10 +713,11 @@ export default function App() {
         const err = await res.json().catch(() => ({}));
         throw new Error(err?.error?.message || `HTTP ${res.status}`);
       }
-      const data  = await res.json();
-      const reply = data.content?.[0]?.text ?? "I didn't catch a response — try again.";
-      setMessages([...updated, { role: 'assistant', content: reply }]);
-      generateButtons(reply);
+      const data     = await res.json();
+      const reply    = data.content?.[0]?.text ?? "I didn't catch a response — try again.";
+      const withReply = [...updated, { role: 'assistant', content: reply }];
+      setMessages(withReply);
+      generateButtons(reply, withReply); // pass full history for smarter buttons
     } catch (e) {
       setMessages([...updated, { role: 'assistant', content: `Something went wrong: ${e.message}` }]);
     } finally {
@@ -629,37 +731,60 @@ export default function App() {
     sendMessage(text, fresh ? [] : history);
   };
 
-  const reset = () => { setView('landing'); setMessages([]); setQuickReplies([]); };
+  const reset = () => {
+    setView('landing');
+    setMessages([]);
+    setQuickReplies([]);
+    try { localStorage.removeItem('koda-messages'); } catch {}
+  };
 
   return (
-    <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', background: '#0F1117' }}>
+    <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', background: 'var(--bg)' }}>
       <style>{CSS}</style>
 
       {/* Header */}
       <header style={{
-        background: '#0F1117',
-        borderBottom: view === 'chat' ? '1px solid #2A2D3A' : 'none',
-        padding: '0 28px', height: 62, flexShrink: 0,
+        background: 'var(--bg)',
+        borderBottom: view === 'chat' ? '1px solid var(--border)' : 'none',
+        padding: '0 24px', height: 62, flexShrink: 0,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
-        {/* Left: Logo */}
-        <button onClick={reset} style={{
-          background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-          display: 'flex', alignItems: 'center', gap: 9,
-        }}>
+        {/* Logo */}
+        <button onClick={reset} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', gap: 9 }}>
           <KodaLogo size={32} r={10} />
-          <span style={{ fontSize: 16, fontWeight: 700, color: '#F0F0F0', letterSpacing: '-0.35px' }}>
-            Koda
-          </span>
+          <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.35px' }}>Koda</span>
         </button>
 
-        {/* Right: Online + New chat */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+        {/* Right controls */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <OnlineIndicator />
+
+          {/* Theme toggle */}
+          <button className="k-theme-btn" onClick={toggleTheme} title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
+            {theme === 'dark' ? (
+              /* Sun icon */
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="5"/>
+                <line x1="12" y1="1" x2="12" y2="3"/>
+                <line x1="12" y1="21" x2="12" y2="23"/>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                <line x1="1" y1="12" x2="3" y2="12"/>
+                <line x1="21" y1="12" x2="23" y2="12"/>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+              </svg>
+            ) : (
+              /* Moon icon */
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+              </svg>
+            )}
+          </button>
+
           {view === 'chat' && (
             <button className="k-new-chat" onClick={reset}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="12" y1="5" x2="12" y2="19" />
                 <line x1="5" y1="12" x2="19" y2="12" />
               </svg>
@@ -672,19 +797,21 @@ export default function App() {
       {/* Main */}
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
         {view === 'landing' ? (
-          <Landing
-            onChipClick={p  => startChat(p.prompt, true)}
-            onSubmit={text  => startChat(text, true)}
-          />
+          <Landing onChipClick={p => startChat(p.prompt, true)} onSubmit={text => startChat(text, true)} />
         ) : (
-          <Chat
-            messages={messages}
-            loading={loading}
-            onSend={text => sendMessage(text)}
-            quickReplies={quickReplies}
-          />
+          <Chat messages={messages} loading={loading} onSend={text => sendMessage(text)} quickReplies={quickReplies} />
         )}
       </main>
+
+      {/* "Conversation saved" toast */}
+      {savedPing && (
+        <div className="k-toast">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+          Conversation saved
+        </div>
+      )}
     </div>
   );
 }
