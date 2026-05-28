@@ -186,11 +186,11 @@ body {
   font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
   font-size: 0.86em; border: 1px solid #2A2D3A; white-space: nowrap;
 }
-.md     { text-align: left; }
-.md ul  { padding-left: 20px; margin: 6px 0; text-align: left; list-style-position: outside; }
-.md ol  { padding-left: 20px; margin: 6px 0; text-align: left; list-style-position: outside; }
-.md li  { margin-bottom: 5px; line-height: 1.65; color: #D8DBF0; text-align: left; }
-.md p   { margin: 0 0 8px; color: #D8DBF0; text-align: left; }
+.md     { text-align: left !important; }
+.md ul  { padding-left: 20px !important; margin: 6px 0; text-align: left !important; list-style-type: disc !important; list-style-position: outside !important; }
+.md ol  { padding-left: 20px !important; margin: 6px 0; text-align: left !important; list-style-type: decimal !important; list-style-position: outside !important; }
+.md li  { margin-bottom: 5px; line-height: 1.65; color: #D8DBF0; text-align: left !important; display: list-item !important; }
+.md p   { margin: 0 0 8px; color: #D8DBF0; text-align: left !important; }
 .md p:last-child { margin: 0; }
 .md .hd { font-weight: 700; margin: 10px 0 5px; color: #F0F0F0; }
 .md .hd:first-child { margin-top: 0; }
@@ -349,8 +349,10 @@ function MessageBubble({ msg }) {
         padding: '12px 16px',
         borderRadius: isUser ? '18px 18px 5px 18px' : '5px 18px 18px 18px',
         background: isUser ? '#52E09C' : '#22253A',
-        border: isUser ? 'none' : '1px solid #2A2D3A',
-        borderLeft: isUser ? undefined : '3px solid #52E09C',
+        borderTop:    isUser ? 'none' : '1px solid #2A2D3A',
+        borderRight:  isUser ? 'none' : '1px solid #2A2D3A',
+        borderBottom: isUser ? 'none' : '1px solid #2A2D3A',
+        borderLeft:   isUser ? 'none' : '3px solid #52E09C',
         color: isUser ? '#0A1A12' : '#F0F0F0',
         fontSize: 15, lineHeight: 1.7,
         boxShadow: isUser
