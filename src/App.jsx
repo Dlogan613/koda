@@ -118,7 +118,7 @@ body * {
     box-shadow       0.28s ease,
     fill             0.22s ease;
 }
-.k-msg-in, .k-dot, .k-online-dot { transition: none !important; }
+.k-msg-in, .k-dot, .k-online-dot, .k-qr, .k-qr-chip { transition: none !important; }
 
 /* --- Chip --- */
 .k-chip {
@@ -436,6 +436,7 @@ function MessageBubble({ msg }) {
           ? '0 0 20px var(--accent-glow), 0 4px 12px var(--shadow-sm)'
           : '0 2px 8px var(--shadow-sm)',
         wordBreak: 'break-word', fontWeight: isUser ? 500 : 400,
+        textAlign: 'left',
       }}>
         {isUser ? msg.content : renderMarkdown(msg.content)}
       </div>
