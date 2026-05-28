@@ -606,23 +606,42 @@ function Chat({ messages, loading, onSend, quickReplies }) {
 /* ── App root ───────────────────────────────────────────────────────── */
 
 export default function App() {
-  // ── Theme — detect system pref, persist to localStorage, apply to <html> immediately
+  // ── Theme — follow system by default; persist manual override separately
+  const THEME_OVERRIDE_KEY = 'koda-theme-override';
+  const getSystemTheme = () =>
+    window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+
   const [theme, setTheme] = useState(() => {
     try {
-      const saved = localStorage.getItem('koda-theme');
-      if (saved) { document.documentElement.className = saved; return saved; }
-      const pref = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-      document.documentElement.className = pref;
-      return pref;
+      const override = localStorage.getItem(THEME_OVERRIDE_KEY);
+      const t = override ?? getSystemTheme();
+      document.documentElement.className = t;
+      return t;
     } catch { return 'dark'; }
   });
 
+  // Apply theme class to <html> whenever theme changes
   useEffect(() => {
     document.documentElement.className = theme;
-    localStorage.setItem('koda-theme', theme);
   }, [theme]);
 
-  const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
+  // Follow system theme changes unless the user has set a manual override
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const handler = (e) => {
+      if (!localStorage.getItem(THEME_OVERRIDE_KEY))
+        setTheme(e.matches ? 'dark' : 'light');
+    };
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+
+  // Manual toggle — save as override so system changes no longer auto-apply
+  const toggleTheme = () => setTheme(t => {
+    const next = t === 'dark' ? 'light' : 'dark';
+    try { localStorage.setItem(THEME_OVERRIDE_KEY, next); } catch {}
+    return next;
+  });
 
   // ── Conversation state — restore from localStorage on mount
   const [messages, setMessages] = useState(() => {
