@@ -57,10 +57,11 @@ body {
   font-family: 'Inter', sans-serif;
 }
 .k-chip:hover {
-  transform: translateY(-3px);
-  border-color: #52E09C;
-  background: rgba(82,224,156,0.05);
-  box-shadow: 0 0 20px rgba(82,224,156,0.12), 0 8px 24px rgba(0,0,0,0.4);
+  transform: translateY(-2px);
+  border-color: rgba(82,224,156,0.35);
+  border-left-color: #52E09C;
+  background: rgba(82,224,156,0.04);
+  box-shadow: -2px 0 10px rgba(82,224,156,0.15), 0 6px 20px rgba(0,0,0,0.4);
 }
 .k-chip:active { transform: translateY(-1px); transition-duration: 0.06s; }
 
@@ -105,7 +106,7 @@ body {
 }
 .k-qr-chip {
   padding: 8px 18px; border-radius: 999px;
-  border: 1px solid #52E09C; background: transparent;
+  border: 1px solid #52E09C; background: #1A1D27;
   color: #52E09C; font-family: 'Inter', sans-serif;
   font-size: 13.5px; font-weight: 500; cursor: pointer;
   transition: background 0.14s, box-shadow 0.14s, transform 0.1s;
@@ -162,12 +163,18 @@ body {
 .k-dot:nth-child(3) { animation-delay: 0.36s; }
 
 @keyframes onlinePulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(82,224,156,0.6); }
-  50%       { box-shadow: 0 0 0 4px rgba(82,224,156,0); }
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(82,224,156,0.5), 0 0 5px rgba(82,224,156,0.4);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(82,224,156,0), 0 0 14px rgba(82,224,156,0.65);
+    transform: scale(1.15);
+  }
 }
 .k-online-dot {
   width: 8px; height: 8px; border-radius: 50%; background: #52E09C;
-  animation: onlinePulse 2s ease-in-out infinite; flex-shrink: 0;
+  animation: onlinePulse 2.2s ease-in-out infinite; flex-shrink: 0;
 }
 
 /* --- Markdown inside AI bubbles --- */
@@ -179,10 +186,11 @@ body {
   font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
   font-size: 0.86em; border: 1px solid #2A2D3A; white-space: nowrap;
 }
-.md ul  { padding-left: 20px; margin: 6px 0; }
-.md ol  { padding-left: 20px; margin: 6px 0; }
-.md li  { margin-bottom: 5px; line-height: 1.65; color: #D8DBF0; }
-.md p   { margin: 0 0 8px; color: #D8DBF0; }
+.md     { text-align: left; }
+.md ul  { padding-left: 20px; margin: 6px 0; text-align: left; list-style-position: outside; }
+.md ol  { padding-left: 20px; margin: 6px 0; text-align: left; list-style-position: outside; }
+.md li  { margin-bottom: 5px; line-height: 1.65; color: #D8DBF0; text-align: left; }
+.md p   { margin: 0 0 8px; color: #D8DBF0; text-align: left; }
 .md p:last-child { margin: 0; }
 .md .hd { font-weight: 700; margin: 10px 0 5px; color: #F0F0F0; }
 .md .hd:first-child { margin-top: 0; }
@@ -340,9 +348,10 @@ function MessageBubble({ msg }) {
         maxWidth: '75%',
         padding: '12px 16px',
         borderRadius: isUser ? '18px 18px 5px 18px' : '5px 18px 18px 18px',
-        background: isUser ? '#52E09C' : '#1A1D27',
+        background: isUser ? '#52E09C' : '#22253A',
         border: isUser ? 'none' : '1px solid #2A2D3A',
-        color: isUser ? '#0A1A12' : '#D8DBF0',
+        borderLeft: isUser ? undefined : '3px solid #52E09C',
+        color: isUser ? '#0A1A12' : '#F0F0F0',
         fontSize: 15, lineHeight: 1.7,
         boxShadow: isUser
           ? '0 0 20px rgba(82,224,156,0.2), 0 4px 12px rgba(0,0,0,0.3)'
@@ -389,20 +398,26 @@ function Landing({ onChipClick, onSubmit }) {
           </span>
         </div>
 
-        {/* Headline */}
-        <h1 className="land-title" style={{
-          fontSize: 64, fontWeight: 800, color: '#F0F0F0', textAlign: 'center',
-          letterSpacing: '-2px', lineHeight: 1.05, marginBottom: 4,
+        {/* Headline with radial glow */}
+        <div style={{
+          position: 'relative', marginBottom: 22,
+          background: 'radial-gradient(ellipse 60% 40% at 50% 40%, rgba(82,224,156,0.06) 0%, transparent 70%)',
+          paddingTop: 8, paddingBottom: 4,
         }}>
-          Fix any tech problem.
-        </h1>
-        <h1 className="land-title-2" style={{
-          fontSize: 64, fontWeight: 800, color: '#52E09C', textAlign: 'center',
-          letterSpacing: '-2px', lineHeight: 1.05, marginBottom: 22,
-          textShadow: '0 0 40px rgba(82,224,156,0.35)',
-        }}>
-          In minutes.
-        </h1>
+          <h1 className="land-title" style={{
+            fontSize: 64, fontWeight: 800, color: '#F0F0F0', textAlign: 'center',
+            letterSpacing: '-2px', lineHeight: 1.05, marginBottom: 4,
+          }}>
+            Fix any tech problem.
+          </h1>
+          <h1 className="land-title-2" style={{
+            fontSize: 64, fontWeight: 800, color: '#52E09C', textAlign: 'center',
+            letterSpacing: '-2px', lineHeight: 1.05,
+            textShadow: '0 0 40px rgba(82,224,156,0.35)',
+          }}>
+            In minutes.
+          </h1>
+        </div>
 
         {/* Subline */}
         <p className="land-sub" style={{
