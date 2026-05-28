@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Free Tech Help Guides | Koda</title>
+  <meta name="description" content="Step-by-step guides to fix the most common tech problems on iPhone, Android, Windows and Mac. Free help from Koda AI." />
+  <meta name="keywords" content="tech help guides, fix tech problems, iPhone help, computer help, free tech support, how to fix" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://kodahelp.com/guides/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://kodahelp.com/guides/" />
+  <meta property="og:title" content="Free Tech Help Guides | Koda" />
+  <meta property="og:description" content="Step-by-step guides to fix the most common tech problems on iPhone, Android, Windows and Mac. Free help from Koda AI." />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Free Tech Help Guides | Koda" />
+  <meta name="twitter:description" content="Step-by-step guides to fix the most common tech problems on iPhone, Android, Windows and Mac." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0F1117;
+      color: #F0F0F0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    a { color: #52E09C; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Header ── */
+    header {
+      background: #0F1117;
+      border-bottom: 1px solid #2A2D3A;
+      padding: 0 28px;
+      height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      text-decoration: none;
+    }
+    .logo-icon {
+      width: 32px; height: 32px; border-radius: 10px;
+      background: linear-gradient(135deg, #52E09C 0%, #2DB87A 100%);
+      display: flex; align-items: center; justify-content: center;
+      color: #0A1A12; font-weight: 800; font-size: 15px;
+      box-shadow: 0 0 12px rgba(82,224,156,0.3);
+      flex-shrink: 0;
+    }
+    .logo-name {
+      font-size: 16px; font-weight: 700; color: #F0F0F0; letter-spacing: -0.35px;
+    }
+    .header-cta {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: 999px;
+      background: #52E09C; color: #0A1A12;
+      font-size: 13px; font-weight: 700;
+      box-shadow: 0 0 12px rgba(82,224,156,0.25);
+      transition: background 0.14s, box-shadow 0.14s;
+    }
+    .header-cta:hover { background: #6EEAAA; box-shadow: 0 0 20px rgba(82,224,156,0.4); text-decoration: none; }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      padding: 72px 24px 64px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 50% at 50% 30%, rgba(82,224,156,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 5px 14px 5px 10px; border-radius: 999px;
+      background: rgba(82,224,156,0.08);
+      border: 1px solid rgba(82,224,156,0.25);
+      color: #52E09C; font-size: 12.5px; font-weight: 500;
+      letter-spacing: 0.03em; margin-bottom: 24px;
+    }
+    .hero-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #52E09C;
+      box-shadow: 0 0 8px rgba(82,224,156,0.8);
+      display: inline-block;
+    }
+    .hero h1 {
+      font-size: 52px; font-weight: 800; color: #F0F0F0;
+      letter-spacing: -1.6px; line-height: 1.1;
+      margin-bottom: 18px;
+    }
+    .hero h1 span { color: #52E09C; text-shadow: 0 0 32px rgba(82,224,156,0.3); }
+    .hero p {
+      font-size: 18px; color: #8B8FA8; line-height: 1.65;
+      max-width: 520px; margin: 0 auto;
+      font-weight: 400;
+    }
+
+    /* ── Grid ── */
+    .grid-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .card {
+      background: #1A1D27;
+      border: 1px solid #2A2D3A;
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-decoration: none;
+      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: #52E09C;
+      background: rgba(82,224,156,0.04);
+      box-shadow: 0 0 24px rgba(82,224,156,0.1), 0 8px 28px rgba(0,0,0,0.4);
+      text-decoration: none;
+    }
+    .card:active { transform: translateY(-1px); transition-duration: 0.06s; }
+    .card-emoji {
+      font-size: 28px;
+      line-height: 1;
+      display: block;
+    }
+    .card-title {
+      font-size: 15.5px;
+      font-weight: 700;
+      color: #F0F0F0;
+      letter-spacing: -0.2px;
+      line-height: 1.3;
+    }
+    .card-desc {
+      font-size: 13.5px;
+      color: #8B8FA8;
+      line-height: 1.6;
+      flex: 1;
+    }
+    .card-link {
+      font-size: 13px;
+      font-weight: 600;
+      color: #52E09C;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 4px;
+    }
+    .card:hover .card-link { text-decoration: none; gap: 6px; }
+
+    /* ── CTA Section ── */
+    .cta-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+    .cta-box {
+      background: #1A1D27;
+      border: 1px solid #2A2D3A;
+      border-radius: 20px;
+      padding: 48px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-box::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 70% at 50% 100%, rgba(82,224,156,0.06) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .cta-box h2 {
+      font-size: 28px; font-weight: 800; color: #F0F0F0;
+      letter-spacing: -0.6px; margin-bottom: 10px;
+    }
+    .cta-box p {
+      font-size: 16px; color: #8B8FA8; margin-bottom: 28px; line-height: 1.6;
+    }
+    .cta-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #52E09C; color: #0A1A12;
+      font-weight: 700; font-size: 15px;
+      padding: 15px 32px; border-radius: 999px;
+      box-shadow: 0 0 24px rgba(82,224,156,0.35);
+      transition: background 0.15s, box-shadow 0.15s, transform 0.12s;
+    }
+    .cta-btn:hover {
+      background: #6EEAAA;
+      box-shadow: 0 0 36px rgba(82,224,156,0.5);
+      transform: scale(1.03);
+      text-decoration: none;
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid #2A2D3A;
+      padding: 28px 24px;
+      text-align: center;
+      font-size: 13px;
+      color: #8B8FA8;
+    }
+    footer a { color: #8B8FA8; }
+    footer a:hover { color: #52E09C; }
+
+    /* ── Responsive ── */
+    @media (max-width: 620px) {
+      .hero h1  { font-size: 34px; letter-spacing: -0.8px; }
+      .hero p   { font-size: 16px; }
+      .hero     { padding: 52px 20px 48px; }
+      .grid     { grid-template-columns: 1fr; }
+      .cta-box  { padding: 32px 24px; }
+      .cta-box h2 { font-size: 22px; }
+      header    { padding: 0 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <a href="https://kodahelp.com" class="logo">
+      <div class="logo-icon">K</div>
+      <span class="logo-name">Koda</span>
+    </a>
+    <a href="https://kodahelp.com" class="header-cta">Get instant help →</a>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span class="hero-dot"></span>
+      Free guides &mdash; no account needed
+    </div>
+    <h1>Free Tech <span>Help Guides</span></h1>
+    <p>Step-by-step fixes for the most common tech problems. Written in plain English.</p>
+  </section>
+
+  <!-- Article grid -->
+  <section class="grid-section">
+    <div class="grid">
+
+      <a href="how-to-fix-wifi-on-iphone.html" class="card">
+        <span class="card-emoji">📶</span>
+        <div class="card-title">How to Fix WiFi on iPhone (Step-by-Step)</div>
+        <div class="card-desc">iPhone won't connect to WiFi, or keeps dropping the connection? Six fixes that work, in order — from the simple to the definitive.</div>
+        <span class="card-link">Read guide →</span>
+      </a>
+
+      <a href="computer-running-slow-fix.html" class="card">
+        <span class="card-emoji">🐢</span>
+        <div class="card-title">Why Is My Computer So Slow? How to Fix It</div>
+        <div class="card-desc">The most common causes of a sluggish Windows PC or Mac — and how to fix each one without any technical knowledge.</div>
+        <span class="card-link">Read guide →</span>
+      </a>
+
+      <a href="how-to-recover-hacked-account.html" class="card">
+        <span class="card-emoji">🔐</span>
+        <div class="card-title">How to Recover a Hacked or Locked Account</div>
+        <div class="card-desc">Locked out of Google, Apple, Facebook, or your email? Step-by-step recovery instructions — act fast, most accounts can be saved.</div>
+        <span class="card-link">Read guide →</span>
+      </a>
+
+      <a href="printer-not-printing-fix.html" class="card">
+        <span class="card-emoji">🖨️</span>
+        <div class="card-title">Printer Not Printing? Here's How to Fix It</div>
+        <div class="card-desc">Printer says it's ready but nothing comes out? Works for HP, Canon, Epson, and Brother on both Windows and Mac.</div>
+        <span class="card-link">Read guide →</span>
+      </a>
+
+      <a href="iphone-storage-full-fix.html" class="card">
+        <span class="card-emoji">📱</span>
+        <div class="card-title">iPhone Storage Full: What to Delete and How</div>
+        <div class="card-desc">Free up gigabytes in minutes without losing your photos or important data. Covers the fastest and most effective space-saving moves.</div>
+        <span class="card-link">Read guide →</span>
+      </a>
+
+      <a href="app-keeps-crashing-fix.html" class="card">
+        <span class="card-emoji">💥</span>
+        <div class="card-title">App Keeps Crashing? Here's What to Do</div>
+        <div class="card-desc">Whether it's on your phone or computer, app crashes follow a predictable pattern — and a predictable fix. Works on all devices.</div>
+        <span class="card-link">Read guide →</span>
+      </a>
+
+      <a href="how-to-spot-email-scam.html" class="card">
+        <span class="card-emoji">🎣</span>
+        <div class="card-title">How to Tell If an Email Is a Scam or Phishing</div>
+        <div class="card-desc">Seven warning signs that reveal a fake email before you click anything — and what to do if you already did.</div>
+        <span class="card-link">Read guide →</span>
+      </a>
+
+      <a href="how-to-remove-virus-from-computer.html" class="card">
+        <span class="card-emoji">🦠</span>
+        <div class="card-title">How to Remove a Virus From Your Computer</div>
+        <div class="card-desc">Signs your computer is infected, how to remove it safely using free tools, and how to protect yourself going forward.</div>
+        <span class="card-link">Read guide →</span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-box">
+      <h2>Need help right now?</h2>
+      <p>Describe your problem and Koda walks you through the exact fix — step by step, based on your device.</p>
+      <a href="https://kodahelp.com" class="cta-btn">Talk to Koda →</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 <a href="https://kodahelp.com">Koda</a> &nbsp;&middot;&nbsp; <a href="https://kodahelp.com">AI Tech Support</a> &nbsp;&middot;&nbsp; <a href="https://kodahelp.com/guides/">All Guides</a></p>
+  </footer>
+
+</body>
+</html>
