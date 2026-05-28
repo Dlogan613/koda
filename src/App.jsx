@@ -589,7 +589,7 @@ function Chat({ messages, loading, onSend }) {
           {messages.map((m, i) => (
             <div key={i}>
               <MessageBubble msg={m} />
-              {m.role === 'assistant' && m.quickReplies?.length > 0 && i === lastIdx && !loading && (
+              {m.role === 'assistant' && m.quickReplies?.length > 0 && i === lastIdx && (
                 <QuickReplies options={m.quickReplies} onSelect={onSend} />
               )}
             </div>
@@ -716,9 +716,11 @@ export default function App() {
         const err = await res.json().catch(() => ({}));
         throw new Error(err?.error?.message || `HTTP ${res.status}`);
       }
-      const data     = await res.json();
-      const reply    = data.content?.[0]?.text ?? "I didn't catch a response — try again.";
-      const withReply = [...updated, { role: 'assistant', content: reply, quickReplies: parseButtons(reply) }];
+      const data        = await res.json();
+      const reply       = data.content?.[0]?.text ?? "I didn't catch a response — try again.";
+      const assistantMsg = { role: 'assistant', content: reply, quickReplies: parseButtons(reply) };
+      console.log('[koda] message with quickReplies:', JSON.stringify(assistantMsg));
+      const withReply   = [...updated, assistantMsg];
       setMessages(withReply);
     } catch (e) {
       setMessages([...updated, { role: 'assistant', content: `Something went wrong: ${e.message}` }]);
