@@ -174,7 +174,7 @@ body * {
 /* --- Quick reply chips --- */
 .k-qr {
   display: flex; flex-wrap: wrap; gap: 8px;
-  padding: 0 24px 12px; max-width: 760px; margin: 0 auto; width: 100%;
+  padding: 4px 0 8px; width: 100%;
 }
 .k-qr-chip {
   padding: 8px 18px; border-radius: 999px;
@@ -345,6 +345,24 @@ function renderMarkdown(text) {
     }
   }
   return <div className="md">{nodes}</div>;
+}
+
+/* ── Button parsing ─────────────────────────────────────────────────── */
+
+function parseButtons(text) {
+  const t = text.toLowerCase();
+  if (t.includes('what device') || t.includes('which device') || t.includes('device are you') || t.includes('device do you')) return ['iPhone', 'Android', 'Windows PC', 'Mac'];
+  if (t.includes('which app') || t.includes('what app') || t.includes('app is')) return ['Safari/Browser', 'Email', 'Social Media', 'Other app'];
+  if (t.includes('still') && (t.includes('working') || t.includes('fix') || t.includes('help'))) return ['Yes, fixed!', 'Still broken', 'Something changed'];
+  if (t.includes('how long') || t.includes('when did') || t.includes('when did this')) return ['Just now', 'Few days ago', 'Longer'];
+  if (t.includes('windows') && t.includes('mac')) return ['Windows PC', 'Mac'];
+  if (t.includes('iphone') && t.includes('android')) return ['iPhone', 'Android', 'Windows PC', 'Mac'];
+  if (t.includes('restart') || t.includes('restarted') || t.includes('tried')) return ['Yes I tried', 'Not yet', 'Tried, did not work'];
+  if (t.includes('error') && t.includes('message')) return ['Yes, has error', 'No error message', 'Not sure'];
+  if (t.includes('connected') || t.includes('connection')) return ['Yes connected', 'Not connected', 'Keeps dropping'];
+  if (t.includes('update') || t.includes('updated')) return ['Yes updated', 'Not updated', 'Not sure'];
+  if (t.includes('?')) return ['Yes', 'No', 'Not sure'];
+  return ['Tell me more', 'Try something else', 'Start over'];
 }
 
 /* ── Quick replies ──────────────────────────────────────────────────── */
@@ -546,7 +564,7 @@ function Landing({ onChipClick, onSubmit }) {
 
 /* ── Chat ───────────────────────────────────────────────────────────── */
 
-function Chat({ messages, loading, onSend, quickReplies }) {
+function Chat({ messages, loading, onSend }) {
   const [val, setVal] = useState('');
   const endRef   = useRef(null);
   const inputRef = useRef(null);
@@ -561,29 +579,31 @@ function Chat({ messages, loading, onSend, quickReplies }) {
   };
   const onKey = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); go(); } };
 
+  const lastIdx = messages.length - 1;
+
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
       {/* Messages */}
       <div className="k-messages" style={{ paddingLeft: 0, paddingRight: 0 }}>
         <div className="msgs-inner" style={{ padding: '0 24px', display: 'flex', flexDirection: 'column', gap: 20 }}>
-          {messages.map((m, i) => <MessageBubble key={i} msg={m} />)}
+          {messages.map((m, i) => (
+            <div key={i}>
+              <MessageBubble msg={m} />
+              {m.role === 'assistant' && m.quickReplies?.length > 0 && i === lastIdx && !loading && (
+                <QuickReplies options={m.quickReplies} onSelect={onSend} />
+              )}
+            </div>
+          ))}
           {loading && <ThinkingIndicator />}
           <div ref={endRef} />
         </div>
       </div>
 
-      {/* Quick replies */}
-      {quickReplies.length > 0 && (
-        <div style={{ background: 'var(--bg)', paddingTop: 12, borderTop: '1px solid var(--border)' }}>
-          <QuickReplies key={messages.length} options={quickReplies} onSelect={(text) => { onSend(text); }} />
-        </div>
-      )}
-
       {/* Input bar */}
       <div className="chat-input-row" style={{
-        padding: quickReplies.length > 0 ? '4px 24px 28px' : '14px 24px 28px',
+        padding: '14px 24px 28px',
         background: 'var(--bg)',
-        borderTop: quickReplies.length > 0 ? 'none' : '1px solid var(--border)',
+        borderTop: '1px solid var(--border)',
       }}>
         <div className="k-input-bar" style={{ maxWidth: 760, margin: '0 auto', borderRadius: 16 }}>
           <textarea
@@ -658,9 +678,8 @@ export default function App() {
     } catch { return 'landing'; }
   });
 
-  const [loading,      setLoading]      = useState(false);
-  const [quickReplies, setQuickReplies] = useState([]);
-  const [savedPing,    setSavedPing]    = useState(false);
+  const [loading,   setLoading]   = useState(false);
+  const [savedPing, setSavedPing] = useState(false);
 
   // ── Persist messages to localStorage and show "saved" toast
   useEffect(() => {
@@ -671,28 +690,10 @@ export default function App() {
     return () => clearTimeout(t);
   }, [messages]);
 
-  // ── Parse Koda's response to generate contextual quick-reply buttons client-side
-  const parseButtons = (text) => {
-    const t = text.toLowerCase();
-    if (t.includes('what device') || t.includes('which device') || t.includes('device are you') || t.includes('device do you')) return ['iPhone', 'Android', 'Windows PC', 'Mac'];
-    if (t.includes('which app') || t.includes('what app') || t.includes('app is')) return ['Safari/Browser', 'Email', 'Social Media', 'Other app'];
-    if (t.includes('still') && (t.includes('working') || t.includes('fix') || t.includes('help'))) return ['Yes, fixed!', 'Still broken', 'Something changed'];
-    if (t.includes('how long') || t.includes('when did') || t.includes('when did this')) return ['Just now', 'Few days ago', 'Longer'];
-    if (t.includes('windows') && t.includes('mac')) return ['Windows PC', 'Mac'];
-    if (t.includes('iphone') && t.includes('android')) return ['iPhone', 'Android', 'Windows PC', 'Mac'];
-    if (t.includes('restart') || t.includes('restarted') || t.includes('tried')) return ['Yes I tried', 'Not yet', 'Tried, did not work'];
-    if (t.includes('error') && t.includes('message')) return ['Yes, has error', 'No error message', 'Not sure'];
-    if (t.includes('connected') || t.includes('connection')) return ['Yes connected', 'Not connected', 'Keeps dropping'];
-    if (t.includes('update') || t.includes('updated')) return ['Yes updated', 'Not updated', 'Not sure'];
-    if (t.includes('?')) return ['Yes', 'No', 'Not sure'];
-    return ['Tell me more', 'Try something else', 'Start over'];
-  };
-
   // ── Send a message
   const sendMessage = async (content, history = messages) => {
     const updated = [...history, { role: 'user', content }];
     setMessages(updated);
-    setQuickReplies([]);
     setView('chat');
     setLoading(true);
     try {
@@ -717,9 +718,8 @@ export default function App() {
       }
       const data     = await res.json();
       const reply    = data.content?.[0]?.text ?? "I didn't catch a response — try again.";
-      const withReply = [...updated, { role: 'assistant', content: reply }];
+      const withReply = [...updated, { role: 'assistant', content: reply, quickReplies: parseButtons(reply) }];
       setMessages(withReply);
-      setQuickReplies(parseButtons(reply));
     } catch (e) {
       setMessages([...updated, { role: 'assistant', content: `Something went wrong: ${e.message}` }]);
     } finally {
@@ -729,14 +729,13 @@ export default function App() {
 
   const startChat = (text, fresh = false) => {
     const history = fresh ? [] : messages;
-    if (fresh) { setMessages([]); setQuickReplies([]); }
+    if (fresh) { setMessages([]); }
     sendMessage(text, fresh ? [] : history);
   };
 
   const reset = () => {
     setView('landing');
     setMessages([]);
-    setQuickReplies([]);
     try { localStorage.removeItem('koda-messages'); } catch {}
   };
 
@@ -801,7 +800,7 @@ export default function App() {
         {view === 'landing' ? (
           <Landing onChipClick={p => startChat(p.prompt, true)} onSubmit={text => startChat(text, true)} />
         ) : (
-          <Chat messages={messages} loading={loading} onSend={text => sendMessage(text)} quickReplies={quickReplies} />
+          <Chat messages={messages} loading={loading} onSend={text => sendMessage(text)} />
         )}
       </main>
 
