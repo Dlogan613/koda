@@ -674,16 +674,17 @@ export default function App() {
   // ── Parse Koda's response to generate contextual quick-reply buttons client-side
   const parseButtons = (text) => {
     const t = text.toLowerCase();
-    if (t.includes('what device') || t.includes('which device'))
-      return ['iPhone', 'Android', 'Windows PC', 'Mac'];
-    if (t.includes('which app'))
-      return ['Safari/Browser', 'Email', 'Social Media', 'Other app'];
-    if (t.includes('still') && t.includes('working'))
-      return ['Yes, fixed!', 'No, still broken', 'Something changed'];
-    if (t.includes('how long') || t.includes('when did'))
-      return ['Just started', 'A few days', 'Longer'];
-    if (t.includes('yes or no') || (text.trimEnd().endsWith('?') && text.length < 300))
-      return ['Yes', 'No', 'Not sure'];
+    if (t.includes('what device') || t.includes('which device') || t.includes('device are you') || t.includes('device do you')) return ['iPhone', 'Android', 'Windows PC', 'Mac'];
+    if (t.includes('which app') || t.includes('what app') || t.includes('app is')) return ['Safari/Browser', 'Email', 'Social Media', 'Other app'];
+    if (t.includes('still') && (t.includes('working') || t.includes('fix') || t.includes('help'))) return ['Yes, fixed!', 'Still broken', 'Something changed'];
+    if (t.includes('how long') || t.includes('when did') || t.includes('when did this')) return ['Just now', 'Few days ago', 'Longer'];
+    if (t.includes('windows') && t.includes('mac')) return ['Windows PC', 'Mac'];
+    if (t.includes('iphone') && t.includes('android')) return ['iPhone', 'Android', 'Windows PC', 'Mac'];
+    if (t.includes('restart') || t.includes('restarted') || t.includes('tried')) return ['Yes I tried', 'Not yet', 'Tried, did not work'];
+    if (t.includes('error') && t.includes('message')) return ['Yes, has error', 'No error message', 'Not sure'];
+    if (t.includes('connected') || t.includes('connection')) return ['Yes connected', 'Not connected', 'Keeps dropping'];
+    if (t.includes('update') || t.includes('updated')) return ['Yes updated', 'Not updated', 'Not sure'];
+    if (t.includes('?')) return ['Yes', 'No', 'Not sure'];
     return ['Tell me more', 'Try something else', 'Start over'];
   };
 
