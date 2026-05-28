@@ -22,13 +22,13 @@ TONE: Like a calm, brilliant friend sitting next to them. Patient. Never rushed.
 
 const PROBLEMS = [
   { id: 1, icon: '📶', label: 'WiFi & Connectivity', prompt: "My WiFi or internet isn't working." },
-  { id: 2, icon: '🐢', label: 'Slow Computer',       prompt: "My computer is running really slowly." },
-  { id: 3, icon: '🔐', label: 'Login & Passwords',   prompt: "I can't log into my account." },
-  { id: 4, icon: '🖨️', label: 'Printer Problems',    prompt: "My printer isn't working." },
-  { id: 5, icon: '💥', label: 'App Crashing',        prompt: "An app keeps crashing on my computer." },
-  { id: 6, icon: '🦠', label: 'Virus & Malware',     prompt: "I think my device might have a virus." },
-  { id: 7, icon: '📧', label: 'Email Issues',        prompt: "I'm having problems with my email." },
-  { id: 8, icon: '🖥️', label: 'Screen & Display',   prompt: "Something is wrong with my screen or display." },
+  { id: 2, icon: '🐢', label: 'Slow Computer',       prompt: "My device is running really slow." },
+  { id: 3, icon: '🔐', label: 'Login & Passwords',   prompt: "I'm locked out of an account or having password trouble." },
+  { id: 4, icon: '🖨️', label: 'Printer Problems',    prompt: "My printer won't work." },
+  { id: 5, icon: '💥', label: 'App Crashing',        prompt: "An app keeps crashing on me." },
+  { id: 6, icon: '🦠', label: 'Virus & Malware',     prompt: "I'm worried my device might have a virus or something suspicious." },
+  { id: 7, icon: '📧', label: 'Email Issues',        prompt: "I'm having trouble with my email." },
+  { id: 8, icon: '🖥️', label: 'Screen & Display',   prompt: "My screen is having problems." },
 ];
 
 /* ── CSS ────────────────────────────────────────────────────────────── */
@@ -500,14 +500,16 @@ export default function App() {
         },
         body: JSON.stringify({
           model: 'claude-haiku-4-5-20251001',
-          max_tokens: 80,
-          system: 'You generate tap-able quick-reply buttons for a tech support chat. Respond ONLY with valid JSON in this exact format: {"buttons": ["label1", "label2"]}. 2–4 buttons max. Each label must be 1–5 words. If no buttons make sense, return {"buttons": []}. No other text.',
-          messages: [{ role: 'user', content: `Koda just said to a user: "${kodaMessage}"\n\nWhat quick-reply buttons should appear? Match exactly what was asked.` }],
+          max_tokens: 150,
+          system: 'You output ONLY a JSON object — no explanation, no markdown, no extra text. Format: {"buttons":["label1","label2"]}. Rules: 2–4 buttons, each label 1–5 words, match the question asked. If no buttons make sense return {"buttons":[]}.',
+          messages: [{ role: 'user', content: `A tech support assistant just sent this message to a user:\n\n"${kodaMessage}"\n\nOutput the JSON buttons object now.` }],
         }),
       });
       const data = await res.json();
-      const raw  = data.content?.[0]?.text?.trim() ?? '{"buttons":[]}';
-      const json = JSON.parse(raw);
+      const raw  = data.content?.[0]?.text ?? '';
+      // Extract JSON even if the model wraps it in extra text
+      const match = raw.match(/\{[\s\S]*"buttons"[\s\S]*\}/);
+      const json  = match ? JSON.parse(match[0]) : { buttons: [] };
       setQuickReplies(Array.isArray(json.buttons) ? json.buttons.slice(0, 4) : []);
     } catch {
       setQuickReplies([]);
