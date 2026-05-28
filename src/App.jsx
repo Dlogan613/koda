@@ -652,39 +652,20 @@ export default function App() {
     return () => clearTimeout(t);
   }, [messages]);
 
-  // ── Generate context-aware quick-reply buttons using full conversation history
-  const generateButtons = async (kodaMessage, history = []) => {
-    try {
-      // Summarise the last 8 messages so buttons stay contextually relevant
-      const context = history.slice(-8)
-        .map(m => `${m.role === 'user' ? 'User' : 'Koda'}: ${m.content.slice(0, 180)}`)
-        .join('\n');
-
-      const userContent = `Conversation so far:\n${context}\n\nKoda's latest message:\n"${kodaMessage}"\n\nOutput the JSON buttons object. Study the history — if the user's device/platform is already established, never show device-choice buttons again. Make buttons progressively more specific as the conversation develops.`;
-
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': API_KEY,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
-        },
-        body: JSON.stringify({
-          model: 'claude-haiku-4-5-20251001',
-          max_tokens: 150,
-          system: 'You output ONLY a JSON object — no explanation, no markdown, no extra text. Format: {"buttons":["label1","label2"]}. Rules: 2–4 buttons, each label 1–5 words, contextually match what was just asked. Never repeat information the user already provided. If no buttons make sense return {"buttons":[]}.',
-          messages: [{ role: 'user', content: userContent }],
-        }),
-      });
-      const data  = await res.json();
-      const raw   = data.content?.[0]?.text ?? '';
-      const match = raw.match(/\{[\s\S]*"buttons"[\s\S]*\}/);
-      const json  = match ? JSON.parse(match[0]) : { buttons: [] };
-      setQuickReplies(Array.isArray(json.buttons) ? json.buttons.slice(0, 4) : []);
-    } catch {
-      setQuickReplies([]);
-    }
+  // ── Parse Koda's response to generate contextual quick-reply buttons client-side
+  const parseButtons = (text) => {
+    const t = text.toLowerCase();
+    if (t.includes('what device') || t.includes('which device'))
+      return ['iPhone', 'Android', 'Windows PC', 'Mac'];
+    if (t.includes('which app'))
+      return ['Safari/Browser', 'Email', 'Social Media', 'Other app'];
+    if (t.includes('still') && t.includes('working'))
+      return ['Yes, fixed!', 'No, still broken', 'Something changed'];
+    if (t.includes('how long') || t.includes('when did'))
+      return ['Just started', 'A few days', 'Longer'];
+    if (t.includes('yes or no') || (text.trimEnd().endsWith('?') && text.length < 300))
+      return ['Yes', 'No', 'Not sure'];
+    return ['Tell me more', 'Try something else', 'Start over'];
   };
 
   // ── Send a message
@@ -718,7 +699,7 @@ export default function App() {
       const reply    = data.content?.[0]?.text ?? "I didn't catch a response — try again.";
       const withReply = [...updated, { role: 'assistant', content: reply }];
       setMessages(withReply);
-      generateButtons(reply, withReply); // pass full history for smarter buttons
+      setQuickReplies(parseButtons(reply));
     } catch (e) {
       setMessages([...updated, { role: 'assistant', content: `Something went wrong: ${e.message}` }]);
     } finally {
