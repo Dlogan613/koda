@@ -455,9 +455,10 @@ async function generateQuickReplies(history) {
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 150,
+        system: 'You output ONLY a raw JSON array of exactly 3 strings. No markdown, no code fences, no explanation — just the array itself.',
         messages: [{
           role: 'user',
-          content: `Based on this tech support conversation, suggest exactly 3 short follow-up reply buttons the user might want to click next. Each should be a specific action or response — not generic. Max 5 words each. Return ONLY a JSON array of 3 strings, nothing else. No explanation. Example format: ["My WiFi still won't connect", "It worked, thanks!", "Try a different fix"]
+          content: `Based on this tech support conversation, suggest exactly 3 short follow-up reply buttons the user might want to click next. Each should be a specific action or response — not generic. Max 5 words each. Output ONLY the JSON array.
 
 Conversation:
 ${history.slice(-4).map(m => `${m.role}: ${typeof m.content === 'string' ? m.content : m.content[0]?.text || ''}`).join('\n')}`,
@@ -465,8 +466,10 @@ ${history.slice(-4).map(m => `${m.role}: ${typeof m.content === 'string' ? m.con
       }),
     });
     const data = await res.json();
-    const text = data.content[0].text.trim();
-    const buttons = JSON.parse(text);
+    const raw = data.content[0].text.trim();
+    // Extract array even if the model wraps it in markdown code fences
+    const match = raw.match(/\[[\s\S]*\]/);
+    const buttons = JSON.parse(match ? match[0] : raw);
     if (Array.isArray(buttons) && buttons.length > 0) return buttons.slice(0, 3);
     throw new Error('invalid response');
   } catch {
@@ -1040,6 +1043,12 @@ export default function App() {
       generateQuickReplies(withReply).then(buttons => {
         setMessages(prev => prev.map((m, i) =>
           i === prev.length - 1 && m.role === 'assistant' ? { ...m, quickReplies: buttons } : m
+        ));
+      }).catch(() => {
+        setMessages(prev => prev.map((m, i) =>
+          i === prev.length - 1 && m.role === 'assistant'
+            ? { ...m, quickReplies: ['Walk me through it', 'Still having the issue', 'Try something else'] }
+            : m
         ));
       });
     } catch (e) {
