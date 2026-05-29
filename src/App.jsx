@@ -174,11 +174,11 @@ body * {
 /* --- Quick reply chips --- */
 .k-qr {
   display: flex; flex-wrap: wrap; gap: 8px;
-  padding: 4px 0 8px; width: 100%;
+  padding: 10px 0 4px; width: 100%;
 }
 .k-qr-chip {
   padding: 8px 18px; border-radius: 999px;
-  border: 1px solid var(--accent); background: var(--surface);
+  border: 1.5px solid var(--accent); background: var(--surface-2);
   color: var(--accent); font-family: 'Inter', sans-serif;
   font-size: 13.5px; font-weight: 500; cursor: pointer; line-height: 1;
 }
@@ -314,6 +314,10 @@ function renderInline(text, kp = '') {
   return parts;
 }
 
+const LIST_STYLE = { textAlign: 'left', paddingLeft: 20, margin: '6px 0' };
+const LI_STYLE   = { textAlign: 'left', display: 'list-item', marginBottom: 4, lineHeight: 1.65 };
+const P_STYLE    = { textAlign: 'left', margin: '0 0 8px' };
+
 function renderMarkdown(text) {
   const lines = text.split('\n');
   const nodes = [];
@@ -321,30 +325,30 @@ function renderMarkdown(text) {
   while (i < lines.length) {
     const line = lines[i];
     if (/^#{1,3} /.test(line)) {
-      nodes.push(<div key={i} className="hd">{renderInline(line.replace(/^#{1,3} /, ''), `h${i}`)}</div>);
+      nodes.push(<div key={i} className="hd" style={{ textAlign: 'left' }}>{renderInline(line.replace(/^#{1,3} /, ''), `h${i}`)}</div>);
       i++;
     } else if (/^[-*] /.test(line)) {
       const items = [];
       while (i < lines.length && /^[-*] /.test(lines[i])) {
-        items.push(<li key={i}>{renderInline(lines[i].slice(2), `u${i}`)}</li>);
+        items.push(<li key={i} style={LI_STYLE}>{renderInline(lines[i].slice(2), `u${i}`)}</li>);
         i++;
       }
-      nodes.push(<ul key={`ul${i}`}>{items}</ul>);
+      nodes.push(<ul key={`ul${i}`} style={{ ...LIST_STYLE, listStyleType: 'disc', listStylePosition: 'outside' }}>{items}</ul>);
     } else if (/^\d+\. /.test(line)) {
       const items = [];
       while (i < lines.length && /^\d+\. /.test(lines[i])) {
-        items.push(<li key={i}>{renderInline(lines[i].replace(/^\d+\. /, ''), `o${i}`)}</li>);
+        items.push(<li key={i} style={LI_STYLE}>{renderInline(lines[i].replace(/^\d+\. /, ''), `o${i}`)}</li>);
         i++;
       }
-      nodes.push(<ol key={`ol${i}`}>{items}</ol>);
+      nodes.push(<ol key={`ol${i}`} style={{ ...LIST_STYLE, listStyleType: 'decimal', listStylePosition: 'outside' }}>{items}</ol>);
     } else if (line.trim() === '') {
       i++;
     } else {
-      nodes.push(<p key={i}>{renderInline(line, `p${i}`)}</p>);
+      nodes.push(<p key={i} style={P_STYLE}>{renderInline(line, `p${i}`)}</p>);
       i++;
     }
   }
-  return <div className="md">{nodes}</div>;
+  return <div className="md" style={{ textAlign: 'left' }}>{nodes}</div>;
 }
 
 /* ── Button parsing ─────────────────────────────────────────────────── */
