@@ -125,7 +125,7 @@ body * {
     box-shadow       0.28s ease,
     fill             0.22s ease;
 }
-.k-msg-in, .k-dot, .k-online-dot, .k-qr, .k-qr-chip { transition: none !important; }
+.k-msg-in, .k-dot, .k-online-dot, .k-qr, .k-qr-chip, .k-qr-shimmer-chip { transition: none !important; }
 
 /* --- Chip --- */
 .k-chip {
@@ -195,6 +195,22 @@ body * {
   transform: translateY(-1px);
 }
 .k-qr-chip:active, .k-qr-chip.picked { background: var(--accent); color: var(--send-text); transform: translateY(0); }
+
+/* --- Quick reply shimmer --- */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.k-qr-shimmer { display: flex; gap: 8px; padding: 10px 0 4px; }
+.k-qr-shimmer-chip {
+  height: 34px; border-radius: 999px;
+  background: linear-gradient(90deg, var(--surface-2) 25%, var(--border) 50%, var(--surface-2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+.k-qr-shimmer-chip:nth-child(1) { width: 120px; }
+.k-qr-shimmer-chip:nth-child(2) { width: 96px; }
+.k-qr-shimmer-chip:nth-child(3) { width: 108px; }
 
 /* --- New chat button --- */
 .k-new-chat {
@@ -358,22 +374,38 @@ function renderMarkdown(text) {
   return <div className="md" style={{ textAlign: 'left' }}>{nodes}</div>;
 }
 
-/* ── Button parsing ─────────────────────────────────────────────────── */
+/* ── Context-aware quick reply generation ───────────────────────────── */
 
-function parseButtons(text) {
-  const t = text.toLowerCase();
-  if (t.includes('what device') || t.includes('which device') || t.includes('device are you') || t.includes('device do you')) return ['iPhone', 'Android', 'Windows PC', 'Mac'];
-  if (t.includes('which app') || t.includes('what app') || t.includes('app is')) return ['Safari/Browser', 'Email', 'Social Media', 'Other app'];
-  if (t.includes('still') && (t.includes('working') || t.includes('fix') || t.includes('help'))) return ['Yes, fixed!', 'Still broken', 'Something changed'];
-  if (t.includes('how long') || t.includes('when did') || t.includes('when did this')) return ['Just now', 'Few days ago', 'Longer'];
-  if (t.includes('windows') && t.includes('mac')) return ['Windows PC', 'Mac'];
-  if (t.includes('iphone') && t.includes('android')) return ['iPhone', 'Android', 'Windows PC', 'Mac'];
-  if (t.includes('restart') || t.includes('restarted') || t.includes('tried')) return ['Yes I tried', 'Not yet', 'Tried, did not work'];
-  if (t.includes('error') && t.includes('message')) return ['Yes, has error', 'No error message', 'Not sure'];
-  if (t.includes('connected') || t.includes('connection')) return ['Yes connected', 'Not connected', 'Keeps dropping'];
-  if (t.includes('update') || t.includes('updated')) return ['Yes updated', 'Not updated', 'Not sure'];
-  if (t.includes('?')) return ['Yes', 'No', 'Not sure'];
-  return ['Tell me more', 'Try something else', 'Start over'];
+async function generateQuickReplies(history) {
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 150,
+        messages: [{
+          role: 'user',
+          content: `Based on this tech support conversation, suggest exactly 3 short follow-up reply buttons the user might want to click next. Each should be a specific action or response — not generic. Max 5 words each. Return ONLY a JSON array of 3 strings, nothing else. No explanation. Example format: ["My WiFi still won't connect", "It worked, thanks!", "Try a different fix"]
+
+Conversation:
+${history.slice(-4).map(m => `${m.role}: ${typeof m.content === 'string' ? m.content : m.content[0]?.text || ''}`).join('\n')}`,
+        }],
+      }),
+    });
+    const data = await res.json();
+    const text = data.content[0].text.trim();
+    const buttons = JSON.parse(text);
+    if (Array.isArray(buttons) && buttons.length > 0) return buttons.slice(0, 3);
+    throw new Error('invalid response');
+  } catch {
+    return ['Walk me through it', 'Still having the issue', 'Try something else'];
+  }
 }
 
 /* ── Quick replies ──────────────────────────────────────────────────── */
@@ -392,6 +424,16 @@ function QuickReplies({ options, onSelect }) {
           {opt}
         </button>
       ))}
+    </div>
+  );
+}
+
+function QuickRepliesShimmer() {
+  return (
+    <div className="k-qr-shimmer">
+      <div className="k-qr-shimmer-chip" />
+      <div className="k-qr-shimmer-chip" />
+      <div className="k-qr-shimmer-chip" />
     </div>
   );
 }
@@ -600,8 +642,12 @@ function Chat({ messages, loading, onSend }) {
           {messages.map((m, i) => (
             <div key={i}>
               <MessageBubble msg={m} />
-              {m.role === 'assistant' && m.quickReplies?.length > 0 && i === lastIdx && (
-                <QuickReplies options={m.quickReplies} onSelect={onSend} />
+              {m.role === 'assistant' && i === lastIdx && (
+                m.quickReplies === null
+                  ? <QuickRepliesShimmer />
+                  : m.quickReplies?.length > 0
+                    ? <QuickReplies options={m.quickReplies} onSelect={onSend} />
+                    : null
               )}
             </div>
           ))}
@@ -727,15 +773,21 @@ export default function App() {
         const err = await res.json().catch(() => ({}));
         throw new Error(err?.error?.message || `HTTP ${res.status}`);
       }
-      const data        = await res.json();
-      const reply       = data.content?.[0]?.text ?? "I didn't catch a response — try again.";
-      const assistantMsg = { role: 'assistant', content: reply, quickReplies: parseButtons(reply) };
-      console.log('[koda] message with quickReplies:', JSON.stringify(assistantMsg));
-      const withReply   = [...updated, assistantMsg];
+      const data     = await res.json();
+      const reply    = data.content?.[0]?.text ?? "I didn't catch a response — try again.";
+      // quickReplies: null signals the shimmer while the Haiku call runs
+      const withReply = [...updated, { role: 'assistant', content: reply, quickReplies: null }];
       setMessages(withReply);
+      setLoading(false);
+
+      // Generate context-aware buttons non-blocking — update last message when ready
+      generateQuickReplies(withReply).then(buttons => {
+        setMessages(prev => prev.map((m, i) =>
+          i === prev.length - 1 && m.role === 'assistant' ? { ...m, quickReplies: buttons } : m
+        ));
+      });
     } catch (e) {
       setMessages([...updated, { role: 'assistant', content: `Something went wrong: ${e.message}` }]);
-    } finally {
       setLoading(false);
     }
   };
