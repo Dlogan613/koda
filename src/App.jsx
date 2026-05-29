@@ -713,9 +713,9 @@ function Landing({ onChipClick, onSubmit }) {
           marginBottom: 28, letterSpacing: '0.01em',
           animation: 'fadeUp 0.5s ease 0.5s both',
         }}>
-          <span style={{ color: '#C0C4D6', fontWeight: 500 }}>10,000+</span> problems solved
+          Instant answers
           {' · '}
-          Avg fix time: <span style={{ color: '#C0C4D6', fontWeight: 500 }}>4 min</span>
+          Always free
           {' · '}
           No account needed
         </p>
