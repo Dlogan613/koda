@@ -46,14 +46,14 @@ RULES:
 Users may share screenshots or photos of their screen, error messages, or device. When an image is provided, carefully examine it and reference specific details you see — error text, icons, settings screens — in your response. This helps you give much more accurate help.`;
 
 const PROBLEMS = [
-  { id: 1, icon: '📶', label: 'WiFi & Connectivity', prompt: "My WiFi or internet isn't working." },
-  { id: 2, icon: '🐢', label: 'Slow Computer',       prompt: "My device is running really slow." },
-  { id: 3, icon: '🔐', label: 'Login & Passwords',   prompt: "I'm locked out of an account or having password trouble." },
-  { id: 4, icon: '🖨️', label: 'Printer Problems',    prompt: "My printer won't work." },
-  { id: 5, icon: '💥', label: 'App Crashing',        prompt: "An app keeps crashing on me." },
-  { id: 6, icon: '🦠', label: 'Virus & Malware',     prompt: "I'm worried my device might have a virus or something suspicious." },
-  { id: 7, icon: '📧', label: 'Email Issues',        prompt: "I'm having trouble with my email." },
-  { id: 8, icon: '🖥️', label: 'Screen & Display',   prompt: "My screen is having problems." },
+  { id: 1, icon: '🔍', label: 'Help Me Find Something', prompt: "I need help finding or searching for something." },
+  { id: 2, icon: '📖', label: 'Show Me How To Do This',  prompt: "I need a tutorial or step-by-step guide for something on my device." },
+  { id: 3, icon: '🔑', label: 'Login & Account Help',    prompt: "I need help logging in or accessing an account." },
+  { id: 4, icon: '📶', label: 'WiFi & Internet Issues',  prompt: "I'm having WiFi or internet connection problems." },
+  { id: 5, icon: '🛡️', label: 'Virus, Scam or Popup',   prompt: "I think I have a virus, got scammed, or keep seeing scary popups." },
+  { id: 6, icon: '🐢', label: 'My Device Is Slow',       prompt: "My phone or computer is running slow." },
+  { id: 7, icon: '⚙️', label: 'Set Something Up',        prompt: "I need help setting something up on my device or account." },
+  { id: 8, icon: '🆘', label: 'Something Else',          prompt: "I have a different tech problem I need help with." },
 ];
 
 /* ── Learning system ────────────────────────────────────────────────── */
