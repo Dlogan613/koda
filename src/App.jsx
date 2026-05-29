@@ -40,6 +40,54 @@ const PROBLEMS = [
   { id: 8, icon: '🖥️', label: 'Screen & Display',   prompt: "My screen is having problems." },
 ];
 
+/* ── Learning system ────────────────────────────────────────────────── */
+
+const LEARNING_KEY = 'koda_learning';
+const LEARNING_MAX = 200;
+
+const POS_SIGNALS = ['thanks', 'thank you', 'that worked', 'fixed it', 'got it', 'perfect', 'awesome', 'great', 'solved', "you're the best", 'it worked'];
+const NEG_SIGNALS = ["that didn't work", 'still broken', 'not working', "doesn't work", 'still not', "that's wrong", "you're wrong", "that's not right", 'i already tried that', 'not helpful', 'confused', 'what do you mean'];
+
+function detectSignal(text, prevText) {
+  const t = text.toLowerCase();
+  if (POS_SIGNALS.some(s => t.includes(s))) return 'positive';
+  if (NEG_SIGNALS.some(s => t.includes(s))) return 'negative';
+  if (prevText) {
+    const words = str => new Set(str.toLowerCase().split(/\W+/).filter(w => w.length > 3));
+    const curr = words(text);
+    const prev = words(prevText);
+    if (curr.size > 0 && prev.size > 0) {
+      const overlap = [...curr].filter(w => prev.has(w)).length;
+      if (overlap / Math.min(curr.size, prev.size) > 0.4) return 'rephrase';
+    }
+  }
+  return null;
+}
+
+function loadLog() {
+  try { return JSON.parse(localStorage.getItem(LEARNING_KEY) || '[]'); } catch { return []; }
+}
+
+function appendLog(entry) {
+  try {
+    const log = [...loadLog(), entry].slice(-LEARNING_MAX);
+    localStorage.setItem(LEARNING_KEY, JSON.stringify(log));
+  } catch {}
+}
+
+function adaptiveNote(log) {
+  const recent = log.slice(-50);
+  const n = recent.length;
+  if (n < 5) return '';
+  const neg = recent.filter(e => e.signal === 'negative').length;
+  const rep = recent.filter(e => e.signal === 'rephrase').length;
+  const pos = recent.filter(e => e.signal === 'positive').length;
+  if (neg / n > 0.30) return 'Recent conversations suggest users need simpler, shorter responses. Be more concise. Use fewer words per step.';
+  if (rep / n > 0.20) return 'Users have recently struggled to understand responses. Use even simpler language. Confirm understanding after each step.';
+  if (pos / n > 0.60) return 'Users are finding responses helpful. Maintain your current approach.';
+  return '';
+}
+
 /* ── CSS ────────────────────────────────────────────────────────────── */
 
 const CSS = `
@@ -487,6 +535,69 @@ function ThinkingIndicator() {
   );
 }
 
+function AdminPanel() {
+  const [log, setLog] = useState(loadLog);
+  const pos  = log.filter(e => e.signal === 'positive').length;
+  const neg  = log.filter(e => e.signal === 'negative').length;
+  const rep  = log.filter(e => e.signal === 'rephrase').length;
+  const note = adaptiveNote(log);
+
+  const clear = () => { localStorage.removeItem(LEARNING_KEY); setLog([]); };
+
+  const rowColor = { positive: '#52E09C', negative: '#ff6b6b', rephrase: '#f0a500' };
+
+  return (
+    <div style={{
+      position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 500,
+      background: '#0A0C12', borderTop: '2px solid #52E09C',
+      padding: '16px 24px 20px', maxHeight: '42vh', overflowY: 'auto',
+      fontFamily: "'SF Mono','Fira Code',monospace", fontSize: 12, color: '#C0C3D4',
+    }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+        <span style={{ color: '#52E09C', fontWeight: 700, letterSpacing: '0.08em', fontSize: 11 }}>
+          ⚙ KODA LEARNING LOG
+        </span>
+        <button onClick={clear} style={{
+          background: 'none', border: '1px solid #ff6b6b', borderRadius: 6,
+          color: '#ff6b6b', padding: '3px 10px', cursor: 'pointer',
+          fontFamily: 'inherit', fontSize: 11,
+        }}>
+          Clear Learning Data
+        </button>
+      </div>
+
+      <div style={{ display: 'flex', gap: 28, marginBottom: 10, flexWrap: 'wrap' }}>
+        <span>✅ Positive: <strong style={{ color: '#52E09C' }}>{pos}</strong></span>
+        <span>❌ Negative: <strong style={{ color: '#ff6b6b' }}>{neg}</strong></span>
+        <span>🔁 Rephrase: <strong style={{ color: '#f0a500' }}>{rep}</strong></span>
+        <span style={{ color: '#8B8FA8' }}>Total: {log.length} / {LEARNING_MAX}</span>
+      </div>
+
+      {note && (
+        <div style={{
+          marginBottom: 10, padding: '6px 10px',
+          background: '#1A1D27', borderLeft: '3px solid #52E09C',
+          borderRadius: 4, color: '#52E09C', fontSize: 11,
+        }}>
+          Active adaptation: {note}
+        </div>
+      )}
+
+      <div style={{ borderTop: '1px solid #1A1D27', paddingTop: 10 }}>
+        <div style={{ color: '#8B8FA8', marginBottom: 6, fontSize: 11 }}>Last 10 entries (newest first)</div>
+        {log.length === 0 && <div style={{ color: '#3A3D4E' }}>No entries yet.</div>}
+        {[...log].reverse().slice(0, 10).map((e, i) => (
+          <div key={i} style={{ color: rowColor[e.signal] || '#ccc', marginBottom: 4, fontSize: 11 }}>
+            [{new Date(e.timestamp).toLocaleTimeString()}]{' '}
+            <strong>{e.signal.toUpperCase()}</strong>{' '}
+            <span style={{ color: '#8B8FA8' }}>— "{e.topic}" · {e.conversationLength} msgs</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function MessageBubble({ msg }) {
   const isUser = msg.role === 'user';
   return (
@@ -801,6 +912,8 @@ export default function App() {
     } catch { return 'landing'; }
   });
 
+  const isAdmin = new URLSearchParams(window.location.search).get('admin') === '1';
+
   const [loading,    setLoading]    = useState(false);
   const [attachment, setAttachment] = useState(null);
   const [savedPing,  setSavedPing]  = useState(false);
@@ -832,6 +945,18 @@ export default function App() {
     setView('chat');
     setLoading(true);
     setAttachment(null);
+
+    // Detect implicit signal and log it
+    const prevUserMsg = history.filter(m => m.role === 'user').slice(-1)[0]?.content ?? '';
+    const signal = detectSignal(userContent, prevUserMsg);
+    if (signal) {
+      const topic = (history.find(m => m.role === 'user')?.content ?? userContent).slice(0, 80);
+      appendLog({ timestamp: Date.now(), signal, topic, conversationLength: updated.length });
+    }
+
+    // Prepend adaptive note to system prompt when the data warrants it
+    const note = adaptiveNote(loadLog());
+    const effectivePrompt = note ? `${note}\n\n${SYSTEM_PROMPT}` : SYSTEM_PROMPT;
 
     try {
       // Previous turns sent as plain text; current turn may include an image block
@@ -865,7 +990,7 @@ export default function App() {
         body: JSON.stringify({
           model: 'claude-sonnet-4-6',
           max_tokens: 1024,
-          system: SYSTEM_PROMPT,
+          system: effectivePrompt,
           messages: [...prevMessages, currentMsg],
         }),
       });
@@ -967,6 +1092,9 @@ export default function App() {
           <Chat messages={messages} loading={loading} onSend={text => sendMessage(text)} attachment={attachment} setAttachment={setAttachment} />
         )}
       </main>
+
+      {/* Admin learning panel */}
+      {isAdmin && <AdminPanel />}
 
       {/* "Conversation saved" toast */}
       {savedPing && (
