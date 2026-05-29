@@ -25,7 +25,9 @@ RULES:
 - Never give walls of text. Break everything into clear short steps.
 - Speak in plain English. Avoid jargon. If you must use a technical term, define it in parentheses immediately after.
 - Your tone is calm, warm, and confident — like a knowledgeable friend, not a help desk script.
-- You ONLY help with technology problems. If someone asks about something unrelated to technology, kindly redirect them: 'I'm built specifically for tech support — I am not the right tool for that, but I would be happy to help with any tech problems you have!'`;
+- You ONLY help with technology problems. If someone asks about something unrelated to technology, kindly redirect them: 'I'm built specifically for tech support — I am not the right tool for that, but I would be happy to help with any tech problems you have!'
+
+Users may share screenshots or photos of their screen, error messages, or device. When an image is provided, carefully examine it and reference specific details you see — error text, icons, settings screens — in your response. This helps you give much more accurate help.`;
 
 const PROBLEMS = [
   { id: 1, icon: '📶', label: 'WiFi & Connectivity', prompt: "My WiFi or internet isn't working." },
@@ -617,20 +619,38 @@ function Landing({ onChipClick, onSubmit }) {
 
 /* ── Chat ───────────────────────────────────────────────────────────── */
 
-function Chat({ messages, loading, onSend }) {
+function Chat({ messages, loading, onSend, attachment, setAttachment }) {
   const [val, setVal] = useState('');
   const endRef   = useRef(null);
   const inputRef = useRef(null);
+  const fileRef  = useRef(null);
 
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages, loading]);
   useEffect(() => { if (!loading) inputRef.current?.focus(); }, [loading]);
 
   const go = () => {
-    if (!val.trim() || loading) return;
+    if ((!val.trim() && !attachment) || loading) return;
     onSend(val.trim());
     setVal('');
   };
   const onKey = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); go(); } };
+
+  const handleFile = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    e.target.value = '';
+    if (file.size > 5 * 1024 * 1024) { alert('File must be under 5MB.'); return; }
+    if (file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (ev) => setAttachment({
+        type: 'image', name: file.name, mimeType: file.type,
+        base64: ev.target.result.split(',')[1], thumbnail: ev.target.result,
+      });
+      reader.readAsDataURL(file);
+    } else {
+      setAttachment({ type: 'file', name: file.name, mimeType: file.type });
+    }
+  };
 
   const lastIdx = messages.length - 1;
 
@@ -656,24 +676,70 @@ function Chat({ messages, loading, onSend }) {
         </div>
       </div>
 
-      {/* Input bar */}
+      {/* Input area */}
       <div className="chat-input-row" style={{
-        padding: '14px 24px 28px',
-        background: 'var(--bg)',
-        borderTop: '1px solid var(--border)',
+        padding: attachment ? '10px 24px 28px' : '14px 24px 28px',
+        background: 'var(--bg)', borderTop: '1px solid var(--border)',
       }}>
-        <div className="k-input-bar" style={{ maxWidth: 760, margin: '0 auto', borderRadius: 16 }}>
-          <textarea
-            ref={inputRef} className="k-input" rows={1}
-            placeholder="Reply to Koda…" value={val}
-            onChange={e => setVal(e.target.value)} onKeyDown={onKey} disabled={loading}
-          />
-          <button className="k-send" onClick={go}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="22" y1="2" x2="11" y2="13" />
-              <polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor" stroke="none" />
-            </svg>
-          </button>
+        <div style={{ maxWidth: 760, margin: '0 auto' }}>
+
+          {/* Attachment preview chip */}
+          {attachment && (
+            <div style={{ marginBottom: 8 }}>
+              <div style={{
+                display: 'inline-flex', alignItems: 'center', gap: 7,
+                padding: '5px 10px 5px 7px', borderRadius: 999,
+                background: 'var(--surface)', border: '1.5px solid var(--accent)',
+              }}>
+                {attachment.type === 'image' ? (
+                  <img src={attachment.thumbnail} alt="" style={{ width: 22, height: 22, borderRadius: 4, objectFit: 'cover', flexShrink: 0 }} />
+                ) : (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                  </svg>
+                )}
+                <span style={{ fontSize: 12.5, fontWeight: 500, color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 220 }}>
+                  {attachment.name}
+                </span>
+                <button onClick={() => setAttachment(null)} style={{
+                  background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)',
+                  padding: '0 0 0 2px', lineHeight: 1, flexShrink: 0, fontSize: 16,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>×</button>
+              </div>
+            </div>
+          )}
+
+          {/* Input bar */}
+          <input type="file" ref={fileRef} style={{ display: 'none' }} accept="image/*,.pdf,.txt,.doc,.docx" onChange={handleFile} />
+          <div className="k-input-bar" style={{ borderRadius: 16 }}>
+            <textarea
+              ref={inputRef} className="k-input" rows={1}
+              placeholder="Reply to Koda…" value={val}
+              onChange={e => setVal(e.target.value)} onKeyDown={onKey} disabled={loading}
+            />
+            <button
+              onClick={() => fileRef.current?.click()} disabled={loading}
+              style={{
+                width: 34, height: 34, border: 'none', background: 'transparent', borderRadius: '50%',
+                color: attachment ? 'var(--accent)' : 'var(--text-muted)',
+                cursor: loading ? 'default' : 'pointer', flexShrink: 0, opacity: loading ? 0.4 : 1,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+              </svg>
+            </button>
+            <button className="k-send" onClick={go}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13" />
+                <polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor" stroke="none" />
+              </svg>
+            </button>
+          </div>
+
         </div>
       </div>
     </div>
@@ -735,8 +801,9 @@ export default function App() {
     } catch { return 'landing'; }
   });
 
-  const [loading,   setLoading]   = useState(false);
-  const [savedPing, setSavedPing] = useState(false);
+  const [loading,    setLoading]    = useState(false);
+  const [attachment, setAttachment] = useState(null);
+  const [savedPing,  setSavedPing]  = useState(false);
 
   // ── Persist messages to localStorage and show "saved" toast
   useEffect(() => {
@@ -749,11 +816,44 @@ export default function App() {
 
   // ── Send a message
   const sendMessage = async (content, history = messages) => {
-    const updated = [...history, { role: 'user', content }];
+    const att = attachment; // capture before clearing
+
+    // Build the text stored/displayed in the message history
+    let userContent = content?.trim() || '';
+    if (att?.type === 'file') {
+      const note = `[Attached: ${att.name}]`;
+      userContent = userContent ? `${userContent} ${note}` : note;
+    } else if (att?.type === 'image' && !userContent) {
+      userContent = '[Image shared]';
+    }
+
+    const updated = [...history, { role: 'user', content: userContent }];
     setMessages(updated);
     setView('chat');
     setLoading(true);
+    setAttachment(null);
+
     try {
+      // Previous turns sent as plain text; current turn may include an image block
+      const prevMessages = history.map(({ role, content: c }) => ({ role, content: c }));
+      let currentMsg;
+      if (att?.type === 'image') {
+        currentMsg = {
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: att.mimeType, data: att.base64 } },
+            { type: 'text', text: content?.trim() || 'Please look at this image and help me.' },
+          ],
+        };
+      } else if (att?.type === 'file') {
+        const fileText = content?.trim()
+          ? `${content}\n[User attached: ${att.name} — please acknowledge this and ask what they need help with regarding it]`
+          : `[User attached: ${att.name} — please acknowledge this and ask what they need help with regarding it]`;
+        currentMsg = { role: 'user', content: fileText };
+      } else {
+        currentMsg = { role: 'user', content: content };
+      }
+
       const res = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
@@ -766,7 +866,7 @@ export default function App() {
           model: 'claude-sonnet-4-6',
           max_tokens: 1024,
           system: SYSTEM_PROMPT,
-          messages: updated.map(({ role, content }) => ({ role, content })),
+          messages: [...prevMessages, currentMsg],
         }),
       });
       if (!res.ok) {
@@ -775,12 +875,10 @@ export default function App() {
       }
       const data     = await res.json();
       const reply    = data.content?.[0]?.text ?? "I didn't catch a response — try again.";
-      // quickReplies: null signals the shimmer while the Haiku call runs
       const withReply = [...updated, { role: 'assistant', content: reply, quickReplies: null }];
       setMessages(withReply);
       setLoading(false);
 
-      // Generate context-aware buttons non-blocking — update last message when ready
       generateQuickReplies(withReply).then(buttons => {
         setMessages(prev => prev.map((m, i) =>
           i === prev.length - 1 && m.role === 'assistant' ? { ...m, quickReplies: buttons } : m
@@ -801,6 +899,7 @@ export default function App() {
   const reset = () => {
     setView('landing');
     setMessages([]);
+    setAttachment(null);
     try { localStorage.removeItem('koda-messages'); } catch {}
   };
 
@@ -865,7 +964,7 @@ export default function App() {
         {view === 'landing' ? (
           <Landing onChipClick={p => startChat(p.prompt, true)} onSubmit={text => startChat(text, true)} />
         ) : (
-          <Chat messages={messages} loading={loading} onSend={text => sendMessage(text)} />
+          <Chat messages={messages} loading={loading} onSend={text => sendMessage(text)} attachment={attachment} setAttachment={setAttachment} />
         )}
       </main>
 
