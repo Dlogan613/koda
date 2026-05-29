@@ -688,14 +688,14 @@ function Landing({ onChipClick, onSubmit }) {
             fontSize: 64, fontWeight: 800, color: 'var(--text)', textAlign: 'center',
             letterSpacing: '-2px', lineHeight: 1.05, marginBottom: 4,
           }}>
-            Fix any tech problem.
+            Get help with anything tech.
           </h1>
           <h1 className="land-title-2" style={{
             fontSize: 64, fontWeight: 800, color: 'var(--accent)', textAlign: 'center',
             letterSpacing: '-2px', lineHeight: 1.05,
             textShadow: '0 0 40px var(--accent-glow-lg)',
           }}>
-            In minutes.
+            In seconds.
           </h1>
         </div>
 
@@ -704,7 +704,7 @@ function Landing({ onChipClick, onSubmit }) {
           fontSize: 17, color: 'var(--text-muted)', textAlign: 'center',
           lineHeight: 1.7, fontWeight: 400, marginBottom: 28,
         }}>
-          Describe what's wrong. Koda figures it out and guides you<br />through the fix, step by step.
+          Ask anything about your devices, apps, or the internet.<br />Koda guides you through it instantly.
         </p>
 
         {/* Social proof strip */}
@@ -739,7 +739,7 @@ function Landing({ onChipClick, onSubmit }) {
         <div className="k-input-bar" style={{ marginBottom: 14, borderRadius: 16 }}>
           <textarea
             ref={ref} className="k-input" rows={1}
-            placeholder="What's going on with your device?"
+            placeholder="Ask Koda anything about your tech..."
             value={val} onChange={e => setVal(e.target.value)} onKeyDown={onKey}
           />
           <button className="k-send" onClick={go}>
