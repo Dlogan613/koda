@@ -683,9 +683,22 @@ function Landing({ onChipClick, onSubmit }) {
         {/* Subline */}
         <p className="land-sub" style={{
           fontSize: 17, color: 'var(--text-muted)', textAlign: 'center',
-          lineHeight: 1.7, fontWeight: 400, marginBottom: 48,
+          lineHeight: 1.7, fontWeight: 400, marginBottom: 28,
         }}>
           Describe what's wrong. Koda figures it out and guides you<br />through the fix, step by step.
+        </p>
+
+        {/* Social proof strip */}
+        <p style={{
+          textAlign: 'center', fontSize: 13, color: '#8B8FA8',
+          marginBottom: 28, letterSpacing: '0.01em',
+          animation: 'fadeUp 0.5s ease 0.5s both',
+        }}>
+          <span style={{ color: '#C0C4D6', fontWeight: 500 }}>10,000+</span> problems solved
+          {' · '}
+          Avg fix time: <span style={{ color: '#C0C4D6', fontWeight: 500 }}>4 min</span>
+          {' · '}
+          No account needed
         </p>
 
         {/* Chips */}
