@@ -959,12 +959,16 @@ export default function App() {
     setLoading(true);
     setAttachment(null);
 
+    if (history.length === 0) window.plausible?.('Chat Started');
+
     // Detect implicit signal and log it
     const prevUserMsg = history.filter(m => m.role === 'user').slice(-1)[0]?.content ?? '';
     const signal = detectSignal(userContent, prevUserMsg);
     if (signal) {
       const topic = (history.find(m => m.role === 'user')?.content ?? userContent).slice(0, 80);
       appendLog({ timestamp: Date.now(), signal, topic, conversationLength: updated.length });
+      if (signal === 'positive') window.plausible?.('Problem Solved');
+      if (signal === 'negative') window.plausible?.('Problem Not Solved');
     }
 
     // Prepend adaptive note to system prompt when the data warrants it
@@ -1100,7 +1104,10 @@ export default function App() {
       {/* Main */}
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
         {view === 'landing' ? (
-          <Landing onChipClick={p => startChat(p.prompt, true)} onSubmit={text => startChat(text, true)} />
+          <Landing
+            onChipClick={p => { window.plausible?.('Chip Clicked', { props: { category: p.label } }); startChat(p.prompt, true); }}
+            onSubmit={text => startChat(text, true)}
+          />
         ) : (
           <Chat messages={messages} loading={loading} onSend={text => sendMessage(text)} attachment={attachment} setAttachment={setAttachment} />
         )}
