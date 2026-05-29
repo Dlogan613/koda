@@ -996,7 +996,7 @@ export default function App() {
 
     try {
       // Previous turns sent as plain text; current turn may include an image block
-      const prevMessages = history.map(({ role, content: c }) => ({ role, content: c }));
+      const prevMessages = history.slice(-10).map(({ role, content: c }) => ({ role, content: c }));
       let currentMsg;
       if (att?.type === 'image') {
         currentMsg = {
@@ -1025,7 +1025,7 @@ export default function App() {
         },
         body: JSON.stringify({
           model: 'claude-sonnet-4-6',
-          max_tokens: 1024,
+          max_tokens: 800,
           system: effectivePrompt,
           messages: [...prevMessages, currentMsg],
         }),
