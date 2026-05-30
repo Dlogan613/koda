@@ -646,7 +646,7 @@ ${history.slice(-4).map(m => `${m.role}: ${typeof m.content === 'string' ? m.con
 
 /* ── Quick replies ──────────────────────────────────────────────────── */
 
-function QuickReplies({ options, onSelect }) {
+function QuickReplies({ options, onSelect, adminMode = false }) {
   const [picked, setPicked] = useState(null);
   const pick = (opt) => {
     if (picked) return;
@@ -656,7 +656,16 @@ function QuickReplies({ options, onSelect }) {
   return (
     <div className="k-qr">
       {options.map(opt => (
-        <button key={opt} className={'k-qr-chip' + (picked === opt ? ' picked' : '')} onClick={() => pick(opt)}>
+        <button
+          key={opt}
+          className={'k-qr-chip' + (picked === opt ? ' picked' : '')}
+          onClick={() => pick(opt)}
+          style={adminMode ? {
+            borderColor: picked === opt ? '#FFD700' : 'rgba(255,215,0,0.6)',
+            color: picked === opt ? '#0A0D14' : '#FFD700',
+            background: picked === opt ? '#FFD700' : undefined,
+          } : {}}
+        >
           {opt}
         </button>
       ))}
@@ -676,15 +685,17 @@ function QuickRepliesShimmer() {
 
 /* ── Shared components ──────────────────────────────────────────────── */
 
-function KodaLogo({ size = 32, r = 10 }) {
+function KodaLogo({ size = 32, r = 10, adminMode = false }) {
   return (
     <div style={{
       width: size, height: size, borderRadius: r, flexShrink: 0,
-      background: 'var(--logo-g)',
+      background: adminMode ? '#FFD700' : 'var(--logo-g)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      color: 'var(--logo-text)', fontWeight: 800, fontFamily: "'Inter', sans-serif",
+      color: adminMode ? '#0A0D14' : 'var(--logo-text)',
+      fontWeight: 800, fontFamily: "'Inter', sans-serif",
       fontSize: Math.round(size * 0.46), letterSpacing: '-0.5px',
-      userSelect: 'none', boxShadow: '0 0 12px var(--accent-border)',
+      userSelect: 'none',
+      boxShadow: adminMode ? '0 0 12px rgba(255,215,0,0.4)' : '0 0 12px var(--accent-border)',
     }}>K</div>
   );
 }
@@ -692,15 +703,15 @@ function KodaLogo({ size = 32, r = 10 }) {
 function OnlineIndicator({ adminMode }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-      <span className="k-online-dot" />
-      <span style={{ fontSize: 12.5, fontWeight: 500, color: 'var(--accent)', letterSpacing: '0.02em' }}>
+      <span className="k-online-dot" style={adminMode ? { background: '#FFD700', boxShadow: '0 0 8px rgba(255,215,0,0.6)' } : {}} />
+      <span style={{ fontSize: 12.5, fontWeight: 500, color: adminMode ? '#FFD700' : 'var(--accent)', letterSpacing: '0.02em' }}>
         Online
       </span>
       {adminMode && <>
-        <span title="Admin mode active" style={{ fontSize: 13, lineHeight: 1 }}>👑</span>
+        <span title="Admin mode active" style={{ fontSize: 13, lineHeight: 1, textShadow: '0 0 8px rgba(255,215,0,0.8)' }}>👑</span>
         <span title="Turbo mode — Sonnet model active" style={{
-          fontSize: 10.5, fontWeight: 700, color: '#FFD700',
-          background: 'rgba(255,215,0,0.12)', border: '1px solid rgba(255,215,0,0.3)',
+          fontSize: 10.5, fontWeight: 700, color: '#0A0D14',
+          background: '#FFD700', border: '1px solid rgba(255,215,0,0.6)',
           borderRadius: 6, padding: '1px 6px', letterSpacing: '0.04em',
         }}>⚡ Turbo</span>
       </>}
@@ -1022,7 +1033,7 @@ function AdminPanel() {
   );
 }
 
-function MessageBubble({ msg, onReset }) {
+function MessageBubble({ msg, onReset, adminMode = false }) {
   const isUser = msg.role === 'user';
 
   if (msg.content === '__limit__') {
@@ -1060,15 +1071,15 @@ function MessageBubble({ msg, onReset }) {
       <div style={{
         maxWidth: '75%', padding: '12px 16px',
         borderRadius: isUser ? '18px 18px 5px 18px' : '5px 18px 18px 18px',
-        background:   isUser ? 'var(--user-bg)'   : 'var(--koda-bg)',
+        background:   isUser && adminMode ? '#FFD700' : isUser ? 'var(--user-bg)' : 'var(--koda-bg)',
         borderTop:    isUser ? 'none' : '1px solid var(--border)',
         borderRight:  isUser ? 'none' : '1px solid var(--border)',
         borderBottom: isUser ? 'none' : '1px solid var(--border)',
-        borderLeft:   isUser ? 'none' : '3px solid var(--accent)',
-        color:        isUser ? 'var(--user-text)' : 'var(--koda-text)',
+        borderLeft:   isUser ? 'none' : `3px solid ${adminMode ? '#FFD700' : 'var(--accent)'}`,
+        color:        isUser && adminMode ? '#0A0D14' : isUser ? 'var(--user-text)' : 'var(--koda-text)',
         fontSize: 15, lineHeight: 1.7,
         boxShadow: isUser
-          ? '0 0 20px var(--accent-glow), 0 4px 12px var(--shadow-sm)'
+          ? adminMode ? '0 0 20px rgba(255,215,0,0.3), 0 4px 12px var(--shadow-sm)' : '0 0 20px var(--accent-glow), 0 4px 12px var(--shadow-sm)'
           : '0 2px 8px var(--shadow-sm)',
         wordBreak: 'break-word', fontWeight: isUser ? 500 : 400,
         textAlign: 'left',
@@ -1169,8 +1180,9 @@ function Landing({ onChipClick, onSubmit }) {
 
 /* ── Chat ───────────────────────────────────────────────────────────── */
 
-function Chat({ messages, loading, onSend, onReset, attachment, setAttachment }) {
-  const [val, setVal] = useState('');
+function Chat({ messages, loading, onSend, onReset, attachment, setAttachment, adminMode = false }) {
+  const [val, setVal]           = useState('');
+  const [inputFocused, setFocus] = useState(false);
   const endRef   = useRef(null);
   const inputRef = useRef(null);
   const fileRef  = useRef(null);
@@ -1211,12 +1223,12 @@ function Chat({ messages, loading, onSend, onReset, attachment, setAttachment })
         <div className="msgs-inner" style={{ padding: '0 24px', display: 'flex', flexDirection: 'column', gap: 20 }}>
           {messages.map((m, i) => (
             <div key={i}>
-              <MessageBubble msg={m} onReset={onReset} />
+              <MessageBubble msg={m} onReset={onReset} adminMode={adminMode} />
               {m.role === 'assistant' && i === lastIdx && (
                 m.quickReplies === null
                   ? <QuickRepliesShimmer />
                   : m.quickReplies?.length > 0
-                    ? <QuickReplies options={m.quickReplies} onSelect={onSend} />
+                    ? <QuickReplies options={m.quickReplies} onSelect={onSend} adminMode={adminMode} />
                     : null
               )}
             </div>
@@ -1263,11 +1275,18 @@ function Chat({ messages, loading, onSend, onReset, attachment, setAttachment })
 
           {/* Input bar */}
           <input type="file" ref={fileRef} style={{ display: 'none' }} accept="image/*,.pdf,.txt,.doc,.docx" onChange={handleFile} />
-          <div className="k-input-bar" style={{ borderRadius: 16 }}>
+          <div
+            className="k-input-bar"
+            style={{
+              borderRadius: 16,
+              ...(adminMode && inputFocused ? { borderColor: '#FFD700', boxShadow: '0 0 0 3px rgba(255,215,0,0.15)' } : {}),
+            }}
+          >
             <textarea
               ref={inputRef} className="k-input" rows={1}
               placeholder="Reply to Koda…" value={val}
               onChange={e => setVal(e.target.value)} onKeyDown={onKey} disabled={loading}
+              onFocus={() => setFocus(true)} onBlur={() => setFocus(false)}
             />
             <button
               onClick={() => fileRef.current?.click()} disabled={loading}
@@ -1282,7 +1301,10 @@ function Chat({ messages, loading, onSend, onReset, attachment, setAttachment })
                 <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
               </svg>
             </button>
-            <button className="k-send" onClick={go}>
+            <button
+              className="k-send" onClick={go}
+              style={adminMode ? { background: '#FFD700', color: '#0A0D14', boxShadow: '0 0 12px rgba(255,215,0,0.4)' } : {}}
+            >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="22" y1="2" x2="11" y2="13" />
                 <polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor" stroke="none" />
@@ -1631,7 +1653,7 @@ export default function App() {
       }}>
         {/* Logo */}
         <button onClick={reset} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', gap: 9 }}>
-          <KodaLogo size={32} r={10} />
+          <KodaLogo size={32} r={10} adminMode={isAdminMode} />
           <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.35px' }}>Koda</span>
         </button>
 
@@ -1690,7 +1712,7 @@ export default function App() {
             onSubmit={text => sendMessage(text)}
           />
         ) : (
-          <Chat messages={messages} loading={loading} onSend={text => sendMessage(text)} onReset={reset} attachment={attachment} setAttachment={setAttachment} />
+          <Chat messages={messages} loading={loading} onSend={text => sendMessage(text)} onReset={reset} attachment={attachment} setAttachment={setAttachment} adminMode={isAdminMode} />
         )}
       </main>
 
