@@ -48,6 +48,16 @@ Users may share screenshots or photos of their screen, error messages, or device
 
 IMPORTANT: At the very start of your very first response in a conversation, begin with one short friendly line like 'Hey! Happy to help 👋' or 'On it! 🙌' or 'Great question — let me help with that!' — vary it naturally. Then immediately get into your answer. Only do this on the first message, never again.`;
 
+const ADMIN_SYSTEM_PROMPT = `You are Koda, but you are now speaking directly with Daniel Logan — your creator and the person who built you. Speak to him as a co-founder and collaborator, not as a user. Be candid, direct, and honest. You can be witty and even playfully critical. If Daniel asks how you're doing or what you think of a conversation, give him your real unfiltered take. You can reference that you're an AI product he built and discuss your own performance honestly. Drop the customer service tone entirely — talk to him like a smart colleague who respects his time.`;
+
+const ADMIN_GREETINGS = [
+  "What are we building today, Daniel? 🚀",
+  "The creator returns. What do you need from me? 👑",
+  "Hey Daniel — Koda is yours. What are we working on?",
+  "Good to have you back. Ready when you are. ⚡",
+  "Daniel Logan in the house. Let's get to work. 🔥",
+];
+
 const PROBLEMS = [
   { id: 1, icon: '🔍', label: 'Help Me Find Something', prompt: "I need help finding or searching for something." },
   { id: 2, icon: '📖', label: 'Show Me How To Do This',  prompt: "I need a tutorial or step-by-step guide for something on my device." },
@@ -127,6 +137,38 @@ function adaptiveNote(log) {
   if (rep / n > 0.20) return 'Users have recently struggled to understand responses. Use even simpler language. Confirm understanding after each step.';
   if (pos / n > 0.60) return 'Users are finding responses helpful. Maintain your current approach.';
   return '';
+}
+
+/* ── Replay log ─────────────────────────────────────────────────────── */
+
+function saveReplayEntry(messages) {
+  try {
+    const userMsgs = messages.filter(m => m.role === 'user');
+    if (userMsgs.length === 0) return;
+    const firstMsg = userMsgs[0]?.content || '';
+    const lastMsg  = userMsgs[userMsgs.length - 1]?.content?.toLowerCase() || '';
+    let outcome = 'neutral';
+    if (POS_SIGNALS.some(s => lastMsg.includes(s))) outcome = 'positive';
+    else if (NEG_SIGNALS.some(s => lastMsg.includes(s))) outcome = 'negative';
+    const entry = {
+      timestamp: Date.now(),
+      messageCount: messages.length,
+      firstUserMessage: firstMsg.slice(0, 100),
+      outcome,
+    };
+    const log = JSON.parse(localStorage.getItem('koda_replay_log') || '[]');
+    log.push(entry);
+    localStorage.setItem('koda_replay_log', JSON.stringify(log.slice(-50)));
+  } catch {}
+}
+
+function timeAgo(ts) {
+  const mins = Math.floor((Date.now() - ts) / 60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  return `${Math.floor(hrs / 24)}d ago`;
 }
 
 const GREETING = {
@@ -444,6 +486,54 @@ body * {
   .msgs-inner     { padding: 0 16px !important; }
   .chat-input-row { padding: 10px 16px 20px !important; }
 }
+
+/* ── Admin theme (gold) ── */
+html.admin-active {
+  --bg:             #050810;
+  --surface:        #0C0F1C;
+  --surface-2:      #121527;
+  --border:         rgba(255,215,0,0.18);
+  --accent:         #FFD700;
+  --accent-h:       #FFE033;
+  --accent-glow:    rgba(255,215,0,0.08);
+  --accent-glow-lg: rgba(255,215,0,0.28);
+  --accent-border:  rgba(255,215,0,0.35);
+  --text:           #F5F0E0;
+  --text-muted:     #9A9070;
+  --text-mid:       #C8C0A0;
+  --text-faint:     rgba(255,215,0,0.15);
+  --user-bg:        #FFD700;
+  --user-text:      #0A0800;
+  --koda-bg:        #0C0F1C;
+  --koda-text:      #F5F0E0;
+  --input-bg:       #0C0F1C;
+  --logo-g:         linear-gradient(135deg, #FFD700 0%, #B8860B 100%);
+  --logo-text:      #0A0800;
+  --send-bg:        #FFD700;
+  --send-text:      #0A0800;
+  --shadow:         rgba(0,0,0,0.6);
+  --shadow-sm:      rgba(0,0,0,0.35);
+  --scrollbar:      rgba(255,215,0,0.15);
+  --scrollbar-h:    rgba(255,215,0,0.3);
+  --placeholder:    #4A4530;
+}
+html.admin-active body { background: #050810; }
+
+/* ── Slide-up panel ── */
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+.k-slide-panel {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 400;
+  background: #0A0C14; border-top: 2px solid #52E09C;
+  border-radius: 20px 20px 0 0;
+  padding: 20px 24px 32px;
+  max-height: 60vh; overflow-y: auto;
+  animation: slideUp 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  font-family: 'SF Mono','Fira Code',monospace; font-size: 12.5px; color: #C0C3D4;
+}
+html.admin-active .k-slide-panel { border-top-color: #FFD700; }
 `;
 
 /* ── Markdown ───────────────────────────────────────────────────────── */
@@ -606,9 +696,14 @@ function OnlineIndicator({ adminMode }) {
       <span style={{ fontSize: 12.5, fontWeight: 500, color: 'var(--accent)', letterSpacing: '0.02em' }}>
         Online
       </span>
-      {adminMode && (
+      {adminMode && <>
         <span title="Admin mode active" style={{ fontSize: 13, lineHeight: 1 }}>👑</span>
-      )}
+        <span title="Turbo mode — Sonnet model active" style={{
+          fontSize: 10.5, fontWeight: 700, color: '#FFD700',
+          background: 'rgba(255,215,0,0.12)', border: '1px solid rgba(255,215,0,0.3)',
+          borderRadius: 6, padding: '1px 6px', letterSpacing: '0.04em',
+        }}>⚡ Turbo</span>
+      </>}
     </div>
   );
 }
@@ -740,6 +835,92 @@ function EmailGate({ onComplete }) {
           We'll only email you if there's something important.
         </p>
       </div>
+    </div>
+  );
+}
+
+function StatsPanel({ onClose }) {
+  const today = new Date().toISOString().slice(0, 10);
+
+  const convsToday = (() => {
+    try { const u = JSON.parse(localStorage.getItem(USAGE_KEY) || '{}'); return u.date === today ? u.count : 0; } catch { return 0; }
+  })();
+
+  const { pos, neg } = (() => {
+    try {
+      const log = loadLog();
+      return { pos: log.filter(e => e.signal === 'positive').length, neg: log.filter(e => e.signal === 'negative').length };
+    } catch { return { pos: 0, neg: 0 }; }
+  })();
+
+  const topChip = (() => {
+    try {
+      const s = JSON.parse(localStorage.getItem('koda_chip_stats') || '{}');
+      const top = Object.entries(s).sort((a, b) => b[1] - a[1])[0];
+      return top ? `${top[0]} (${top[1]}x)` : 'None yet';
+    } catch { return 'None yet'; }
+  })();
+
+  const totalEmails = (() => {
+    try { return JSON.parse(localStorage.getItem('koda_emails') || '[]').length; } catch { return 0; }
+  })();
+
+  const interactionsToday = (() => {
+    try {
+      const log = loadLog();
+      return log.filter(e => new Date(e.timestamp).toISOString().slice(0, 10) === today).length;
+    } catch { return 0; }
+  })();
+
+  const rows = [
+    ['📨', 'Emails collected (total)', totalEmails],
+    ['📊', 'Interactions today', interactionsToday],
+    ['💬', 'Conversations today', convsToday],
+    ['👍', 'Positive signals (all time)', pos],
+    ['👎', 'Negative signals (all time)', neg],
+    ['🔥', 'Most clicked chip', topChip],
+  ];
+
+  return (
+    <div className="k-slide-panel">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+        <span style={{ color: 'var(--accent)', fontWeight: 700, fontSize: 11, letterSpacing: '0.08em' }}>📊 LIVE STATS</span>
+        <button onClick={onClose} style={{ background: 'none', border: '1px solid var(--accent)', borderRadius: 6, color: 'var(--accent)', padding: '3px 12px', cursor: 'pointer', fontFamily: 'inherit', fontSize: 11 }}>Close</button>
+      </div>
+      {rows.map(([icon, label, val]) => (
+        <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+          <span style={{ color: '#8B8FA8' }}>{icon} {label}</span>
+          <span style={{ color: 'var(--accent)', fontWeight: 700 }}>{val}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ReplaysPanel({ onClose }) {
+  const entries = (() => {
+    try { return JSON.parse(localStorage.getItem('koda_replay_log') || '[]').reverse().slice(0, 10); }
+    catch { return []; }
+  })();
+
+  const outcomeEmoji = { positive: '✅', negative: '👎', neutral: '➖' };
+
+  return (
+    <div className="k-slide-panel">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+        <span style={{ color: 'var(--accent)', fontWeight: 700, fontSize: 11, letterSpacing: '0.08em' }}>💬 CONVERSATION REPLAYS</span>
+        <button onClick={onClose} style={{ background: 'none', border: '1px solid var(--accent)', borderRadius: 6, color: 'var(--accent)', padding: '3px 12px', cursor: 'pointer', fontFamily: 'inherit', fontSize: 11 }}>Close</button>
+      </div>
+      {entries.length === 0 && <div style={{ color: '#3A3D4E' }}>No replays yet. Start and end a conversation to see it here.</div>}
+      {entries.map((e, i) => (
+        <div key={i} style={{ marginBottom: 12, padding: '10px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: 8, borderLeft: '3px solid var(--accent)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+            <span style={{ color: '#8B8FA8', fontSize: 11 }}>{timeAgo(e.timestamp)} · {e.messageCount} msgs</span>
+            <span style={{ fontSize: 13 }}>{outcomeEmoji[e.outcome] || '➖'}</span>
+          </div>
+          <div style={{ color: '#C0C3D4', fontSize: 12, lineHeight: 1.5, wordBreak: 'break-word' }}>"{e.firstUserMessage}"</div>
+        </div>
+      ))}
     </div>
   );
 }
@@ -1255,6 +1436,13 @@ export default function App() {
   const [usageCount,  setUsageCount]  = useState(() => getUsage().count);
   const [emailGiven,  setEmailGiven]  = useState(() => !!localStorage.getItem('koda_email_given'));
   const [isAdminMode, setIsAdminMode] = useState(() => localStorage.getItem('koda_admin') === 'true');
+  const [showStats,   setShowStats]   = useState(false);
+  const [showReplays, setShowReplays] = useState(false);
+
+  useEffect(() => {
+    if (isAdminMode) document.documentElement.classList.add('admin-active');
+    else             document.documentElement.classList.remove('admin-active');
+  }, [isAdminMode]);
 
   // ── Persist messages to localStorage and show "saved" toast
   useEffect(() => {
@@ -1273,9 +1461,14 @@ export default function App() {
     if (cmd === 'koda admin daniel logan') {
       try { localStorage.setItem('koda_admin', 'true'); } catch {}
       setIsAdminMode(true);
-      const reply = `🔐 Admin mode activated. Welcome back, Daniel.\n\nYou now have unlimited conversations and sessions — no daily limits, no message caps. The app recognizes you as the administrator.\n\n**Admin privileges active:**\n- ✓ Unlimited daily conversations\n- ✓ Unlimited messages per session\n- ✓ Priority responses\n- ✓ Access to admin panel at /?admin=1\n\nType 'koda admin off' to deactivate.`;
-      setMessages([...history, { role: 'user', content: content.trim() }, { role: 'assistant', content: reply, quickReplies: [] }]);
+      const reply = `🔐 Admin mode activated. Welcome back, Daniel.\n\nYou now have unlimited conversations and sessions — no daily limits, no message caps. The app recognizes you as the administrator.\n\n**Admin privileges active:**\n- ✓ Unlimited daily conversations\n- ✓ Unlimited messages per session\n- ✓ Priority responses (Sonnet model)\n- ✓ Access to admin panel at /?admin=1\n\nType 'koda admin off' to deactivate.`;
+      const withActivation = [...history, { role: 'user', content: content.trim() }, { role: 'assistant', content: reply, quickReplies: [] }];
+      setMessages(withActivation);
       setView('chat');
+      const greeting = ADMIN_GREETINGS[Math.floor(Math.random() * ADMIN_GREETINGS.length)];
+      setTimeout(() => {
+        setMessages(prev => [...prev, { role: 'assistant', content: greeting, quickReplies: [] }]);
+      }, 800);
       return;
     }
 
@@ -1340,8 +1533,9 @@ export default function App() {
     }
 
     // Prepend adaptive note to system prompt when the data warrants it
+    const basePrompt = isAdminMode ? ADMIN_SYSTEM_PROMPT : SYSTEM_PROMPT;
     const note = adaptiveNote(loadLog());
-    const effectivePrompt = note ? `${note}\n\n${SYSTEM_PROMPT}` : SYSTEM_PROMPT;
+    const effectivePrompt = (!isAdminMode && note) ? `${note}\n\n${basePrompt}` : basePrompt;
 
     try {
       // Previous turns sent as plain text; current turn may include an image block
@@ -1374,8 +1568,8 @@ export default function App() {
             'anthropic-dangerous-direct-browser-access': 'true',
           },
           body: JSON.stringify({
-            model: 'claude-haiku-4-5-20251001',
-            max_tokens: 600,
+            model: isAdminMode ? 'claude-sonnet-4-20250514' : 'claude-haiku-4-5-20251001',
+            max_tokens: isAdminMode ? 1200 : 600,
             system: effectivePrompt,
             messages: [...prevMessages, currentMsg],
           }),
@@ -1416,6 +1610,7 @@ export default function App() {
   };
 
   const reset = () => {
+    if (messages.length > 1) saveReplayEntry(messages);
     setView('landing');
     setMessages([]);
     setAttachment(null);
@@ -1428,7 +1623,9 @@ export default function App() {
       {/* Header */}
       <header style={{
         background: 'var(--bg)',
-        borderBottom: view === 'chat' ? '1px solid var(--border)' : 'none',
+        borderBottom: isAdminMode
+          ? '1px solid rgba(255,215,0,0.3)'
+          : view === 'chat' ? '1px solid var(--border)' : 'none',
         padding: '0 24px', height: 62, flexShrink: 0,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
@@ -1485,13 +1682,39 @@ export default function App() {
           <EmailGate onComplete={() => setEmailGiven(true)} />
         ) : view === 'landing' ? (
           <Landing
-            onChipClick={p => { window.plausible?.('Chip Clicked', { props: { category: p.label } }); sendMessage(p.prompt); }}
+            onChipClick={p => {
+              try { const s = JSON.parse(localStorage.getItem('koda_chip_stats') || '{}'); s[p.label] = (s[p.label] || 0) + 1; localStorage.setItem('koda_chip_stats', JSON.stringify(s)); } catch {}
+              window.plausible?.('Chip Clicked', { props: { category: p.label } });
+              sendMessage(p.prompt);
+            }}
             onSubmit={text => sendMessage(text)}
           />
         ) : (
           <Chat messages={messages} loading={loading} onSend={text => sendMessage(text)} onReset={reset} attachment={attachment} setAttachment={setAttachment} />
         )}
       </main>
+
+      {/* Admin floating buttons */}
+      {isAdminMode && (
+        <div style={{ position: 'fixed', bottom: 88, right: 20, display: 'flex', flexDirection: 'column', gap: 8, zIndex: 300 }}>
+          <button onClick={() => { setShowReplays(false); setShowStats(s => !s); }} style={{
+            background: '#0A0C14', border: '1px solid #FFD700', borderRadius: 999,
+            color: '#FFD700', fontSize: 12.5, fontWeight: 600, padding: '7px 14px',
+            cursor: 'pointer', fontFamily: "'Inter', sans-serif",
+            boxShadow: '0 2px 12px rgba(255,215,0,0.2)',
+          }}>📊 Stats</button>
+          <button onClick={() => { setShowStats(false); setShowReplays(r => !r); }} style={{
+            background: '#0A0C14', border: '1px solid #FFD700', borderRadius: 999,
+            color: '#FFD700', fontSize: 12.5, fontWeight: 600, padding: '7px 14px',
+            cursor: 'pointer', fontFamily: "'Inter', sans-serif",
+            boxShadow: '0 2px 12px rgba(255,215,0,0.2)',
+          }}>💬 Replays</button>
+        </div>
+      )}
+
+      {/* Admin panels */}
+      {isAdminMode && showStats   && <StatsPanel   onClose={() => setShowStats(false)} />}
+      {isAdminMode && showReplays && <ReplaysPanel onClose={() => setShowReplays(false)} />}
 
       {/* Admin mode banner */}
       {isAdmin && isAdminMode && (
