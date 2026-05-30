@@ -1155,43 +1155,36 @@ function GuidePage({ slug }) {
 function DailyLimitScreen() {
   return (
     <div style={{
-      height: '100dvh', display: 'flex', flexDirection: 'column',
-      background: 'var(--bg)', fontFamily: "'Inter', sans-serif",
+      flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
+      padding: '0 24px', fontFamily: "'Inter', sans-serif",
     }}>
-      <header style={{
-        background: 'var(--bg)', borderBottom: '1px solid var(--border)',
-        padding: '0 24px', height: 62, flexShrink: 0,
-        display: 'flex', alignItems: 'center',
-      }}>
-        <a href="/" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none' }}>
-          <KodaLogo size={32} r={10} />
-          <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.35px' }}>Koda</span>
-        </a>
-      </header>
-
-      <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 24px' }}>
-        <div style={{ textAlign: 'center', maxWidth: 420 }}>
-          <div style={{ fontSize: 56, marginBottom: 20 }}>☕</div>
-          <h1 style={{ fontSize: 26, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.5px', marginBottom: 12 }}>
-            You've used Koda 3 times today
-          </h1>
-          <p style={{ fontSize: 16, color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: 24 }}>
-            Koda is free and we want to keep it that way.<br />Come back tomorrow for more help!
-          </p>
-          <p style={{ fontSize: 13.5, color: 'var(--text-muted)', marginBottom: 24 }}>
-            Need urgent help? The guides below are always free.
-          </p>
-          <a href="/guides" style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            background: 'var(--accent)', color: 'var(--send-text)',
-            fontWeight: 700, fontSize: 15, padding: '14px 28px',
-            borderRadius: 999, textDecoration: 'none',
-            boxShadow: '0 0 20px var(--accent-border)',
-          }}>
-            Browse Free Guides →
-          </a>
+      <div style={{ textAlign: 'center', maxWidth: 420 }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
+          <KodaLogo size={56} r={14} />
         </div>
-      </main>
+        <h1 style={{
+          fontSize: 26, fontWeight: 800, color: '#FFFFFF',
+          letterSpacing: '-0.5px', lineHeight: 1.2, marginBottom: 12,
+        }}>
+          You've used Koda 3 times today
+        </h1>
+        <p style={{ fontSize: 16, color: '#8B8FA8', lineHeight: 1.7, marginBottom: 16 }}>
+          Koda is free and we want to keep it that way.<br />Come back tomorrow for more help!
+        </p>
+        <p style={{ fontSize: 13.5, color: '#8B8FA8', marginBottom: 28 }}>
+          Need urgent help? The guides below are always free.
+        </p>
+        <a href="/guides" style={{
+          display: 'inline-flex', alignItems: 'center', gap: 8,
+          background: '#52E09C', color: '#0A1A12',
+          fontWeight: 700, fontSize: 15, padding: '14px 28px',
+          borderRadius: 50, textDecoration: 'none',
+          boxShadow: '0 0 20px rgba(82,224,156,0.3)',
+          fontFamily: "'Inter', sans-serif",
+        }}>
+          Browse Free Guides →
+        </a>
+      </div>
     </div>
   );
 }
@@ -1404,7 +1397,6 @@ export default function App() {
 
   const chatApp = (
     <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', background: 'var(--bg)' }}>
-      <style>{CSS}</style>
 
       {/* Header */}
       <header style={{
@@ -1460,7 +1452,9 @@ export default function App() {
 
       {/* Main */}
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-        {view === 'landing' && !emailGiven ? (
+        {view === 'landing' && usageCount >= 3 ? (
+          <DailyLimitScreen />
+        ) : view === 'landing' && !emailGiven ? (
           <EmailGate onComplete={() => setEmailGiven(true)} />
         ) : view === 'landing' ? (
           <Landing
@@ -1488,6 +1482,8 @@ export default function App() {
   );
 
   return (
+    <>
+    <style>{CSS}</style>
     <Routes>
       <Route path="/guides/reset-apple-id-password"    element={<GuidePage slug="reset-apple-id-password" />} />
       <Route path="/guides/cancel-iphone-subscription" element={<GuidePage slug="cancel-iphone-subscription" />} />
@@ -1499,7 +1495,8 @@ export default function App() {
       <Route path="/guides/update-windows"             element={<GuidePage slug="update-windows" />} />
       <Route path="/guides/fix-phone-battery-drain"    element={<GuidePage slug="fix-phone-battery-drain" />} />
       <Route path="/guides/set-up-new-iphone"          element={<GuidePage slug="set-up-new-iphone" />} />
-      <Route path="*" element={view === 'landing' && usageCount >= 3 ? <DailyLimitScreen /> : chatApp} />
+      <Route path="*" element={chatApp} />
     </Routes>
+    </>
   );
 }
