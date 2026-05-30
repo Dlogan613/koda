@@ -599,13 +599,16 @@ function KodaLogo({ size = 32, r = 10 }) {
   );
 }
 
-function OnlineIndicator() {
+function OnlineIndicator({ adminMode }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
       <span className="k-online-dot" />
       <span style={{ fontSize: 12.5, fontWeight: 500, color: 'var(--accent)', letterSpacing: '0.02em' }}>
         Online
       </span>
+      {adminMode && (
+        <span title="Admin mode active" style={{ fontSize: 13, lineHeight: 1 }}>👑</span>
+      )}
     </div>
   );
 }
@@ -1246,11 +1249,12 @@ export default function App() {
 
   const isAdmin = new URLSearchParams(window.location.search).get('admin') === '1';
 
-  const [loading,    setLoading]    = useState(false);
-  const [attachment, setAttachment] = useState(null);
-  const [savedPing,  setSavedPing]  = useState(false);
-  const [usageCount, setUsageCount] = useState(() => getUsage().count);
-  const [emailGiven, setEmailGiven] = useState(() => !!localStorage.getItem('koda_email_given'));
+  const [loading,     setLoading]     = useState(false);
+  const [attachment,  setAttachment]  = useState(null);
+  const [savedPing,   setSavedPing]   = useState(false);
+  const [usageCount,  setUsageCount]  = useState(() => getUsage().count);
+  const [emailGiven,  setEmailGiven]  = useState(() => !!localStorage.getItem('koda_email_given'));
+  const [isAdminMode, setIsAdminMode] = useState(() => localStorage.getItem('koda_admin') === 'true');
 
   // ── Persist messages to localStorage and show "saved" toast
   useEffect(() => {
@@ -1263,7 +1267,28 @@ export default function App() {
 
   // ── Send a message
   const sendMessage = async (content, history = messages) => {
-    if (history.length >= 20) {
+    const cmd = content?.trim().toLowerCase();
+
+    // ── Admin command: activate
+    if (cmd === 'koda admin daniel logan') {
+      try { localStorage.setItem('koda_admin', 'true'); } catch {}
+      setIsAdminMode(true);
+      const reply = `🔐 Admin mode activated. Welcome back, Daniel.\n\nYou now have unlimited conversations and sessions — no daily limits, no message caps. The app recognizes you as the administrator.\n\n**Admin privileges active:**\n- ✓ Unlimited daily conversations\n- ✓ Unlimited messages per session\n- ✓ Priority responses\n- ✓ Access to admin panel at /?admin=1\n\nType 'koda admin off' to deactivate.`;
+      setMessages([...history, { role: 'user', content: content.trim() }, { role: 'assistant', content: reply, quickReplies: [] }]);
+      setView('chat');
+      return;
+    }
+
+    // ── Admin command: deactivate
+    if (cmd === 'koda admin off') {
+      try { localStorage.setItem('koda_admin', 'false'); } catch {}
+      setIsAdminMode(false);
+      setMessages([...history, { role: 'user', content: content.trim() }, { role: 'assistant', content: 'Admin mode deactivated.', quickReplies: [] }]);
+      setView('chat');
+      return;
+    }
+
+    if (!isAdminMode && history.length >= 20) {
       setMessages([...history, {
         role: 'assistant',
         content: '__limit__',
@@ -1291,14 +1316,16 @@ export default function App() {
     setAttachment(null);
 
     if (history.length === 0) {
-      if (usageCount >= 3) {
+      if (!isAdminMode && usageCount >= 3) {
         setLoading(false);
         setMessages([]);
         setView('landing');
         return;
       }
-      const newCount = incrementUsage();
-      setUsageCount(newCount);
+      if (!isAdminMode) {
+        const newCount = incrementUsage();
+        setUsageCount(newCount);
+      }
       window.plausible?.('Chat Started');
     }
 
@@ -1413,7 +1440,7 @@ export default function App() {
 
         {/* Right controls */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <OnlineIndicator />
+          <OnlineIndicator adminMode={isAdminMode} />
 
           {/* Theme toggle */}
           <button className="k-theme-btn" onClick={toggleTheme} title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
@@ -1452,9 +1479,9 @@ export default function App() {
 
       {/* Main */}
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-        {view === 'landing' && usageCount >= 3 ? (
+        {!isAdminMode && view === 'landing' && usageCount >= 3 ? (
           <DailyLimitScreen />
-        ) : view === 'landing' && !emailGiven ? (
+        ) : !isAdminMode && view === 'landing' && !emailGiven ? (
           <EmailGate onComplete={() => setEmailGiven(true)} />
         ) : view === 'landing' ? (
           <Landing
@@ -1465,6 +1492,18 @@ export default function App() {
           <Chat messages={messages} loading={loading} onSend={text => sendMessage(text)} onReset={reset} attachment={attachment} setAttachment={setAttachment} />
         )}
       </main>
+
+      {/* Admin mode banner */}
+      {isAdmin && isAdminMode && (
+        <div style={{
+          background: 'rgba(82,224,156,0.08)', borderTop: '1px solid rgba(82,224,156,0.25)',
+          padding: '8px 24px', textAlign: 'center',
+          fontSize: 12.5, fontWeight: 600, color: '#52E09C', letterSpacing: '0.02em',
+          fontFamily: "'Inter', sans-serif",
+        }}>
+          👑 Admin Mode Active — Welcome, Daniel
+        </div>
+      )}
 
       {/* Admin learning panel */}
       {isAdmin && <AdminPanel />}
