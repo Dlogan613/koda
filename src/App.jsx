@@ -370,6 +370,10 @@ body * {
 .md .hd:first-child { margin-top: 0; }
 
 /* --- Responsive --- */
+@media (max-width: 480px) {
+  .land-chips              { grid-template-columns: 1fr !important; }
+  .land-chips .k-chip span:nth-child(2) { font-size: 14px !important; }
+}
 @media (max-width: 600px) {
   .land-chips     { grid-template-columns: 1fr 1fr !important; }
   .land-title     { font-size: 36px !important; letter-spacing: -1px !important; }
