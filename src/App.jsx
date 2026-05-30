@@ -165,16 +165,35 @@ const CSS = `
   --user-text:      #FFFFFF;
   --koda-bg:        #FFFFFF;
   --koda-text:      #1A1814;
-  --input-bg:       #F3F1EC;
+  --input-bg:       #FFFFFF;
   --logo-g:         linear-gradient(135deg, #40916C 0%, #2D6A4F 100%);
   --logo-text:      #FFFFFF;
   --send-bg:        #2D6A4F;
   --send-text:      #FFFFFF;
   --shadow:         rgba(0,0,0,0.07);
-  --shadow-sm:      rgba(0,0,0,0.04);
+  --shadow-sm:      rgba(0,0,0,0.08);
   --scrollbar:      #D4D0C8;
   --scrollbar-h:    #C0B8B0;
   --placeholder:    #A8A29E;
+}
+
+/* ── Light mode polish ── */
+:root.light body {
+  background: linear-gradient(135deg, #f8f7f4 0%, #f0ede8 50%, #f5f3ef 100%);
+  background-attachment: fixed;
+}
+:root.light body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse at top left, rgba(82,224,156,0.04) 0%, transparent 60%);
+}
+:root.light header {
+  background: #ffffff !important;
+  border-bottom: 1px solid rgba(0,0,0,0.06) !important;
+}
+:root.light .k-input-bar {
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.1);
 }
 
 /* ── Reset & base ── */
