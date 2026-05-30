@@ -475,6 +475,19 @@ function renderMarkdown(text) {
 
 /* ── Context-aware quick reply generation ───────────────────────────── */
 
+function getErrorMessage(error) {
+  const msg = (error?.message || String(error)).toLowerCase();
+  if (msg.includes('rate_limit') || msg.includes('rate limit') || msg.includes('429'))
+    return "Koda is really busy right now — please try again in a moment! 🙏";
+  if (msg.includes('credit') || msg.includes('billing') || msg.includes('quota') || msg.includes('insufficient'))
+    return "Koda is taking a short break — please try again in a few minutes! ☕";
+  if (msg.includes('invalid x-api-key') || msg.includes('authentication') || msg.includes('401'))
+    return "Koda is temporarily unavailable — please try again shortly! 🔧";
+  if (msg.includes('overloaded') || msg.includes('529'))
+    return "Koda is getting a lot of requests right now — hang tight and try again in a moment! 🌊";
+  return "Something went wrong on our end — please try again! 🔄";
+}
+
 async function generateQuickReplies(history) {
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -1118,7 +1131,7 @@ export default function App() {
       ]);
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        throw new Error(err?.error?.message || `HTTP ${res.status}`);
+        throw new Error(err?.error?.message || `status ${res.status}`);
       }
       const data     = await res.json();
       const reply    = data.content?.[0]?.text ?? "I didn't catch a response — try again.";
@@ -1138,7 +1151,7 @@ export default function App() {
         ));
       });
     } catch (e) {
-      setMessages([...updated, { role: 'assistant', content: `Something went wrong: ${e.message}` }]);
+      setMessages([...updated, { role: 'assistant', content: getErrorMessage(e), quickReplies: [] }]);
       setLoading(false);
     }
   };
