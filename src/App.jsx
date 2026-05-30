@@ -104,6 +104,13 @@ function adaptiveNote(log) {
   return '';
 }
 
+const GREETING = {
+  role: 'assistant',
+  content: "Hey! I'm Koda 👋 Your personal tech assistant. Ask me anything about your devices, apps, wifi, accounts, or anything else tech-related — I'll walk you through it step by step. What can I help you with today?",
+  isGreeting: true,
+  quickReplies: [],
+};
+
 /* ── CSS ────────────────────────────────────────────────────────────── */
 
 const CSS = `
@@ -793,7 +800,7 @@ function Landing({ onChipClick, onSubmit }) {
 
 /* ── Chat ───────────────────────────────────────────────────────────── */
 
-function Chat({ messages, loading, onSend, onReset, attachment, setAttachment }) {
+function Chat({ messages, loading, onSend, onReset, onChipClick, attachment, setAttachment }) {
   const [val, setVal] = useState('');
   const endRef   = useRef(null);
   const inputRef = useRef(null);
@@ -845,6 +852,18 @@ function Chat({ messages, loading, onSend, onReset, attachment, setAttachment })
               )}
             </div>
           ))}
+          {/* Topic chips — shown only before the user sends any message */}
+          {!messages.some(m => m.role === 'user') && !loading && (
+            <div className="land-chips" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+              {PROBLEMS.map(p => (
+                <button key={p.id} className="k-chip" onClick={() => onChipClick(p)}>
+                  <span style={{ fontSize: 16, lineHeight: 1, padding: '5px 7px', background: 'var(--bg)', borderRadius: 8, flexShrink: 0 }}>{p.icon}</span>
+                  <span style={{ fontSize: 13.5, fontWeight: 500, color: 'var(--text)', flex: 1, letterSpacing: '-0.1px' }}>{p.label}</span>
+                  <span style={{ color: 'var(--text-faint)', fontSize: 14, flexShrink: 0 }}>→</span>
+                </button>
+              ))}
+            </div>
+          )}
           {loading && <ThinkingIndicator />}
           <div ref={endRef} />
         </div>
@@ -960,20 +979,16 @@ export default function App() {
     return next;
   });
 
-  // ── Conversation state — restore from localStorage on mount
+  // ── Conversation state — always start with greeting; restore real messages from localStorage
   const [messages, setMessages] = useState(() => {
     try {
       const s = localStorage.getItem('koda-messages');
-      return s ? JSON.parse(s) : [];
-    } catch { return []; }
+      const saved = s ? JSON.parse(s) : [];
+      return saved.length > 0 ? [GREETING, ...saved] : [GREETING];
+    } catch { return [GREETING]; }
   });
 
-  const [view, setView] = useState(() => {
-    try {
-      const s = localStorage.getItem('koda-messages');
-      return s && JSON.parse(s).length > 0 ? 'chat' : 'landing';
-    } catch { return 'landing'; }
-  });
+  const [view, setView] = useState('chat');
 
   const isAdmin = new URLSearchParams(window.location.search).get('admin') === '1';
 
@@ -981,10 +996,11 @@ export default function App() {
   const [attachment, setAttachment] = useState(null);
   const [savedPing,  setSavedPing]  = useState(false);
 
-  // ── Persist messages to localStorage and show "saved" toast
+  // ── Persist messages to localStorage (skip greeting-only state) and show "saved" toast
   useEffect(() => {
-    if (messages.length === 0) return;
-    try { localStorage.setItem('koda-messages', JSON.stringify(messages)); } catch {}
+    const real = messages.filter(m => !m.isGreeting);
+    if (real.length === 0) return;
+    try { localStorage.setItem('koda-messages', JSON.stringify(real)); } catch {}
     setSavedPing(true);
     const t = setTimeout(() => setSavedPing(false), 2000);
     return () => clearTimeout(t);
@@ -992,7 +1008,7 @@ export default function App() {
 
   // ── Send a message
   const sendMessage = async (content, history = messages) => {
-    if (history.length >= 20) {
+    if (history.filter(m => !m.isGreeting).length >= 20) {
       setMessages([...history, {
         role: 'assistant',
         content: '__limit__',
@@ -1019,7 +1035,7 @@ export default function App() {
     setLoading(true);
     setAttachment(null);
 
-    if (history.length === 0) window.plausible?.('Chat Started');
+    if (!history.some(m => m.role === 'user')) window.plausible?.('Chat Started');
 
     // Detect implicit signal and log it
     const prevUserMsg = history.filter(m => m.role === 'user').slice(-1)[0]?.content ?? '';
@@ -1037,7 +1053,7 @@ export default function App() {
 
     try {
       // Previous turns sent as plain text; current turn may include an image block
-      const prevMessages = history.slice(-10).map(({ role, content: c }) => ({ role, content: c }));
+      const prevMessages = history.filter(m => !m.isGreeting).slice(-10).map(({ role, content: c }) => ({ role, content: c }));
       let currentMsg;
       if (att?.type === 'image') {
         currentMsg = {
@@ -1105,8 +1121,7 @@ export default function App() {
   };
 
   const reset = () => {
-    setView('landing');
-    setMessages([]);
+    setMessages([GREETING]);
     setAttachment(null);
     try { localStorage.removeItem('koda-messages'); } catch {}
   };
@@ -1118,7 +1133,7 @@ export default function App() {
       {/* Header */}
       <header style={{
         background: 'var(--bg)',
-        borderBottom: view === 'chat' ? '1px solid var(--border)' : 'none',
+        borderBottom: messages.some(m => m.role === 'user') ? '1px solid var(--border)' : 'none',
         padding: '0 24px', height: 62, flexShrink: 0,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
@@ -1155,7 +1170,7 @@ export default function App() {
             )}
           </button>
 
-          {view === 'chat' && (
+          {messages.some(m => m.role === 'user') && (
             <button className="k-new-chat" onClick={reset}>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="12" y1="5" x2="12" y2="19" />
@@ -1169,14 +1184,12 @@ export default function App() {
 
       {/* Main */}
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-        {view === 'landing' ? (
-          <Landing
-            onChipClick={p => { window.plausible?.('Chip Clicked', { props: { category: p.label } }); startChat(p.prompt, true); }}
-            onSubmit={text => startChat(text, true)}
-          />
-        ) : (
-          <Chat messages={messages} loading={loading} onSend={text => sendMessage(text)} onReset={reset} attachment={attachment} setAttachment={setAttachment} />
-        )}
+        <Chat
+          messages={messages} loading={loading}
+          onSend={text => sendMessage(text)} onReset={reset}
+          onChipClick={p => { window.plausible?.('Chip Clicked', { props: { category: p.label } }); sendMessage(p.prompt); }}
+          attachment={attachment} setAttachment={setAttachment}
+        />
       </main>
 
       {/* Admin learning panel */}
