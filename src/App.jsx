@@ -1091,21 +1091,24 @@ export default function App() {
         currentMsg = { role: 'user', content: content };
       }
 
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': API_KEY,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
-        },
-        body: JSON.stringify({
-          model: 'claude-haiku-4-5-20251001',
-          max_tokens: 600,
-          system: effectivePrompt,
-          messages: [...prevMessages, currentMsg],
+      const [res] = await Promise.all([
+        fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': API_KEY,
+            'anthropic-version': '2023-06-01',
+            'anthropic-dangerous-direct-browser-access': 'true',
+          },
+          body: JSON.stringify({
+            model: 'claude-haiku-4-5-20251001',
+            max_tokens: 600,
+            system: effectivePrompt,
+            messages: [...prevMessages, currentMsg],
+          }),
         }),
-      });
+        new Promise(resolve => setTimeout(resolve, 1200)),
+      ]);
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
         throw new Error(err?.error?.message || `HTTP ${res.status}`);
@@ -1116,7 +1119,7 @@ export default function App() {
       setMessages(withReply);
       setLoading(false);
 
-      generateQuickReplies(withReply).then(buttons => {
+      Promise.all([generateQuickReplies(withReply), new Promise(resolve => setTimeout(resolve, 800))]).then(([buttons]) => {
         setMessages(prev => prev.map((m, i) =>
           i === prev.length - 1 && m.role === 'assistant' ? { ...m, quickReplies: buttons } : m
         ));
