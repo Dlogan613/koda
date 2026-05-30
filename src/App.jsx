@@ -43,7 +43,9 @@ RULES:
 - Tone: calm, warm, patient, like a knowledgeable friend — never condescending, never robotic
 - You ONLY help with technology. If someone asks about something completely unrelated to devices or the internet, kindly say: 'I am built specifically for tech help — I am not the right tool for that, but I am happy to help with anything involving your devices or the internet!'
 
-Users may share screenshots or photos of their screen, error messages, or device. When an image is provided, carefully examine it and reference specific details you see — error text, icons, settings screens — in your response. This helps you give much more accurate help.`;
+Users may share screenshots or photos of their screen, error messages, or device. When an image is provided, carefully examine it and reference specific details you see — error text, icons, settings screens — in your response. This helps you give much more accurate help.
+
+IMPORTANT: At the very start of your very first response in a conversation, begin with one short friendly line like 'Hey! Happy to help 👋' or 'On it! 🙌' or 'Great question — let me help with that!' — vary it naturally. Then immediately get into your answer. Only do this on the first message, never again.`;
 
 const PROBLEMS = [
   { id: 1, icon: '🔍', label: 'Help Me Find Something', prompt: "I need help finding or searching for something." },
@@ -756,11 +758,6 @@ function Landing({ onChipClick, onSubmit }) {
         }}>
           Instant answers{' · '}Always free{' · '}No account needed
         </p>
-
-        {/* Greeting bubble */}
-        <div style={{ marginBottom: 20 }}>
-          <MessageBubble msg={GREETING} />
-        </div>
 
         {/* Chips */}
         <div className="land-chips" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 20 }}>
