@@ -59,6 +59,28 @@ const PROBLEMS = [
   { id: 8, icon: '🆘', label: 'Something Else',          prompt: "I have a different tech problem I need help with." },
 ];
 
+/* ── Daily usage limit ──────────────────────────────────────────────── */
+
+const USAGE_KEY = 'koda_usage';
+
+function getUsage() {
+  try {
+    const today = new Date().toISOString().slice(0, 10);
+    const raw = JSON.parse(localStorage.getItem(USAGE_KEY) || '{}');
+    if (raw.date !== today) return { date: today, count: 0 };
+    return raw;
+  } catch { return { date: new Date().toISOString().slice(0, 10), count: 0 }; }
+}
+
+function incrementUsage() {
+  try {
+    const usage = getUsage();
+    usage.count += 1;
+    localStorage.setItem(USAGE_KEY, JSON.stringify(usage));
+    return usage.count;
+  } catch { return 1; }
+}
+
 /* ── Learning system ────────────────────────────────────────────────── */
 
 const LEARNING_KEY = 'koda_learning';
@@ -975,6 +997,52 @@ function GuidePage({ slug }) {
   );
 }
 
+/* ── Daily limit screen ─────────────────────────────────────────────── */
+
+function DailyLimitScreen() {
+  return (
+    <div style={{
+      height: '100dvh', display: 'flex', flexDirection: 'column',
+      background: 'var(--bg)', fontFamily: "'Inter', sans-serif",
+    }}>
+      <header style={{
+        background: 'var(--bg)', borderBottom: '1px solid var(--border)',
+        padding: '0 24px', height: 62, flexShrink: 0,
+        display: 'flex', alignItems: 'center',
+      }}>
+        <a href="/" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none' }}>
+          <KodaLogo size={32} r={10} />
+          <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.35px' }}>Koda</span>
+        </a>
+      </header>
+
+      <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 24px' }}>
+        <div style={{ textAlign: 'center', maxWidth: 420 }}>
+          <div style={{ fontSize: 56, marginBottom: 20 }}>☕</div>
+          <h1 style={{ fontSize: 26, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.5px', marginBottom: 12 }}>
+            You've used Koda 3 times today
+          </h1>
+          <p style={{ fontSize: 16, color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: 24 }}>
+            Koda is free and we want to keep it that way.<br />Come back tomorrow for more help!
+          </p>
+          <p style={{ fontSize: 13.5, color: 'var(--text-muted)', marginBottom: 24 }}>
+            Need urgent help? The guides below are always free.
+          </p>
+          <a href="/guides" style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            background: 'var(--accent)', color: 'var(--send-text)',
+            fontWeight: 700, fontSize: 15, padding: '14px 28px',
+            borderRadius: 999, textDecoration: 'none',
+            boxShadow: '0 0 20px var(--accent-border)',
+          }}>
+            Browse Free Guides →
+          </a>
+        </div>
+      </main>
+    </div>
+  );
+}
+
 /* ── App root ───────────────────────────────────────────────────────── */
 
 export default function App() {
@@ -1035,6 +1103,7 @@ export default function App() {
   const [loading,    setLoading]    = useState(false);
   const [attachment, setAttachment] = useState(null);
   const [savedPing,  setSavedPing]  = useState(false);
+  const [usageCount, setUsageCount] = useState(() => getUsage().count);
 
   // ── Persist messages to localStorage and show "saved" toast
   useEffect(() => {
@@ -1074,7 +1143,17 @@ export default function App() {
     setLoading(true);
     setAttachment(null);
 
-    if (history.length === 0) window.plausible?.('Chat Started');
+    if (history.length === 0) {
+      if (usageCount >= 3) {
+        setLoading(false);
+        setMessages([]);
+        setView('landing');
+        return;
+      }
+      const newCount = incrementUsage();
+      setUsageCount(newCount);
+      window.plausible?.('Chat Started');
+    }
 
     // Detect implicit signal and log it
     const prevUserMsg = history.filter(m => m.role === 'user').slice(-1)[0]?.content ?? '';
@@ -1264,7 +1343,7 @@ export default function App() {
       <Route path="/guides/update-windows"             element={<GuidePage slug="update-windows" />} />
       <Route path="/guides/fix-phone-battery-drain"    element={<GuidePage slug="fix-phone-battery-drain" />} />
       <Route path="/guides/set-up-new-iphone"          element={<GuidePage slug="set-up-new-iphone" />} />
-      <Route path="*" element={chatApp} />
+      <Route path="*" element={view === 'landing' && usageCount >= 3 ? <DailyLimitScreen /> : chatApp} />
     </Routes>
   );
 }
