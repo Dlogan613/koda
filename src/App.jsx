@@ -617,8 +617,35 @@ function AdminPanel() {
   );
 }
 
-function MessageBubble({ msg }) {
+function MessageBubble({ msg, onReset }) {
   const isUser = msg.role === 'user';
+
+  if (msg.content === '__limit__') {
+    return (
+      <div className="k-msg-in" style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-end', gap: 9 }}>
+        <KodaLogo size={26} r={8} />
+        <div style={{
+          maxWidth: '75%', padding: '16px 18px', borderRadius: '5px 18px 18px 18px',
+          background: 'var(--koda-bg)', border: '1px solid var(--border)',
+          borderLeft: '3px solid var(--accent)', boxShadow: '0 2px 8px var(--shadow-sm)',
+          textAlign: 'left',
+        }}>
+          <p style={{ fontSize: 15, color: 'var(--koda-text)', marginBottom: 12, lineHeight: 1.6 }}>
+            You've reached the limit for this session. Start a new chat to keep going!
+          </p>
+          <button onClick={onReset} style={{
+            padding: '8px 18px', borderRadius: 999, border: 'none',
+            background: 'var(--accent)', color: 'var(--send-text)',
+            fontSize: 13.5, fontWeight: 600, cursor: 'pointer',
+            fontFamily: "'Inter', sans-serif",
+          }}>
+            Start New Chat
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="k-msg-in" style={{
       display: 'flex', justifyContent: isUser ? 'flex-end' : 'flex-start',
@@ -762,7 +789,7 @@ function Landing({ onChipClick, onSubmit }) {
 
 /* ── Chat ───────────────────────────────────────────────────────────── */
 
-function Chat({ messages, loading, onSend, attachment, setAttachment }) {
+function Chat({ messages, loading, onSend, onReset, attachment, setAttachment }) {
   const [val, setVal] = useState('');
   const endRef   = useRef(null);
   const inputRef = useRef(null);
@@ -804,7 +831,7 @@ function Chat({ messages, loading, onSend, attachment, setAttachment }) {
         <div className="msgs-inner" style={{ padding: '0 24px', display: 'flex', flexDirection: 'column', gap: 20 }}>
           {messages.map((m, i) => (
             <div key={i}>
-              <MessageBubble msg={m} />
+              <MessageBubble msg={m} onReset={onReset} />
               {m.role === 'assistant' && i === lastIdx && (
                 m.quickReplies === null
                   ? <QuickRepliesShimmer />
@@ -961,6 +988,16 @@ export default function App() {
 
   // ── Send a message
   const sendMessage = async (content, history = messages) => {
+    if (history.length >= 20) {
+      setMessages([...history, {
+        role: 'assistant',
+        content: '__limit__',
+        quickReplies: [],
+      }]);
+      setView('chat');
+      return;
+    }
+
     const att = attachment; // capture before clearing
 
     // Build the text stored/displayed in the message history
@@ -1024,8 +1061,8 @@ export default function App() {
           'anthropic-dangerous-direct-browser-access': 'true',
         },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 800,
+          model: 'claude-haiku-4-5-20251001',
+          max_tokens: 600,
           system: effectivePrompt,
           messages: [...prevMessages, currentMsg],
         }),
@@ -1134,7 +1171,7 @@ export default function App() {
             onSubmit={text => startChat(text, true)}
           />
         ) : (
-          <Chat messages={messages} loading={loading} onSend={text => sendMessage(text)} attachment={attachment} setAttachment={setAttachment} />
+          <Chat messages={messages} loading={loading} onSend={text => sendMessage(text)} onReset={reset} attachment={attachment} setAttachment={setAttachment} />
         )}
       </main>
 
