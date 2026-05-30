@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 
@@ -923,6 +924,44 @@ function Chat({ messages, loading, onSend, onReset, attachment, setAttachment })
   );
 }
 
+/* ── Guide page ─────────────────────────────────────────────────────── */
+
+function GuidePage({ slug }) {
+  const [bodyHtml, setBodyHtml] = useState('');
+  const [guideStyles, setGuideStyles] = useState('');
+
+  useEffect(() => {
+    fetch(`/guides/${slug}.html`)
+      .then(r => r.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        document.title = doc.title;
+        const styleEl = doc.querySelector('style');
+        setGuideStyles(styleEl?.textContent || '');
+        setBodyHtml(doc.body.innerHTML);
+      })
+      .catch(() => {
+        setBodyHtml('<p style="color:#C0C3D4;padding:40px">Guide not found.</p>');
+      });
+  }, [slug]);
+
+  if (!bodyHtml) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100dvh', background: '#0F1117', color: '#8B8FA8', fontFamily: 'Inter, sans-serif' }}>
+        Loading…
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <style>{guideStyles}</style>
+      <div dangerouslySetInnerHTML={{ __html: bodyHtml }} />
+    </>
+  );
+}
+
 /* ── App root ───────────────────────────────────────────────────────── */
 
 export default function App() {
@@ -1117,7 +1156,7 @@ export default function App() {
     try { localStorage.removeItem('koda-messages'); } catch {}
   };
 
-  return (
+  const chatApp = (
     <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', background: 'var(--bg)' }}>
       <style>{CSS}</style>
 
@@ -1198,5 +1237,21 @@ export default function App() {
         </div>
       )}
     </div>
+  );
+
+  return (
+    <Routes>
+      <Route path="/guides/reset-apple-id-password"    element={<GuidePage slug="reset-apple-id-password" />} />
+      <Route path="/guides/cancel-iphone-subscription" element={<GuidePage slug="cancel-iphone-subscription" />} />
+      <Route path="/guides/transfer-iphone-photos"     element={<GuidePage slug="transfer-iphone-photos" />} />
+      <Route path="/guides/clear-iphone-storage"       element={<GuidePage slug="clear-iphone-storage" />} />
+      <Route path="/guides/connect-bluetooth-headphones" element={<GuidePage slug="connect-bluetooth-headphones" />} />
+      <Route path="/guides/share-wifi-password"        element={<GuidePage slug="share-wifi-password" />} />
+      <Route path="/guides/stop-spam-calls"            element={<GuidePage slug="stop-spam-calls" />} />
+      <Route path="/guides/update-windows"             element={<GuidePage slug="update-windows" />} />
+      <Route path="/guides/fix-phone-battery-drain"    element={<GuidePage slug="fix-phone-battery-drain" />} />
+      <Route path="/guides/set-up-new-iphone"          element={<GuidePage slug="set-up-new-iphone" />} />
+      <Route path="*" element={chatApp} />
+    </Routes>
   );
 }
