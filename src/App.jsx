@@ -388,6 +388,15 @@ body * {
   animation: onlinePulse 2.2s ease-in-out infinite; flex-shrink: 0;
 }
 
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-7px); }
+  40%       { transform: translateX(7px); }
+  60%       { transform: translateX(-5px); }
+  80%       { transform: translateX(5px); }
+}
+.k-shake { animation: shake 0.38s ease; }
+
 @keyframes toastIn {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -622,14 +631,133 @@ function ThinkingIndicator() {
   );
 }
 
+function EmailGate({ onComplete }) {
+  const [email, setEmail]   = useState('');
+  const [error, setError]   = useState('');
+  const [shaking, setShake] = useState(false);
+  const inputRef = useRef(null);
+
+  const isValidEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+
+  const shake = () => {
+    setShake(true);
+    setTimeout(() => setShake(false), 400);
+  };
+
+  const submit = () => {
+    if (!isValidEmail(email)) {
+      setError('Please enter a valid email address.');
+      shake();
+      inputRef.current?.focus();
+      return;
+    }
+    setError('');
+    try {
+      const existing = JSON.parse(localStorage.getItem('koda_emails') || '[]');
+      if (!existing.includes(email.trim())) {
+        localStorage.setItem('koda_emails', JSON.stringify([...existing, email.trim()]));
+      }
+      localStorage.setItem('koda_user_email', email.trim());
+      localStorage.setItem('koda_email_given', 'true');
+    } catch {}
+    onComplete();
+  };
+
+  const onKey = e => { if (e.key === 'Enter') submit(); };
+
+  return (
+    <div style={{
+      flex: 1, display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center',
+      padding: '0 24px',
+    }}>
+      <div style={{ width: '100%', maxWidth: 400, textAlign: 'center' }}>
+
+        {/* Logo */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
+          <KodaLogo size={56} r={16} />
+        </div>
+
+        <h1 style={{
+          fontSize: 28, fontWeight: 800, color: 'var(--text)',
+          letterSpacing: '-0.6px', lineHeight: 1.2, marginBottom: 12,
+        }}>
+          Get instant tech help — free
+        </h1>
+
+        <p style={{
+          fontSize: 15, color: 'var(--text-muted)', lineHeight: 1.65, marginBottom: 28,
+        }}>
+          Enter your email to start. No password, no account, no spam.
+        </p>
+
+        {/* Input */}
+        <input
+          ref={inputRef}
+          type="email"
+          value={email}
+          onChange={e => { setEmail(e.target.value); setError(''); }}
+          onKeyDown={onKey}
+          placeholder="you@example.com"
+          className={shaking ? 'k-shake' : ''}
+          style={{
+            width: '100%', padding: '13px 18px',
+            background: '#1A1D27', color: 'var(--text)',
+            border: error ? '1.5px solid #ff6b6b' : '1.5px solid var(--border)',
+            borderRadius: 12, fontSize: 15, fontFamily: "'Inter', sans-serif",
+            outline: 'none', marginBottom: error ? 8 : 12,
+            boxSizing: 'border-box',
+          }}
+          onFocus={e => { if (!error) e.target.style.borderColor = '#52E09C'; }}
+          onBlur={e => { if (!error) e.target.style.borderColor = 'var(--border)'; }}
+        />
+
+        {error && (
+          <p style={{ fontSize: 13, color: '#ff6b6b', marginBottom: 12, textAlign: 'left' }}>
+            {error}
+          </p>
+        )}
+
+        {/* Submit */}
+        <button
+          onClick={submit}
+          style={{
+            width: '100%', padding: '14px', borderRadius: 12, border: 'none',
+            background: 'var(--accent)', color: 'var(--send-text)',
+            fontSize: 15, fontWeight: 700, cursor: 'pointer',
+            fontFamily: "'Inter', sans-serif",
+            boxShadow: '0 0 20px var(--accent-border)',
+            marginBottom: 14,
+          }}
+        >
+          Start chatting →
+        </button>
+
+        <p style={{ fontSize: 12.5, color: 'var(--text-muted)' }}>
+          We'll only email you if there's something important.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function AdminPanel() {
   const [log, setLog] = useState(loadLog);
+  const [emails, setEmails] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('koda_emails') || '[]'); } catch { return []; }
+  });
   const pos  = log.filter(e => e.signal === 'positive').length;
   const neg  = log.filter(e => e.signal === 'negative').length;
   const rep  = log.filter(e => e.signal === 'rephrase').length;
   const note = adaptiveNote(log);
 
   const clear = () => { localStorage.removeItem(LEARNING_KEY); setLog([]); };
+  const clearEmails = () => {
+    localStorage.removeItem('koda_emails');
+    localStorage.removeItem('koda_user_email');
+    localStorage.removeItem('koda_email_given');
+    setEmails([]);
+  };
 
   const rowColor = { positive: '#52E09C', negative: '#ff6b6b', rephrase: '#f0a500' };
 
@@ -680,6 +808,31 @@ function AdminPanel() {
             <span style={{ color: '#8B8FA8' }}>— "{e.topic}" · {e.conversationLength} msgs</span>
           </div>
         ))}
+      </div>
+
+      <div style={{ borderTop: '1px solid #1A1D27', paddingTop: 10, marginTop: 10 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+          <span style={{ color: '#52E09C', fontWeight: 700, letterSpacing: '0.08em', fontSize: 11 }}>
+            📧 COLLECTED EMAILS ({emails.length})
+          </span>
+          {emails.length > 0 && (
+            <button onClick={clearEmails} style={{
+              background: 'none', border: '1px solid #ff6b6b', borderRadius: 6,
+              color: '#ff6b6b', padding: '3px 10px', cursor: 'pointer',
+              fontFamily: 'inherit', fontSize: 11,
+            }}>
+              Clear Emails
+            </button>
+          )}
+        </div>
+        {emails.length === 0
+          ? <div style={{ color: '#3A3D4E' }}>No emails collected yet.</div>
+          : emails.map((em, i) => (
+            <div key={i} style={{ color: '#C0C3D4', marginBottom: 3, fontSize: 11 }}>
+              {i + 1}. {em}
+            </div>
+          ))
+        }
       </div>
     </div>
   );
@@ -1104,6 +1257,7 @@ export default function App() {
   const [attachment, setAttachment] = useState(null);
   const [savedPing,  setSavedPing]  = useState(false);
   const [usageCount, setUsageCount] = useState(() => getUsage().count);
+  const [emailGiven, setEmailGiven] = useState(() => !!localStorage.getItem('koda_email_given'));
 
   // ── Persist messages to localStorage and show "saved" toast
   useEffect(() => {
@@ -1306,7 +1460,9 @@ export default function App() {
 
       {/* Main */}
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-        {view === 'landing' ? (
+        {view === 'landing' && !emailGiven ? (
+          <EmailGate onComplete={() => setEmailGiven(true)} />
+        ) : view === 'landing' ? (
           <Landing
             onChipClick={p => { window.plausible?.('Chip Clicked', { props: { category: p.label } }); sendMessage(p.prompt); }}
             onSubmit={text => sendMessage(text)}
