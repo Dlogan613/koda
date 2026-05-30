@@ -715,40 +715,24 @@ function Landing({ onChipClick, onSubmit }) {
   return (
     <div className="land-wrap" style={{
       flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center',
-      justifyContent: 'center', padding: '48px 24px 48px', overflowY: 'auto',
+      justifyContent: 'flex-start', padding: '40px 24px 40px', overflowY: 'auto',
     }}>
       <div style={{ width: '100%', maxWidth: 680 }}>
 
-        {/* Badge */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 32 }}>
-          <span style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            padding: '6px 16px 6px 10px', borderRadius: 999,
-            background: 'var(--accent-glow)', border: '1px solid var(--accent-border)',
-            color: 'var(--accent)', fontSize: 12.5, fontWeight: 500, letterSpacing: '0.03em',
-          }}>
-            <span style={{
-              width: 7, height: 7, borderRadius: '50%', background: 'var(--accent)',
-              display: 'inline-block', boxShadow: '0 0 8px var(--accent-glow-lg)',
-            }} />
-            AI Tech Support — Always On
-          </span>
-        </div>
-
-        {/* Headline with radial glow */}
+        {/* Hero */}
         <div style={{
-          position: 'relative', marginBottom: 22,
+          position: 'relative', marginBottom: 20, textAlign: 'center',
           background: 'radial-gradient(ellipse 60% 40% at 50% 40%, var(--accent-glow) 0%, transparent 70%)',
           paddingTop: 8, paddingBottom: 4,
         }}>
           <h1 className="land-title" style={{
-            fontSize: 64, fontWeight: 800, color: 'var(--text)', textAlign: 'center',
+            fontSize: 56, fontWeight: 800, color: 'var(--text)',
             letterSpacing: '-2px', lineHeight: 1.05, marginBottom: 4,
           }}>
             Get help with anything tech.
           </h1>
           <h1 className="land-title-2" style={{
-            fontSize: 64, fontWeight: 800, color: 'var(--accent)', textAlign: 'center',
+            fontSize: 56, fontWeight: 800, color: 'var(--accent)',
             letterSpacing: '-2px', lineHeight: 1.05,
             textShadow: '0 0 40px var(--accent-glow-lg)',
           }}>
@@ -758,8 +742,8 @@ function Landing({ onChipClick, onSubmit }) {
 
         {/* Subline */}
         <p className="land-sub" style={{
-          fontSize: 17, color: 'var(--text-muted)', textAlign: 'center',
-          lineHeight: 1.7, fontWeight: 400, marginBottom: 28,
+          fontSize: 16, color: 'var(--text-muted)', textAlign: 'center',
+          lineHeight: 1.7, fontWeight: 400, marginBottom: 16,
         }}>
           Ask anything about your devices, apps, or the internet.<br />Koda guides you through it instantly.
         </p>
@@ -767,18 +751,19 @@ function Landing({ onChipClick, onSubmit }) {
         {/* Social proof strip */}
         <p style={{
           textAlign: 'center', fontSize: 13, color: '#8B8FA8',
-          marginBottom: 28, letterSpacing: '0.01em',
+          marginBottom: 24, letterSpacing: '0.01em',
           animation: 'fadeUp 0.5s ease 0.5s both',
         }}>
-          Instant answers
-          {' · '}
-          Always free
-          {' · '}
-          No account needed
+          Instant answers{' · '}Always free{' · '}No account needed
         </p>
 
+        {/* Greeting bubble */}
+        <div style={{ marginBottom: 20 }}>
+          <MessageBubble msg={GREETING} />
+        </div>
+
         {/* Chips */}
-        <div className="land-chips" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 24 }}>
+        <div className="land-chips" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 20 }}>
           {PROBLEMS.map(p => (
             <button key={p.id} className="k-chip" onClick={() => onChipClick(p)}>
               <span style={{ fontSize: 16, lineHeight: 1, padding: '5px 7px', background: 'var(--bg)', borderRadius: 8, flexShrink: 0 }}>
@@ -793,7 +778,7 @@ function Landing({ onChipClick, onSubmit }) {
         </div>
 
         {/* Input bar */}
-        <div className="k-input-bar" style={{ marginBottom: 14, borderRadius: 16 }}>
+        <div className="k-input-bar" style={{ borderRadius: 16 }}>
           <textarea
             ref={ref} className="k-input" rows={1}
             placeholder="Ask Koda anything about your tech..."
@@ -807,11 +792,6 @@ function Landing({ onChipClick, onSubmit }) {
           </button>
         </div>
 
-        {/* Footer note */}
-        <p style={{ textAlign: 'center', fontSize: 12.5, color: 'var(--text-faint)', letterSpacing: '0.02em' }}>
-          No account needed · Instant answers · Completely free
-        </p>
-
       </div>
     </div>
   );
@@ -819,7 +799,7 @@ function Landing({ onChipClick, onSubmit }) {
 
 /* ── Chat ───────────────────────────────────────────────────────────── */
 
-function Chat({ messages, loading, onSend, onReset, onChipClick, attachment, setAttachment }) {
+function Chat({ messages, loading, onSend, onReset, attachment, setAttachment }) {
   const [val, setVal] = useState('');
   const endRef   = useRef(null);
   const inputRef = useRef(null);
@@ -871,18 +851,6 @@ function Chat({ messages, loading, onSend, onReset, onChipClick, attachment, set
               )}
             </div>
           ))}
-          {/* Topic chips — shown only before the user sends any message */}
-          {!messages.some(m => m.role === 'user') && !loading && (
-            <div className="land-chips" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-              {PROBLEMS.map(p => (
-                <button key={p.id} className="k-chip" onClick={() => onChipClick(p)}>
-                  <span style={{ fontSize: 16, lineHeight: 1, padding: '5px 7px', background: 'var(--bg)', borderRadius: 8, flexShrink: 0 }}>{p.icon}</span>
-                  <span style={{ fontSize: 13.5, fontWeight: 500, color: 'var(--text)', flex: 1, letterSpacing: '-0.1px' }}>{p.label}</span>
-                  <span style={{ color: 'var(--text-faint)', fontSize: 14, flexShrink: 0 }}>→</span>
-                </button>
-              ))}
-            </div>
-          )}
           {loading && <ThinkingIndicator />}
           <div ref={endRef} />
         </div>
@@ -998,16 +966,20 @@ export default function App() {
     return next;
   });
 
-  // ── Conversation state — always start with greeting; restore real messages from localStorage
+  // ── Conversation state — restore from localStorage on mount
   const [messages, setMessages] = useState(() => {
     try {
       const s = localStorage.getItem('koda-messages');
-      const saved = s ? JSON.parse(s) : [];
-      return saved.length > 0 ? [GREETING, ...saved] : [GREETING];
-    } catch { return [GREETING]; }
+      return s ? JSON.parse(s) : [];
+    } catch { return []; }
   });
 
-  const [view, setView] = useState('chat');
+  const [view, setView] = useState(() => {
+    try {
+      const s = localStorage.getItem('koda-messages');
+      return s && JSON.parse(s).length > 0 ? 'chat' : 'landing';
+    } catch { return 'landing'; }
+  });
 
   const isAdmin = new URLSearchParams(window.location.search).get('admin') === '1';
 
@@ -1015,11 +987,10 @@ export default function App() {
   const [attachment, setAttachment] = useState(null);
   const [savedPing,  setSavedPing]  = useState(false);
 
-  // ── Persist messages to localStorage (skip greeting-only state) and show "saved" toast
+  // ── Persist messages to localStorage and show "saved" toast
   useEffect(() => {
-    const real = messages.filter(m => !m.isGreeting);
-    if (real.length === 0) return;
-    try { localStorage.setItem('koda-messages', JSON.stringify(real)); } catch {}
+    if (messages.length === 0) return;
+    try { localStorage.setItem('koda-messages', JSON.stringify(messages)); } catch {}
     setSavedPing(true);
     const t = setTimeout(() => setSavedPing(false), 2000);
     return () => clearTimeout(t);
@@ -1027,7 +998,7 @@ export default function App() {
 
   // ── Send a message
   const sendMessage = async (content, history = messages) => {
-    if (history.filter(m => !m.isGreeting).length >= 20) {
+    if (history.length >= 20) {
       setMessages([...history, {
         role: 'assistant',
         content: '__limit__',
@@ -1054,7 +1025,7 @@ export default function App() {
     setLoading(true);
     setAttachment(null);
 
-    if (!history.some(m => m.role === 'user')) window.plausible?.('Chat Started');
+    if (history.length === 0) window.plausible?.('Chat Started');
 
     // Detect implicit signal and log it
     const prevUserMsg = history.filter(m => m.role === 'user').slice(-1)[0]?.content ?? '';
@@ -1072,7 +1043,7 @@ export default function App() {
 
     try {
       // Previous turns sent as plain text; current turn may include an image block
-      const prevMessages = history.filter(m => !m.isGreeting).slice(-10).map(({ role, content: c }) => ({ role, content: c }));
+      const prevMessages = history.slice(-10).map(({ role, content: c }) => ({ role, content: c }));
       let currentMsg;
       if (att?.type === 'image') {
         currentMsg = {
@@ -1143,7 +1114,8 @@ export default function App() {
   };
 
   const reset = () => {
-    setMessages([GREETING]);
+    setView('landing');
+    setMessages([]);
     setAttachment(null);
     try { localStorage.removeItem('koda-messages'); } catch {}
   };
@@ -1155,7 +1127,7 @@ export default function App() {
       {/* Header */}
       <header style={{
         background: 'var(--bg)',
-        borderBottom: messages.some(m => m.role === 'user') ? '1px solid var(--border)' : 'none',
+        borderBottom: view === 'chat' ? '1px solid var(--border)' : 'none',
         padding: '0 24px', height: 62, flexShrink: 0,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
@@ -1192,7 +1164,7 @@ export default function App() {
             )}
           </button>
 
-          {messages.some(m => m.role === 'user') && (
+          {view === 'chat' && (
             <button className="k-new-chat" onClick={reset}>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="12" y1="5" x2="12" y2="19" />
@@ -1206,12 +1178,14 @@ export default function App() {
 
       {/* Main */}
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-        <Chat
-          messages={messages} loading={loading}
-          onSend={text => sendMessage(text)} onReset={reset}
-          onChipClick={p => { window.plausible?.('Chip Clicked', { props: { category: p.label } }); sendMessage(p.prompt); }}
-          attachment={attachment} setAttachment={setAttachment}
-        />
+        {view === 'landing' ? (
+          <Landing
+            onChipClick={p => { window.plausible?.('Chip Clicked', { props: { category: p.label } }); sendMessage(p.prompt); }}
+            onSubmit={text => sendMessage(text)}
+          />
+        ) : (
+          <Chat messages={messages} loading={loading} onSend={text => sendMessage(text)} onReset={reset} attachment={attachment} setAttachment={setAttachment} />
+        )}
       </main>
 
       {/* Admin learning panel */}
