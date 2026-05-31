@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to Set Up Two-Factor Authentication on Any Account | Koda</title>
+  <meta name="description" content="Add two-factor authentication to your Apple ID, Google account, email and more. Step-by-step guide to securing your accounts." />
+  <meta name="keywords" content="two-factor authentication setup, 2FA iPhone, enable 2FA Google, Apple ID two-factor, two-step verification, account security" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://kodahelp.com/guides/how-to-set-up-two-factor-authentication.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://kodahelp.com/guides/how-to-set-up-two-factor-authentication.html" />
+  <meta property="og:title" content="How to Set Up Two-Factor Authentication on Any Account" />
+  <meta property="og:description" content="Add two-factor authentication to your Apple ID, Google account, email and more. Step-by-step guide to securing your accounts." />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="How to Set Up Two-Factor Authentication on Any Account" />
+  <meta name="twitter:description" content="Add 2FA to your Apple ID, Google, and other accounts in minutes." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: #0F1117; color: #F0F0F0; -webkit-font-smoothing: antialiased; }
+    a { color: #52E09C; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    header { background: #0F1117; border-bottom: 1px solid #2A2D3A; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+    .logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+    .logo-icon { width: 32px; height: 32px; border-radius: 10px; background: linear-gradient(135deg, #52E09C 0%, #2DB87A 100%); display: flex; align-items: center; justify-content: center; color: #0A1A12; font-weight: 800; font-size: 15px; box-shadow: 0 0 12px rgba(82,224,156,0.3); }
+    .logo-name { font-size: 16px; font-weight: 700; color: #F0F0F0; letter-spacing: -0.35px; }
+    .container { max-width: 720px; margin: 0 auto; padding: 52px 24px 80px; }
+    .breadcrumb { font-size: 13px; color: #8B8FA8; margin-bottom: 28px; }
+    .breadcrumb a { color: #8B8FA8; }
+    .breadcrumb a:hover { color: #52E09C; }
+    h1 { font-size: 38px; font-weight: 800; color: #F0F0F0; letter-spacing: -1px; line-height: 1.15; margin-bottom: 14px; }
+    .meta { font-size: 13px; color: #8B8FA8; margin-bottom: 32px; }
+    .intro { font-size: 17px; color: #C0C3D4; line-height: 1.75; margin-bottom: 40px; padding: 20px 24px; background: #1A1D27; border: 1px solid #2A2D3A; border-left: 3px solid #52E09C; border-radius: 0 12px 12px 0; }
+    h2 { font-size: 21px; font-weight: 700; color: #F0F0F0; margin: 40px 0 16px; letter-spacing: -0.3px; }
+    .steps { display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
+    .step { display: flex; gap: 16px; background: #1A1D27; border: 1px solid #2A2D3A; border-radius: 12px; padding: 18px 20px; }
+    .step-num { width: 28px; height: 28px; border-radius: 50%; background: rgba(82,224,156,0.1); border: 1px solid rgba(82,224,156,0.3); color: #52E09C; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .step-body h3 { font-size: 15px; font-weight: 600; color: #F0F0F0; margin-bottom: 6px; }
+    .step-body p { font-size: 14.5px; color: #C0C3D4; line-height: 1.65; }
+    code { background: #0F1117; color: #52E09C; padding: 2px 7px; border-radius: 5px; font-family: 'SF Mono', monospace; font-size: 0.87em; border: 1px solid #2A2D3A; }
+    p { font-size: 15px; color: #C0C3D4; line-height: 1.75; margin-bottom: 16px; }
+    ul, ol { padding-left: 20px; margin-bottom: 16px; }
+    li { font-size: 15px; color: #C0C3D4; line-height: 1.7; margin-bottom: 6px; }
+    .tip { background: rgba(82,224,156,0.05); border: 1px solid rgba(82,224,156,0.2); border-radius: 10px; padding: 16px 20px; margin: 24px 0; font-size: 14.5px; color: #A8FCD8; line-height: 1.65; }
+    .tip strong { color: #52E09C; }
+    .cta-box { background: #1A1D27; border: 1px solid #2A2D3A; border-radius: 16px; padding: 36px; text-align: center; margin-top: 52px; }
+    .cta-box h2 { margin: 0 0 10px; font-size: 22px; }
+    .cta-box p { margin: 0 0 24px; }
+    .cta-btn { display: inline-flex; align-items: center; gap: 8px; background: #52E09C; color: #0A1A12; font-weight: 700; font-size: 15px; padding: 14px 28px; border-radius: 999px; box-shadow: 0 0 20px rgba(82,224,156,0.3); transition: background 0.15s, box-shadow 0.15s; }
+    .cta-btn:hover { background: #6EEAAA; box-shadow: 0 0 32px rgba(82,224,156,0.5); text-decoration: none; }
+    footer { border-top: 1px solid #2A2D3A; padding: 28px 24px; text-align: center; font-size: 13px; color: #8B8FA8; }
+    footer a { color: #8B8FA8; }
+    footer a:hover { color: #52E09C; }
+    @media (max-width: 600px) { h1 { font-size: 28px; } .container { padding: 36px 18px 60px; } .cta-box { padding: 24px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="https://kodahelp.com" class="logo">
+      <div class="logo-icon">K</div>
+      <span class="logo-name">Koda</span>
+    </a>
+  </header>
+
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="https://kodahelp.com">Home</a> &rsaquo; <a href="https://kodahelp.com/guides">Guides</a> &rsaquo; Two-Factor Authentication
+    </div>
+
+    <h1>How to Set Up Two-Factor Authentication on Any Account</h1>
+    <p class="meta">5 min read &nbsp;·&nbsp; Apple ID &middot; Google &middot; iPhone &middot; Android</p>
+
+    <div class="intro">
+      Two-factor authentication (2FA) adds a second layer of security to your accounts. Even if someone steals your password, they still can't log in without a code that only you receive. It's the single most effective thing you can do to protect your accounts online.
+    </div>
+
+    <h2>Enable Two-Factor Authentication on Apple ID (iPhone)</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Open Settings and tap your name</h3>
+          <p>Open <strong>Settings</strong> and tap your name at the very top to open your Apple ID settings.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Tap Sign-In &amp; Security</h3>
+          <p>Tap <strong>Sign-In &amp; Security</strong>. This is where your Apple ID password and authentication settings live.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Tap Turn On Two-Factor Authentication</h3>
+          <p>Tap <strong>Turn On Two-Factor Authentication</strong>, then tap <strong>Continue</strong>. If you already see "Two-Factor Authentication is on," you're already protected.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>Add a trusted phone number</h3>
+          <p>Enter a phone number where Apple can send verification codes. Choose <strong>Text message</strong> or <strong>Phone call</strong>. Tap <strong>Next</strong>, then enter the 6-digit code you receive to verify the number.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h3>Save your Recovery Key</h3>
+          <p>Apple may display a Recovery Key — a 28-character backup code. Write this down and store it somewhere safe. You'll need it if you ever lose access to your trusted phone number and can't receive codes.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip">
+      <strong>How Apple 2FA works:</strong> When you sign in on a new device, a 6-digit code automatically appears on your trusted iPhone, iPad, or Mac. Enter that code to confirm it's really you. No app needed.
+    </div>
+
+    <h2>Enable Two-Factor Authentication on Google Account</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Open your Google Account settings</h3>
+          <p>On your phone, open the <strong>Settings</strong> app and tap <strong>Google</strong>. Or go to <strong>myaccount.google.com</strong> in a browser on any device.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Tap Security</h3>
+          <p>Tap <strong>Security</strong> in the menu. Scroll down to the section labelled <strong>How you sign in to Google</strong>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Tap 2-Step Verification</h3>
+          <p>Tap <strong>2-Step Verification</strong>. You'll be asked to sign in again to confirm your identity. Tap <strong>Get started</strong>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>Choose your verification method</h3>
+          <p>Google offers several options. <strong>Google prompts</strong> (a tap-to-approve notification on your phone) is the easiest. Alternatively, choose <strong>Authenticator app</strong> for codes generated offline, or <strong>Text message</strong> for SMS codes.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h3>Follow the prompts and tap Turn On</h3>
+          <p>Complete the on-screen steps for your chosen method. When finished, tap <strong>Turn On</strong> to activate 2-Step Verification for your Google account.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <h3>Save backup codes</h3>
+          <p>On the 2-Step Verification page, scroll down and find <strong>Backup codes</strong>. Tap <strong>Set up</strong> or <strong>Show codes</strong>, then download or print the 10 one-time backup codes. Keep them somewhere safe — they let you access your account if you lose your phone.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Set Up 2FA for Other Accounts</h2>
+    <p>Most major services — Facebook, Instagram, X (Twitter), Amazon, your email provider, and banking apps — support two-factor authentication. The steps vary slightly but the pattern is always the same:</p>
+    <ol>
+      <li>Go to <strong>Settings &rarr; Security</strong> (or Privacy) in the app or website</li>
+      <li>Find the option for <strong>Two-Factor Authentication</strong>, <strong>Two-Step Verification</strong>, or <strong>Login Approval</strong></li>
+      <li>Choose a method: phone number (SMS), an authenticator app, or an email code</li>
+      <li>Complete verification and save any backup codes you're given</li>
+    </ol>
+
+    <div class="tip">
+      <strong>Use an authenticator app for best security:</strong> SMS codes (texts) can be intercepted in rare attacks. For higher-value accounts, use a free authenticator app like <strong>Google Authenticator</strong> or <strong>Microsoft Authenticator</strong> instead. These generate codes on your phone without needing a mobile signal.
+    </div>
+
+    <div class="cta-box">
+      <h2>Still stuck? Talk to Koda.</h2>
+      <p>Describe exactly where you're getting stopped and Koda will walk you through it step by step.</p>
+      <a href="https://kodahelp.com" class="cta-btn">Get instant help from Koda &rarr;</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 <a href="https://kodahelp.com">Koda</a> &nbsp;&middot;&nbsp; <a href="https://kodahelp.com">AI Tech Support</a></p>
+  </footer>
+</body>
+</html>
