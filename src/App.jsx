@@ -1593,8 +1593,30 @@ export default function App() {
   const [usageCount,  setUsageCount]  = useState(() => getUsage().count);
   const [emailGiven,  setEmailGiven]  = useState(() => !!localStorage.getItem('koda_email_given'));
   const [isAdminMode, setIsAdminMode] = useState(() => localStorage.getItem('koda_admin') === 'true');
-  const [showStats,   setShowStats]   = useState(false);
-  const [showReplays, setShowReplays] = useState(false);
+  const [showStats,        setShowStats]        = useState(false);
+  const [showReplays,      setShowReplays]      = useState(false);
+  const [showInstallBanner, setShowInstallBanner] = useState(false);
+  const installPromptRef = useRef(null);
+
+  // ── PWA install prompt
+  useEffect(() => {
+    const dismissed   = localStorage.getItem('koda_install_dismissed');
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+      || window.navigator.standalone;
+    if (dismissed || isStandalone) return;
+
+    let timer;
+    const handler = (e) => {
+      e.preventDefault();
+      installPromptRef.current = e;
+      timer = setTimeout(() => setShowInstallBanner(true), 30000);
+    };
+    window.addEventListener('beforeinstallprompt', handler);
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handler);
+      clearTimeout(timer);
+    };
+  }, []);
 
   useEffect(() => {
     if (isAdminMode) document.documentElement.classList.add('admin-active');
@@ -1895,6 +1917,60 @@ export default function App() {
             <polyline points="20 6 9 17 4 12" />
           </svg>
           Conversation saved
+        </div>
+      )}
+
+      {/* PWA install banner — landing page only, 30 s after beforeinstallprompt */}
+      {showInstallBanner && view === 'landing' && (
+        <div style={{
+          position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 500,
+          background: 'var(--surface)', borderTop: '1px solid var(--border)',
+          padding: '14px 20px', display: 'flex', alignItems: 'center',
+          gap: 12, flexWrap: 'wrap',
+          boxShadow: '0 -4px 24px rgba(0,0,0,0.3)',
+          fontFamily: "'Inter', sans-serif",
+          animation: 'slideUp 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards',
+        }}>
+          <span style={{ flex: 1, fontSize: 14, color: 'var(--text-mid)', minWidth: 200 }}>
+            📱 Add Koda to your home screen for instant access
+          </span>
+          <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+            <button
+              onClick={async () => {
+                if (installPromptRef.current) {
+                  installPromptRef.current.prompt();
+                  const { outcome } = await installPromptRef.current.userChoice;
+                  installPromptRef.current = null;
+                  if (outcome === 'accepted') {
+                    try { localStorage.setItem('koda_install_dismissed', 'true'); } catch {}
+                  }
+                }
+                setShowInstallBanner(false);
+              }}
+              style={{
+                padding: '9px 18px', borderRadius: 999, border: 'none',
+                background: 'var(--accent)', color: 'var(--send-text)',
+                fontSize: 13, fontWeight: 700, cursor: 'pointer',
+                fontFamily: "'Inter', sans-serif",
+              }}
+            >
+              Add to Home Screen
+            </button>
+            <button
+              onClick={() => {
+                setShowInstallBanner(false);
+                try { localStorage.setItem('koda_install_dismissed', 'true'); } catch {}
+              }}
+              style={{
+                padding: '9px 16px', borderRadius: 999,
+                border: '1px solid var(--border)', background: 'transparent',
+                color: 'var(--text-muted)', fontSize: 13, cursor: 'pointer',
+                fontFamily: "'Inter', sans-serif",
+              }}
+            >
+              Not now
+            </button>
+          </div>
         </div>
       )}
     </div>

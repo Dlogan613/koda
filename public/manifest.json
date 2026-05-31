@@ -1,18 +1,12 @@
 {
-  "name": "Koda",
+  "name": "Koda — AI Tech Help",
   "short_name": "Koda",
-  "description": "AI-powered tech support that actually fixes your problem.",
+  "description": "Get instant help with any tech problem. Free AI tech support.",
   "start_url": "/",
   "display": "standalone",
-  "orientation": "portrait",
-  "theme_color": "#0F1117",
-  "background_color": "#0F1117",
+  "background_color": "#0A0D14",
+  "theme_color": "#52E09C",
   "icons": [
-    {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
   ]
 }
