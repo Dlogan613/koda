@@ -1141,7 +1141,7 @@ function Footer() {
 
 /* ── Landing ────────────────────────────────────────────────────────── */
 
-function AddToHomeScreenButton() {
+function AddToHomeScreenButton({ theme }) {
   const [installPrompt, setInstallPrompt] = useState(null);
   const [showIosHint,   setShowIosHint]   = useState(false);
   const [hidden,        setHidden]        = useState(() =>
@@ -1187,6 +1187,8 @@ function AddToHomeScreenButton() {
     }
   };
 
+  const isDark = theme !== 'light';
+
   return (
     <div style={{ textAlign: 'center', marginBottom: 16 }}>
       <button
@@ -1194,8 +1196,10 @@ function AddToHomeScreenButton() {
         style={{
           display: 'inline-flex', alignItems: 'center', gap: 6,
           padding: '6px 14px', borderRadius: 999,
-          border: '1px solid var(--border)', background: '#1A1D27',
-          color: '#8B8FA8', fontSize: 12, fontFamily: "'Inter', sans-serif",
+          border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid rgba(0,0,0,0.12)',
+          background: isDark ? '#1A1D27' : '#ffffff',
+          color: isDark ? '#8B8FA8' : '#6B7280',
+          fontSize: 12, fontFamily: "'Inter', sans-serif",
           cursor: 'pointer', fontWeight: 500,
         }}
       >
@@ -1203,7 +1207,8 @@ function AddToHomeScreenButton() {
       </button>
       {showIosHint && (
         <p style={{
-          marginTop: 8, fontSize: 12, color: '#8B8FA8', lineHeight: 1.6,
+          marginTop: 8, fontSize: 12, lineHeight: 1.6,
+          color: isDark ? '#8B8FA8' : '#6B7280',
           animation: 'fadeUp 0.2s ease forwards',
         }}>
           On iPhone: tap the Share button (□↑) in Safari, then &ldquo;Add to Home Screen&rdquo;
@@ -1213,7 +1218,7 @@ function AddToHomeScreenButton() {
   );
 }
 
-function Landing({ onChipClick, onSubmit }) {
+function Landing({ onChipClick, onSubmit, theme }) {
   const [val, setVal] = useState('');
   const ref = useRef(null);
   const go  = () => { if (val.trim()) onSubmit(val.trim()); };
@@ -1281,7 +1286,7 @@ function Landing({ onChipClick, onSubmit }) {
         </div>
 
         {/* Add to Home Screen */}
-        <AddToHomeScreenButton />
+        <AddToHomeScreenButton theme={theme} />
 
         {/* Input bar */}
         <div className="k-input-bar" style={{ borderRadius: 16 }}>
@@ -1942,6 +1947,7 @@ export default function App() {
               sendMessage(p.prompt);
             }}
             onSubmit={text => sendMessage(text)}
+            theme={theme}
           />
         ) : (
           <Chat messages={messages} loading={loading} onSend={text => sendMessage(text)} onReset={reset} attachment={attachment} setAttachment={setAttachment} adminMode={isAdminMode} />
