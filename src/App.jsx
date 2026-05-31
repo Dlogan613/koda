@@ -1141,7 +1141,58 @@ function Footer() {
 
 /* ── Landing ────────────────────────────────────────────────────────── */
 
-function Landing({ onChipClick, onSubmit }) {
+function AddToHomeScreenButton({ installPromptRef }) {
+  const [hidden, setHidden] = useState(() => {
+    const installed   = localStorage.getItem('koda_pwa_installed');
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+      || window.navigator.standalone;
+    return !!(installed || isStandalone);
+  });
+  const [showIosHint, setShowIosHint] = useState(false);
+
+  if (hidden) return null;
+
+  const handleClick = async () => {
+    if (installPromptRef?.current) {
+      installPromptRef.current.prompt();
+      const { outcome } = await installPromptRef.current.userChoice;
+      installPromptRef.current = null;
+      if (outcome === 'accepted') {
+        try { localStorage.setItem('koda_pwa_installed', 'true'); } catch {}
+        setHidden(true);
+      }
+    } else {
+      setShowIosHint(h => !h);
+    }
+  };
+
+  return (
+    <div style={{ textAlign: 'center', marginBottom: 16 }}>
+      <button
+        onClick={handleClick}
+        style={{
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+          padding: '6px 14px', borderRadius: 999,
+          border: '1px solid var(--border)', background: '#1A1D27',
+          color: '#8B8FA8', fontSize: 12, fontFamily: "'Inter', sans-serif",
+          cursor: 'pointer', fontWeight: 500,
+        }}
+      >
+        📱 Add to Home Screen
+      </button>
+      {showIosHint && (
+        <p style={{
+          marginTop: 8, fontSize: 12, color: '#8B8FA8', lineHeight: 1.6,
+          animation: 'fadeUp 0.2s ease forwards',
+        }}>
+          On iPhone: tap the Share button (□↑) in Safari, then &ldquo;Add to Home Screen&rdquo;
+        </p>
+      )}
+    </div>
+  );
+}
+
+function Landing({ onChipClick, onSubmit, installPromptRef }) {
   const [val, setVal] = useState('');
   const ref = useRef(null);
   const go  = () => { if (val.trim()) onSubmit(val.trim()); };
@@ -1207,6 +1258,9 @@ function Landing({ onChipClick, onSubmit }) {
             </button>
           ))}
         </div>
+
+        {/* Add to Home Screen */}
+        <AddToHomeScreenButton installPromptRef={installPromptRef} />
 
         {/* Input bar */}
         <div className="k-input-bar" style={{ borderRadius: 16 }}>
@@ -1867,6 +1921,7 @@ export default function App() {
               sendMessage(p.prompt);
             }}
             onSubmit={text => sendMessage(text)}
+            installPromptRef={installPromptRef}
           />
         ) : (
           <Chat messages={messages} loading={loading} onSend={text => sendMessage(text)} onReset={reset} attachment={attachment} setAttachment={setAttachment} adminMode={isAdminMode} />
