@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to Update Your iPhone to the Latest iOS | Koda</title>
+  <meta name="description" content="Keep your iPhone secure and running smoothly. Step-by-step guide to update iOS — over WiFi or with a computer." />
+  <meta name="keywords" content="how to update iPhone, update iOS, iPhone software update, iOS update stuck, update iPhone over WiFi" />
+  <link rel="canonical" href="https://kodahelp.com/guides/how-to-update-iphone.html" />
+  <link rel="icon" href="/favicon.png" type="image/png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: #0F1117; color: #F0F0F0; -webkit-font-smoothing: antialiased; }
+    a { color: #52E09C; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    header { background: #0F1117; border-bottom: 1px solid #2A2D3A; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+    .logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+    .logo-icon { width: 32px; height: 32px; border-radius: 10px; background: linear-gradient(135deg, #52E09C 0%, #2DB87A 100%); display: flex; align-items: center; justify-content: center; color: #0A1A12; font-weight: 800; font-size: 15px; box-shadow: 0 0 12px rgba(82,224,156,0.3); }
+    .logo-name { font-size: 16px; font-weight: 700; color: #F0F0F0; letter-spacing: -0.35px; }
+    .container { max-width: 720px; margin: 0 auto; padding: 52px 24px 80px; }
+    .breadcrumb { font-size: 13px; color: #8B8FA8; margin-bottom: 28px; }
+    .breadcrumb a { color: #8B8FA8; }
+    .breadcrumb a:hover { color: #52E09C; }
+    h1 { font-size: 38px; font-weight: 800; color: #F0F0F0; letter-spacing: -1px; line-height: 1.15; margin-bottom: 14px; }
+    .meta { font-size: 13px; color: #8B8FA8; margin-bottom: 32px; }
+    .intro { font-size: 17px; color: #C0C3D4; line-height: 1.75; margin-bottom: 40px; padding: 20px 24px; background: #1A1D27; border: 1px solid #2A2D3A; border-left: 3px solid #52E09C; border-radius: 0 12px 12px 0; }
+    h2 { font-size: 21px; font-weight: 700; color: #F0F0F0; margin: 40px 0 16px; letter-spacing: -0.3px; }
+    .steps { display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
+    .step { display: flex; gap: 16px; background: #1A1D27; border: 1px solid #2A2D3A; border-radius: 12px; padding: 18px 20px; }
+    .step-num { width: 28px; height: 28px; border-radius: 50%; background: rgba(82,224,156,0.1); border: 1px solid rgba(82,224,156,0.3); color: #52E09C; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .step-body h3 { font-size: 15px; font-weight: 600; color: #F0F0F0; margin-bottom: 6px; }
+    .step-body p { font-size: 14.5px; color: #C0C3D4; line-height: 1.65; }
+    code { background: #0F1117; color: #52E09C; padding: 2px 7px; border-radius: 5px; font-family: 'SF Mono', monospace; font-size: 0.87em; border: 1px solid #2A2D3A; }
+    p { font-size: 15px; color: #C0C3D4; line-height: 1.75; margin-bottom: 16px; }
+    ul, ol { padding-left: 20px; margin-bottom: 16px; }
+    li { font-size: 15px; color: #C0C3D4; line-height: 1.7; margin-bottom: 6px; }
+    .tip { background: rgba(82,224,156,0.05); border: 1px solid rgba(82,224,156,0.2); border-radius: 10px; padding: 16px 20px; margin: 24px 0; font-size: 14.5px; color: #A8FCD8; line-height: 1.65; }
+    .tip strong { color: #52E09C; }
+    .cta-box { background: #1A1D27; border: 1px solid #2A2D3A; border-radius: 16px; padding: 36px; text-align: center; margin-top: 52px; }
+    .cta-box h2 { margin: 0 0 10px; font-size: 22px; }
+    .cta-box p { margin: 0 0 24px; }
+    .cta-btn { display: inline-flex; align-items: center; gap: 8px; background: #52E09C; color: #0A1A12; font-weight: 700; font-size: 15px; padding: 14px 28px; border-radius: 999px; box-shadow: 0 0 20px rgba(82,224,156,0.3); transition: background 0.15s, box-shadow 0.15s; }
+    .cta-btn:hover { background: #6EEAAA; box-shadow: 0 0 32px rgba(82,224,156,0.5); text-decoration: none; }
+    footer { border-top: 1px solid #2A2D3A; padding: 28px 24px; text-align: center; font-size: 13px; color: #8B8FA8; }
+    footer a { color: #8B8FA8; }
+    footer a:hover { color: #52E09C; }
+    @media (max-width: 600px) { h1 { font-size: 28px; } .container { padding: 36px 18px 60px; } .cta-box { padding: 24px; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="https://kodahelp.com" class="logo">
+    <div class="logo-icon">K</div>
+    <span class="logo-name">Koda</span>
+  </a>
+</header>
+
+<div class="container">
+
+  <div class="breadcrumb">
+    <a href="https://kodahelp.com">Koda</a> &rsaquo; <a href="https://kodahelp.com/guides">Guides</a> &rsaquo; Update iPhone
+  </div>
+
+  <h1>How to Update Your iPhone to the Latest iOS</h1>
+  <div class="meta">iPhone &middot; iPad &nbsp;&mdash;&nbsp; 3 min read</div>
+
+  <div class="intro">
+    Keeping your iPhone updated gives you security fixes, bug patches, and new features. Apple releases updates regularly — here's how to install them safely.
+  </div>
+
+  <h2>Update Over WiFi (The Easy Way)</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Connect your iPhone to WiFi</h3>
+        <p>iOS updates can be several gigabytes in size, so WiFi is required. Open Control Center by swiping down from the top-right, or go to Settings &rarr; WiFi to confirm you're connected.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Go to Settings &rarr; General &rarr; Software Update</h3>
+        <p>Open the Settings app, tap General, then tap Software Update near the top of the list.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Wait while your iPhone checks for updates</h3>
+        <p>This takes a few seconds. If your iPhone is already up to date, you'll see a message saying so. If an update is available, it will show the version number and release notes.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h3>Tap Download and Install</h3>
+        <p>The update will begin downloading over WiFi. Larger updates can take 5–30 minutes to download depending on your internet speed. You can keep using your phone while it downloads.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h3>Enter your passcode if prompted</h3>
+        <p>Apple requires your passcode to authorize the update. Enter your 4- or 6-digit passcode when asked.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <h3>Tap Install Now (or Install Tonight)</h3>
+        <p>Tap Install Now to begin immediately, or Install Tonight to have your iPhone update automatically overnight while it charges. If you tap Remind Me Later, you'll be prompted again in the future.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">7</div>
+      <div class="step-body">
+        <h3>Wait for your iPhone to restart</h3>
+        <p>Your iPhone will show an Apple logo with a progress bar while the update installs. This is normal and usually takes 5–15 minutes. Your phone will restart on its own when it's done.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>Update Using a Computer (if WiFi Isn't Working)</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Open Finder (Mac) or iTunes (Windows or older Mac)</h3>
+        <p>On a Mac running macOS Catalina or later, iPhone updates are handled through Finder. On Windows PCs or Macs running older macOS versions, use iTunes (download it free from apple.com if you don't have it).</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Connect your iPhone with a USB cable and unlock it</h3>
+        <p>Use an Apple Lightning or USB-C cable. When you connect, unlock your iPhone with your passcode and tap Trust This Computer if prompted.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Click on your iPhone in the sidebar</h3>
+        <p>In Finder, your iPhone appears in the left sidebar under Locations. In iTunes, click the iPhone icon near the top-left of the window.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h3>Click Check for Update</h3>
+        <p>On the Summary page, click the Check for Update button. The computer will check Apple's servers for the latest available iOS version.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h3>Click Download and Update</h3>
+        <p>If an update is available, click Download and Update. The update downloads to your computer first, then installs on your iPhone.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <h3>Enter your iPhone passcode if asked and keep the phone connected</h3>
+        <p>You may be prompted to enter your passcode on the iPhone itself. Keep your iPhone connected to the computer and do not unplug it until the update is fully complete.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>If the Update Is Stuck or Won't Download</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Delete the partially downloaded update</h3>
+        <p>Go to Settings &rarr; General &rarr; iPhone Storage. Find the iOS update file in the list (it will say "iOS [version]") and tap it, then tap Delete Update. This removes the corrupted download.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Restart your iPhone</h3>
+        <p>On Face ID iPhones: hold the Side button and Volume Down, then swipe to power off. On older iPhones: hold the Side or Top button. Wait 30 seconds, then turn it back on.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Reconnect to WiFi and try again</h3>
+        <p>Go to Settings &rarr; WiFi and re-select your network. Then go back to Settings &rarr; General &rarr; Software Update and start a fresh download.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h3>Try a different WiFi network if the download keeps failing</h3>
+        <p>Sometimes your home network has a firewall or speed issue that blocks large downloads. Try connecting to a different network — a friend's WiFi or your phone's hotspot from another device.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h3>Use the computer method as a last resort</h3>
+        <p>If WiFi updates keep failing, connect your iPhone to a computer and update through Finder or iTunes instead. This method downloads the full update file to the computer and then installs it directly.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip">
+    <strong>Before you update:</strong> Make sure you have at least 50% battery or plug your charger in — updates can fail if the battery dies mid-install. Taking a quick iCloud backup beforehand is a smart precaution, though iOS updates almost never cause data loss. If your storage is full, the update may fail to download — go to Settings &rarr; General &rarr; iPhone Storage to free up space first.
+  </div>
+
+  <div class="cta-box">
+    <h2>Still stuck? Talk to Koda.</h2>
+    <p>Describe exactly where you're getting stopped and Koda will walk you through it step by step.</p>
+    <a href="https://kodahelp.com" class="cta-btn">Get instant help from Koda &rarr;</a>
+  </div>
+
+</div>
+
+<footer>
+  <p>&copy; 2025 <a href="https://kodahelp.com">Koda</a> &nbsp;&middot;&nbsp; <a href="https://kodahelp.com">AI Tech Support</a></p>
+</footer>
+
+</body>
+</html>

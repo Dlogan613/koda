@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to Find the MAC Address of Any Device | Koda</title>
+  <meta name="description" content="Locate your device's MAC address on iPhone, Android, Windows or Mac in seconds. Step-by-step guide for every major platform." />
+  <meta name="keywords" content="how to find MAC address, MAC address iPhone, MAC address Android, MAC address Windows, MAC address Mac, find network address" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://kodahelp.com/guides/how-to-find-mac-address.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://kodahelp.com/guides/how-to-find-mac-address.html" />
+  <meta property="og:title" content="How to Find the MAC Address of Any Device" />
+  <meta property="og:description" content="Locate your device's MAC address on iPhone, Android, Windows or Mac in seconds. Step-by-step guide for every major platform." />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="How to Find the MAC Address of Any Device" />
+  <meta name="twitter:description" content="Locate your device's MAC address on iPhone, Android, Windows or Mac in seconds. Step-by-step guide for every major platform." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: #0F1117; color: #F0F0F0; -webkit-font-smoothing: antialiased; }
+    a { color: #52E09C; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    header { background: #0F1117; border-bottom: 1px solid #2A2D3A; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+    .logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+    .logo-icon { width: 32px; height: 32px; border-radius: 10px; background: linear-gradient(135deg, #52E09C 0%, #2DB87A 100%); display: flex; align-items: center; justify-content: center; color: #0A1A12; font-weight: 800; font-size: 15px; box-shadow: 0 0 12px rgba(82,224,156,0.3); }
+    .logo-name { font-size: 16px; font-weight: 700; color: #F0F0F0; letter-spacing: -0.35px; }
+    .container { max-width: 720px; margin: 0 auto; padding: 52px 24px 80px; }
+    .breadcrumb { font-size: 13px; color: #8B8FA8; margin-bottom: 28px; }
+    .breadcrumb a { color: #8B8FA8; }
+    .breadcrumb a:hover { color: #52E09C; }
+    h1 { font-size: 38px; font-weight: 800; color: #F0F0F0; letter-spacing: -1px; line-height: 1.15; margin-bottom: 14px; }
+    .meta { font-size: 13px; color: #8B8FA8; margin-bottom: 32px; }
+    .intro { font-size: 17px; color: #C0C3D4; line-height: 1.75; margin-bottom: 40px; padding: 20px 24px; background: #1A1D27; border: 1px solid #2A2D3A; border-left: 3px solid #52E09C; border-radius: 0 12px 12px 0; }
+    h2 { font-size: 21px; font-weight: 700; color: #F0F0F0; margin: 40px 0 16px; letter-spacing: -0.3px; }
+    .steps { display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
+    .step { display: flex; gap: 16px; background: #1A1D27; border: 1px solid #2A2D3A; border-radius: 12px; padding: 18px 20px; }
+    .step-num { width: 28px; height: 28px; border-radius: 50%; background: rgba(82,224,156,0.1); border: 1px solid rgba(82,224,156,0.3); color: #52E09C; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .step-body h3 { font-size: 15px; font-weight: 600; color: #F0F0F0; margin-bottom: 6px; }
+    .step-body p { font-size: 14.5px; color: #C0C3D4; line-height: 1.65; }
+    code { background: #0F1117; color: #52E09C; padding: 2px 7px; border-radius: 5px; font-family: 'SF Mono', monospace; font-size: 0.87em; border: 1px solid #2A2D3A; }
+    p { font-size: 15px; color: #C0C3D4; line-height: 1.75; margin-bottom: 16px; }
+    ul, ol { padding-left: 20px; margin-bottom: 16px; }
+    li { font-size: 15px; color: #C0C3D4; line-height: 1.7; margin-bottom: 6px; }
+    .tip { background: rgba(82,224,156,0.05); border: 1px solid rgba(82,224,156,0.2); border-radius: 10px; padding: 16px 20px; margin: 24px 0; font-size: 14.5px; color: #A8FCD8; line-height: 1.65; }
+    .tip strong { color: #52E09C; }
+    .cta-box { background: #1A1D27; border: 1px solid #2A2D3A; border-radius: 16px; padding: 36px; text-align: center; margin-top: 52px; }
+    .cta-box h2 { margin: 0 0 10px; font-size: 22px; }
+    .cta-box p { margin: 0 0 24px; }
+    .cta-btn { display: inline-flex; align-items: center; gap: 8px; background: #52E09C; color: #0A1A12; font-weight: 700; font-size: 15px; padding: 14px 28px; border-radius: 999px; box-shadow: 0 0 20px rgba(82,224,156,0.3); transition: background 0.15s, box-shadow 0.15s; }
+    .cta-btn:hover { background: #6EEAAA; box-shadow: 0 0 32px rgba(82,224,156,0.5); text-decoration: none; }
+    footer { border-top: 1px solid #2A2D3A; padding: 28px 24px; text-align: center; font-size: 13px; color: #8B8FA8; }
+    footer a { color: #8B8FA8; }
+    footer a:hover { color: #52E09C; }
+    @media (max-width: 600px) { h1 { font-size: 28px; } .container { padding: 36px 18px 60px; } .cta-box { padding: 24px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="https://kodahelp.com" class="logo">
+      <div class="logo-icon">K</div>
+      <span class="logo-name">Koda</span>
+    </a>
+  </header>
+
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="https://kodahelp.com">Home</a> &rsaquo; <a href="https://kodahelp.com/guides">Guides</a> &rsaquo; Find MAC Address
+    </div>
+
+    <h1>How to Find the MAC Address of Any Device</h1>
+    <p class="meta">4 min read &nbsp;·&nbsp; iPhone &middot; Android &middot; Windows &middot; Mac</p>
+
+    <div class="intro">
+      A MAC address (Media Access Control address) is a unique identifier assigned to every network adapter in a device. It looks like this: <code>A4:C3:F0:85:AC:2D</code> — six pairs of numbers and letters separated by colons or dashes. Routers use MAC addresses for device management, parental controls, and network filtering.
+    </div>
+
+    <h2>On iPhone</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Open Settings and tap General</h3>
+          <p>From your Home screen, tap the <strong>Settings</strong> app (the grey gear icon), then scroll down and tap <strong>General</strong>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Tap About</h3>
+          <p>The very first item in General is <strong>About</strong>. Tap it to open the device information screen.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Scroll down to find Wi-Fi Address</h3>
+          <p>Scroll down the About screen until you see <strong>Wi-Fi Address</strong>. The value next to it — in the format <code>XX:XX:XX:XX:XX:XX</code> — is your iPhone's MAC address for its Wi-Fi adapter.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip">
+      <strong>Private MAC address note:</strong> Starting with iOS 14, iPhones use a randomized "private Wi-Fi address" for each network to protect your privacy. The address shown in Settings under About is your device's real MAC address. The randomized address shown under Settings &rarr; Wi-Fi &rarr; (network name) is what your router actually sees unless you disable Private Address for that network.
+    </div>
+
+    <h2>On Android</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Open Settings and tap About Phone</h3>
+          <p>Open the <strong>Settings</strong> app and scroll to the bottom to find <strong>About Phone</strong> (also called "About Device" on some models). Tap it.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Look for Status or Hardware Information</h3>
+          <p>On most Android phones, you'll see a <strong>Status</strong> or <strong>Hardware Information</strong> option inside About Phone. Tap it. On Samsung devices, tap <strong>Status information</strong>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Find Wi-Fi MAC Address</h3>
+          <p>Scroll down to find <strong>Wi-Fi MAC address</strong>. The 12-character alphanumeric string is your device's MAC address. On some phones it may be listed as simply "MAC address."</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Alternative method on Android — through Wi-Fi settings</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Open Settings and tap Wi-Fi or Connections</h3>
+          <p>Go to <strong>Settings &rarr; Wi-Fi</strong> (or <strong>Connections &rarr; Wi-Fi</strong> on Samsung). Make sure you're connected to a network.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Tap the gear icon or network name next to your connected network</h3>
+          <p>Tap the gear icon or the name of the network you're connected to to open its details page.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Find MAC address in the network details</h3>
+          <p>Scroll down in the network details to find <strong>MAC address</strong> or <strong>MAC type</strong>. If it shows "Randomized," tap the field to switch to "Device MAC" to see your real hardware address.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>On Windows</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Open Command Prompt or PowerShell</h3>
+          <p>Press <code>Windows + R</code>, type <code>cmd</code>, and press <strong>Enter</strong>. Alternatively, search "Command Prompt" in the Start menu and open it.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Type ipconfig /all and press Enter</h3>
+          <p>In the Command Prompt window, type <code>ipconfig /all</code> exactly as shown and press <strong>Enter</strong>. A large list of network information appears.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Find Physical Address under your active adapter</h3>
+          <p>Look for your active network adapter — either <strong>Wireless LAN adapter Wi-Fi</strong> (for wireless) or <strong>Ethernet adapter Ethernet</strong> (for wired). The <strong>Physical Address</strong> line under it is your MAC address, formatted like <code>A4-C3-F0-85-AC-2D</code>.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Alternative on Windows — through Settings</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Open Settings &rarr; Network &amp; Internet</h3>
+          <p>Press <code>Windows + I</code> to open Settings, then click <strong>Network &amp; Internet</strong>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Click Wi-Fi or Ethernet, then click your connection</h3>
+          <p>Click <strong>Wi-Fi</strong> in the left panel, then click your connected network name. Or click <strong>Ethernet</strong> if you're wired in, then click your connection.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Scroll down to Physical address (MAC)</h3>
+          <p>Scroll to the bottom of the network properties page. You'll see <strong>Physical address (MAC)</strong> with the 12-character address listed next to it.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>On Mac</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Click the Apple menu and open System Settings (or System Preferences)</h3>
+          <p>Click the Apple  logo in the top-left corner of your screen, then click <strong>System Settings</strong> (macOS Ventura and later) or <strong>System Preferences</strong> (macOS Monterey and earlier).</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Click Network in the sidebar</h3>
+          <p>In System Settings, click <strong>Network</strong> in the left sidebar. A list of your network connections (Wi-Fi, Ethernet, etc.) appears.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Click your active connection, then click Details</h3>
+          <p>Click on the network you're using (e.g., <strong>Wi-Fi</strong>), then click the <strong>Details</strong> button next to it. A sheet slides down with detailed network information.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>Click the Hardware tab to see the MAC address</h3>
+          <p>In the Details sheet, click the <strong>Hardware</strong> tab. Your MAC address appears at the top, listed as <strong>MAC Address</strong> in the format <code>a4:c3:f0:85:ac:2d</code>.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Quick method on Mac — using Terminal</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Open Terminal</h3>
+          <p>Press <code>Command + Space</code> to open Spotlight, type <strong>Terminal</strong>, and press Enter to open it.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Type the command and press Enter</h3>
+          <p>For Wi-Fi, type: <code>ifconfig en0 | grep ether</code> and press Enter. For Ethernet (if connected), try: <code>ifconfig en1 | grep ether</code>. The line beginning with <code>ether</code> is your MAC address.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip">
+      <strong>What the MAC address is used for:</strong> Router administrators use MAC addresses to assign permanent local IP addresses (DHCP reservations), set up parental controls, or allow/block specific devices from the network. If you need to whitelist your device on a school or office network, this is the address you'll be asked to provide.
+    </div>
+
+    <div class="cta-box">
+      <h2>Still stuck? Talk to Koda.</h2>
+      <p>Describe exactly where you're getting stopped and Koda will walk you through it step by step.</p>
+      <a href="https://kodahelp.com" class="cta-btn">Get instant help from Koda &rarr;</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 <a href="https://kodahelp.com">Koda</a> &nbsp;&middot;&nbsp; <a href="https://kodahelp.com">AI Tech Support</a></p>
+  </footer>
+</body>
+</html>
