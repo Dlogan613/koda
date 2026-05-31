@@ -1990,6 +1990,26 @@ export default function App() {
       <Route path="/guides/update-windows"             element={<GuidePage slug="update-windows" />} />
       <Route path="/guides/fix-phone-battery-drain"    element={<GuidePage slug="fix-phone-battery-drain" />} />
       <Route path="/guides/set-up-new-iphone"          element={<GuidePage slug="set-up-new-iphone" />} />
+      <Route path="/guides/how-to-screenshot"           element={<GuidePage slug="how-to-screenshot" />} />
+      <Route path="/guides/how-to-clear-cache"          element={<GuidePage slug="how-to-clear-cache" />} />
+      <Route path="/guides/how-to-update-iphone"        element={<GuidePage slug="how-to-update-iphone" />} />
+      <Route path="/guides/how-to-factory-reset-android" element={<GuidePage slug="how-to-factory-reset-android" />} />
+      <Route path="/guides/how-to-factory-reset-iphone" element={<GuidePage slug="how-to-factory-reset-iphone" />} />
+      <Route path="/guides/how-to-download-apps"        element={<GuidePage slug="how-to-download-apps" />} />
+      <Route path="/guides/how-to-use-airdrop"          element={<GuidePage slug="how-to-use-airdrop" />} />
+      <Route path="/guides/how-to-change-wifi-password" element={<GuidePage slug="how-to-change-wifi-password" />} />
+      <Route path="/guides/how-to-record-screen"        element={<GuidePage slug="how-to-record-screen" />} />
+      <Route path="/guides/how-to-find-mac-address"     element={<GuidePage slug="how-to-find-mac-address" />} />
+      <Route path="/guides/how-to-turn-off-location"    element={<GuidePage slug="how-to-turn-off-location" />} />
+      <Route path="/guides/how-to-backup-iphone"        element={<GuidePage slug="how-to-backup-iphone" />} />
+      <Route path="/guides/how-to-recover-deleted-photos" element={<GuidePage slug="how-to-recover-deleted-photos" />} />
+      <Route path="/guides/how-to-reset-network-settings" element={<GuidePage slug="how-to-reset-network-settings" />} />
+      <Route path="/guides/how-to-use-google-maps-offline" element={<GuidePage slug="how-to-use-google-maps-offline" />} />
+      <Route path="/guides/how-to-block-a-number"       element={<GuidePage slug="how-to-block-a-number" />} />
+      <Route path="/guides/how-to-set-up-two-factor-authentication" element={<GuidePage slug="how-to-set-up-two-factor-authentication" />} />
+      <Route path="/guides/how-to-fix-frozen-phone"     element={<GuidePage slug="how-to-fix-frozen-phone" />} />
+      <Route path="/guides/how-to-manage-notifications" element={<GuidePage slug="how-to-manage-notifications" />} />
+      <Route path="/guides/how-to-use-hotspot"          element={<GuidePage slug="how-to-use-hotspot" />} />
       <Route path="*" element={chatApp} />
     </Routes>
     </>
