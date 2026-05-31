@@ -50,9 +50,12 @@
     .cta-box p { margin: 0 0 24px; }
     .cta-btn { display: inline-flex; align-items: center; gap: 8px; background: #52E09C; color: #0A1A12; font-weight: 700; font-size: 15px; padding: 14px 28px; border-radius: 999px; box-shadow: 0 0 20px rgba(82,224,156,0.3); transition: background 0.15s, box-shadow 0.15s; }
     .cta-btn:hover { background: #6EEAAA; box-shadow: 0 0 32px rgba(82,224,156,0.5); text-decoration: none; }
-    footer { border-top: 1px solid #2A2D3A; padding: 28px 24px; text-align: center; font-size: 13px; color: #8B8FA8; }
+    footer { background: #0D1117; border-top: 1px solid rgba(255,255,255,0.06); padding: 24px; font-size: 13px; color: #8B8FA8; }
+    .footer-inner { max-width: 900px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
     footer a { color: #8B8FA8; }
     footer a:hover { color: #52E09C; }
+    .footer-sep { color: #3A3D4E; }
+    @media (max-width: 680px) { .footer-inner { flex-direction: column; text-align: center; gap: 12px; } }
     @media (max-width: 600px) { h1 { font-size: 28px; } .container { padding: 36px 18px 60px; } .cta-box { padding: 24px; } }
   </style>
 </head>
@@ -267,7 +270,19 @@
   </div>
 
   <footer>
-    <p>&copy; 2025 <a href="https://kodahelp.com">Koda</a> &nbsp;&middot;&nbsp; <a href="https://kodahelp.com">AI Tech Support</a></p>
+    <div class="footer-inner">
+      <span>&copy; 2025 Koda &nbsp;&middot;&nbsp; Built with ❤️ to help people with tech</span>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;">
+        <a href="https://kodahelp.com/guides">All Guides</a>
+        <span class="footer-sep">&middot;</span>
+        <a href="https://kodahelp.com/guides/how-to-fix-wifi-on-iphone.html">WiFi Help</a>
+        <span class="footer-sep">&middot;</span>
+        <a href="https://kodahelp.com/guides/reset-apple-id-password.html">iPhone Help</a>
+        <span class="footer-sep">&middot;</span>
+        <a href="mailto:hello@kodahelp.com">Contact</a>
+      </div>
+      <span>Free AI tech support &nbsp;&middot;&nbsp; No account needed &nbsp;&middot;&nbsp; Always improving</span>
+    </div>
   </footer>
 </body>
 </html>

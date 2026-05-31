@@ -212,6 +212,7 @@ const CSS = `
   --scrollbar:      #2A2D3A;
   --scrollbar-h:    #3A3D4E;
   --placeholder:    #4A4D5E;
+  --footer-border:  rgba(255,255,255,0.06);
 }
 
 :root.light {
@@ -242,6 +243,7 @@ const CSS = `
   --scrollbar:      #D4D0C8;
   --scrollbar-h:    #C0B8B0;
   --placeholder:    #A8A29E;
+  --footer-border:  rgba(0,0,0,0.06);
 }
 
 /* ── Light mode polish ── */
@@ -518,6 +520,31 @@ html.admin-active {
   --placeholder:    #4A4530;
 }
 html.admin-active body { background: #050810; }
+
+/* ── Landing footer ── */
+.k-footer {
+  width: 100%;
+  background: var(--bg);
+  border-top: 1px solid var(--footer-border);
+  padding: 24px;
+  font-size: 13px;
+  color: var(--text-muted);
+  font-family: 'Inter', sans-serif;
+  flex-shrink: 0;
+}
+.k-footer-inner {
+  max-width: 680px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.k-footer a { color: var(--text-muted); text-decoration: none; }
+.k-footer a:hover { color: var(--accent); }
+.k-footer-sep { color: var(--text-faint); }
+@media (max-width: 600px) { .k-footer-inner { flex-direction: column; text-align: center; gap: 12px; } }
 
 /* ── Slide-up panel ── */
 @keyframes slideUp {
@@ -1090,6 +1117,28 @@ function MessageBubble({ msg, onReset, adminMode = false }) {
   );
 }
 
+/* ── Footer ─────────────────────────────────────────────────────────── */
+
+function Footer() {
+  return (
+    <footer className="k-footer">
+      <div className="k-footer-inner">
+        <span>&copy; 2025 Koda &nbsp;&middot;&nbsp; Built with ❤️ to help people with tech</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
+          <a href="/guides">All Guides</a>
+          <span className="k-footer-sep">&middot;</span>
+          <a href="/guides/how-to-fix-wifi-on-iphone.html">WiFi Help</a>
+          <span className="k-footer-sep">&middot;</span>
+          <a href="/guides/reset-apple-id-password">iPhone Help</a>
+          <span className="k-footer-sep">&middot;</span>
+          <a href="mailto:hello@kodahelp.com">Contact</a>
+        </div>
+        <span>Free AI tech support &nbsp;&middot;&nbsp; No account needed &nbsp;&middot;&nbsp; Always improving</span>
+      </div>
+    </footer>
+  );
+}
+
 /* ── Landing ────────────────────────────────────────────────────────── */
 
 function Landing({ onChipClick, onSubmit }) {
@@ -1099,6 +1148,7 @@ function Landing({ onChipClick, onSubmit }) {
   const onKey = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); go(); } };
 
   return (
+    <>
     <div className="land-wrap" style={{
       flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center',
       justifyContent: 'flex-start', padding: '40px 24px 40px', overflowY: 'auto',
@@ -1175,6 +1225,8 @@ function Landing({ onChipClick, onSubmit }) {
 
       </div>
     </div>
+    <Footer />
+    </>
   );
 }
 
