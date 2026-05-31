@@ -1141,22 +1141,43 @@ function Footer() {
 
 /* ── Landing ────────────────────────────────────────────────────────── */
 
-function AddToHomeScreenButton({ installPromptRef }) {
-  const [hidden, setHidden] = useState(() => {
-    const installed   = localStorage.getItem('koda_pwa_installed');
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-      || window.navigator.standalone;
-    return !!(installed || isStandalone);
-  });
-  const [showIosHint, setShowIosHint] = useState(false);
+function AddToHomeScreenButton() {
+  const [installPrompt, setInstallPrompt] = useState(null);
+  const [showIosHint,   setShowIosHint]   = useState(false);
+  const [hidden,        setHidden]        = useState(() =>
+    !!localStorage.getItem('koda_pwa_installed')
+    || window.matchMedia('(display-mode: standalone)').matches
+    || !!window.navigator.standalone
+  );
+
+  useEffect(() => {
+    if (hidden) return;
+
+    const onBeforeInstall = (e) => {
+      e.preventDefault();
+      setInstallPrompt(e);
+    };
+    const onInstalled = () => {
+      try { localStorage.setItem('koda_pwa_installed', 'true'); } catch {}
+      setInstallPrompt(null);
+      setHidden(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', onBeforeInstall);
+    window.addEventListener('appinstalled', onInstalled);
+    return () => {
+      window.removeEventListener('beforeinstallprompt', onBeforeInstall);
+      window.removeEventListener('appinstalled', onInstalled);
+    };
+  }, [hidden]);
 
   if (hidden) return null;
 
   const handleClick = async () => {
-    if (installPromptRef?.current) {
-      installPromptRef.current.prompt();
-      const { outcome } = await installPromptRef.current.userChoice;
-      installPromptRef.current = null;
+    if (installPrompt) {
+      installPrompt.prompt();
+      const { outcome } = await installPrompt.userChoice;
+      setInstallPrompt(null);
       if (outcome === 'accepted') {
         try { localStorage.setItem('koda_pwa_installed', 'true'); } catch {}
         setHidden(true);
@@ -1192,7 +1213,7 @@ function AddToHomeScreenButton({ installPromptRef }) {
   );
 }
 
-function Landing({ onChipClick, onSubmit, installPromptRef }) {
+function Landing({ onChipClick, onSubmit }) {
   const [val, setVal] = useState('');
   const ref = useRef(null);
   const go  = () => { if (val.trim()) onSubmit(val.trim()); };
@@ -1260,7 +1281,7 @@ function Landing({ onChipClick, onSubmit, installPromptRef }) {
         </div>
 
         {/* Add to Home Screen */}
-        <AddToHomeScreenButton installPromptRef={installPromptRef} />
+        <AddToHomeScreenButton />
 
         {/* Input bar */}
         <div className="k-input-bar" style={{ borderRadius: 16 }}>
@@ -1921,7 +1942,6 @@ export default function App() {
               sendMessage(p.prompt);
             }}
             onSubmit={text => sendMessage(text)}
-            installPromptRef={installPromptRef}
           />
         ) : (
           <Chat messages={messages} loading={loading} onSend={text => sendMessage(text)} onReset={reset} attachment={attachment} setAttachment={setAttachment} adminMode={isAdminMode} />
