@@ -1230,6 +1230,64 @@ function Landing({ onChipClick, onSubmit }) {
   );
 }
 
+/* ── Share this fix ─────────────────────────────────────────────────── */
+
+function hasStepByStep(text) {
+  if (typeof text !== 'string') return false;
+  return /^\s*1\./m.test(text) || /\bstep\s+1\b/i.test(text);
+}
+
+function ShareButton({ response }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleShare = async () => {
+    const encoded = encodeURIComponent(response.slice(0, 60));
+    const url = `https://kodahelp.com?tip=${encoded}`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Koda Tech Fix',
+          text: response.split('\n')[0],
+          url,
+        });
+        return;
+      } catch {}
+    }
+
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      const ta = document.createElement('textarea');
+      ta.value = url;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <button
+      onClick={handleShare}
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: 5,
+        padding: '6px 12px', borderRadius: 999,
+        border: '1px solid var(--border)', background: 'var(--surface)',
+        color: copied ? 'var(--accent)' : 'var(--text-muted)',
+        fontSize: 12, fontFamily: "'Inter', sans-serif",
+        cursor: 'pointer', fontWeight: 500, flexShrink: 0,
+        transition: 'color 0.15s, border-color 0.15s',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {copied ? '✅ Link copied!' : '🔗 Share this fix'}
+    </button>
+  );
+}
+
 /* ── Chat ───────────────────────────────────────────────────────────── */
 
 function Chat({ messages, loading, onSend, onReset, attachment, setAttachment, adminMode = false }) {
@@ -1273,18 +1331,43 @@ function Chat({ messages, loading, onSend, onReset, attachment, setAttachment, a
       {/* Messages */}
       <div className="k-messages" style={{ paddingLeft: 0, paddingRight: 0 }}>
         <div className="msgs-inner" style={{ padding: '0 24px', display: 'flex', flexDirection: 'column', gap: 20 }}>
-          {messages.map((m, i) => (
-            <div key={i}>
-              <MessageBubble msg={m} onReset={onReset} adminMode={adminMode} />
-              {m.role === 'assistant' && i === lastIdx && (
-                m.quickReplies === null
-                  ? <QuickRepliesShimmer />
-                  : m.quickReplies?.length > 0
-                    ? <QuickReplies options={m.quickReplies} onSelect={onSend} adminMode={adminMode} />
-                    : null
-              )}
-            </div>
-          ))}
+          {messages.map((m, i) => {
+            const isLast = i === lastIdx;
+            const isStepResp = m.role === 'assistant'
+              && typeof m.content === 'string'
+              && m.content !== '__limit__'
+              && hasStepByStep(m.content);
+            return (
+              <div key={i}>
+                <MessageBubble msg={m} onReset={onReset} adminMode={adminMode} />
+                {m.role === 'assistant' && isLast && (
+                  isStepResp ? (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 8 }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        {m.quickReplies === null
+                          ? <QuickRepliesShimmer />
+                          : m.quickReplies?.length > 0
+                            ? <QuickReplies options={m.quickReplies} onSelect={onSend} adminMode={adminMode} />
+                            : null}
+                      </div>
+                      <ShareButton response={m.content} />
+                    </div>
+                  ) : (
+                    m.quickReplies === null
+                      ? <QuickRepliesShimmer />
+                      : m.quickReplies?.length > 0
+                        ? <QuickReplies options={m.quickReplies} onSelect={onSend} adminMode={adminMode} />
+                        : null
+                  )
+                )}
+                {m.role === 'assistant' && !isLast && isStepResp && (
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 4 }}>
+                    <ShareButton response={m.content} />
+                  </div>
+                )}
+              </div>
+            );
+          })}
           {loading && <ThinkingIndicator />}
           <div ref={endRef} />
         </div>
