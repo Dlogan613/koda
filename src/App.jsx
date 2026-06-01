@@ -1000,98 +1000,151 @@ function ReplaysPanel({ onClose }) {
 }
 
 function AdminPanel() {
-  const [log, setLog] = useState(loadLog);
-  const [emails, setEmails] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('koda_emails') || '[]'); } catch { return []; }
-  });
-  const pos  = log.filter(e => e.signal === 'positive').length;
-  const neg  = log.filter(e => e.signal === 'negative').length;
-  const rep  = log.filter(e => e.signal === 'rephrase').length;
-  const note = adaptiveNote(log);
+  const [data,      setData]      = useState(null);
+  const [loading,   setLoading]   = useState(true);
+  const [lastFetch, setLastFetch] = useState(null);
+  const [secsAgo,   setSecsAgo]   = useState(0);
 
-  const clear = () => { localStorage.removeItem(LEARNING_KEY); setLog([]); };
-  const clearEmails = () => {
+  const fetchData = () => {
+    setLoading(true);
+    fetch(SHEETS_URL)
+      .then(r => r.json())
+      .then(d => {
+        const emailRows = Array.isArray(d.emails) ? d.emails.slice(1) : [];
+        const eventRows = Array.isArray(d.events) ? d.events.slice(1) : [];
+        setData({
+          stats: {
+            emails:          emailRows.length,
+            conversations:   eventRows.filter(r => r[0] === 'conversation_start').length,
+            positiveSignals: eventRows.filter(r => r[0] === 'positive_signal').length,
+            negativeSignals: eventRows.filter(r => r[0] === 'negative_signal').length,
+            newChats:        eventRows.filter(r => r[0] === 'new_chat').length,
+          },
+          emails: [...emailRows].reverse(),
+          events: [...eventRows].reverse().slice(0, 20),
+        });
+        setLastFetch(Date.now());
+        setSecsAgo(0);
+        setLoading(false);
+      })
+      .catch(() => { setLoading(false); });
+  };
+
+  useEffect(() => {
+    fetchData();
+    const iv = setInterval(fetchData, 60000);
+    return () => clearInterval(iv);
+  }, []);
+
+  useEffect(() => {
+    if (!lastFetch) return;
+    const tick = setInterval(() => setSecsAgo(Math.floor((Date.now() - lastFetch) / 1000)), 1000);
+    return () => clearInterval(tick);
+  }, [lastFetch]);
+
+  const clearCache = () => {
+    localStorage.removeItem(LEARNING_KEY);
     localStorage.removeItem('koda_emails');
     localStorage.removeItem('koda_user_email');
     localStorage.removeItem('koda_email_v2');
-    setEmails([]);
+    localStorage.removeItem('koda-messages');
   };
 
-  const rowColor = { positive: '#52E09C', negative: '#ff6b6b', rephrase: '#f0a500' };
+  const fmtDate = (raw) => {
+    if (!raw) return '';
+    const d = new Date(raw);
+    return isNaN(d) ? raw : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  };
+
+  const sectionHead = (label) => (
+    <div style={{ color: '#52E09C', fontWeight: 700, letterSpacing: '0.08em', fontSize: 11, marginBottom: 8 }}>
+      {label}
+    </div>
+  );
+
+  const divider = <div style={{ borderTop: '1px solid #1A1D27', margin: '14px 0' }} />;
 
   return (
     <div style={{
       position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 500,
       background: '#0A0C12', borderTop: '2px solid #52E09C',
-      padding: '16px 24px 20px', maxHeight: '42vh', overflowY: 'auto',
+      padding: '16px 24px 20px', maxHeight: '55vh', overflowY: 'auto',
       fontFamily: "'SF Mono','Fira Code',monospace", fontSize: 12, color: '#C0C3D4',
     }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
         <span style={{ color: '#52E09C', fontWeight: 700, letterSpacing: '0.08em', fontSize: 11 }}>
-          ⚙ KODA LEARNING LOG
+          ⚙ KODA ADMIN — GLOBAL DATA
         </span>
-        <button onClick={clear} style={{
+        <button onClick={clearCache} style={{
           background: 'none', border: '1px solid #ff6b6b', borderRadius: 6,
-          color: '#ff6b6b', padding: '3px 10px', cursor: 'pointer',
-          fontFamily: 'inherit', fontSize: 11,
+          color: '#ff6b6b', padding: '3px 10px', cursor: 'pointer', fontFamily: 'inherit', fontSize: 11,
         }}>
-          Clear Learning Data
+          Clear This Device's Cache
         </button>
       </div>
 
-      <div style={{ display: 'flex', gap: 28, marginBottom: 10, flexWrap: 'wrap' }}>
-        <span>✅ Positive: <strong style={{ color: '#52E09C' }}>{pos}</strong></span>
-        <span>❌ Negative: <strong style={{ color: '#ff6b6b' }}>{neg}</strong></span>
-        <span>🔁 Rephrase: <strong style={{ color: '#f0a500' }}>{rep}</strong></span>
-        <span style={{ color: '#8B8FA8' }}>Total: {log.length} / {LEARNING_MAX}</span>
-      </div>
+      {loading && !data && <div style={{ color: '#8B8FA8' }}>Loading…</div>}
 
-      {note && (
-        <div style={{
-          marginBottom: 10, padding: '6px 10px',
-          background: '#1A1D27', borderLeft: '3px solid #52E09C',
-          borderRadius: 4, color: '#52E09C', fontSize: 11,
-        }}>
-          Active adaptation: {note}
-        </div>
-      )}
-
-      <div style={{ borderTop: '1px solid #1A1D27', paddingTop: 10 }}>
-        <div style={{ color: '#8B8FA8', marginBottom: 6, fontSize: 11 }}>Last 10 entries (newest first)</div>
-        {log.length === 0 && <div style={{ color: '#3A3D4E' }}>No entries yet.</div>}
-        {[...log].reverse().slice(0, 10).map((e, i) => (
-          <div key={i} style={{ color: rowColor[e.signal] || '#ccc', marginBottom: 4, fontSize: 11 }}>
-            [{new Date(e.timestamp).toLocaleTimeString()}]{' '}
-            <strong>{e.signal.toUpperCase()}</strong>{' '}
-            <span style={{ color: '#8B8FA8' }}>— "{e.topic}" · {e.conversationLength} msgs</span>
+      {data && <>
+        {/* Section 1 — Global Stats */}
+        {sectionHead('📊 GLOBAL STATS')}
+        {[
+          ['📨', 'Total emails collected',     data.stats.emails],
+          ['💬', 'Total conversations started', data.stats.conversations],
+          ['👍', 'Positive signals',            data.stats.positiveSignals],
+          ['👎', 'Negative signals',            data.stats.negativeSignals],
+          ['🔄', 'New chats started',           data.stats.newChats],
+        ].map(([icon, label, val]) => (
+          <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0' }}>
+            <span style={{ color: '#8B8FA8' }}>{icon} {label}</span>
+            <strong style={{ color: '#52E09C' }}>{val}</strong>
           </div>
         ))}
-      </div>
 
-      <div style={{ borderTop: '1px solid #1A1D27', paddingTop: 10, marginTop: 10 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-          <span style={{ color: '#52E09C', fontWeight: 700, letterSpacing: '0.08em', fontSize: 11 }}>
-            📧 COLLECTED EMAILS ({emails.length})
-          </span>
-          {emails.length > 0 && (
-            <button onClick={clearEmails} style={{
-              background: 'none', border: '1px solid #ff6b6b', borderRadius: 6,
-              color: '#ff6b6b', padding: '3px 10px', cursor: 'pointer',
-              fontFamily: 'inherit', fontSize: 11,
-            }}>
-              Clear Emails
-            </button>
-          )}
-        </div>
-        {emails.length === 0
-          ? <div style={{ color: '#3A3D4E' }}>No emails collected yet.</div>
-          : emails.map((em, i) => (
-            <div key={i} style={{ color: '#C0C3D4', marginBottom: 3, fontSize: 11 }}>
-              {i + 1}. {em}
-            </div>
-          ))
+        {divider}
+
+        {/* Section 2 — All Emails */}
+        {sectionHead(`📧 ALL EMAILS (${data.emails.length})`)}
+        {data.emails.length === 0
+          ? <div style={{ color: '#3A3D4E' }}>No emails yet.</div>
+          : data.emails.map((row, i) => {
+              const email = Array.isArray(row) ? row[0] : row;
+              const ts    = Array.isArray(row) ? row[1] : '';
+              return (
+                <div key={i} style={{ color: '#C0C3D4', marginBottom: 3, fontSize: 11 }}>
+                  {email}{ts ? <span style={{ color: '#8B8FA8' }}> — {fmtDate(ts)}</span> : ''}
+                </div>
+              );
+            })
         }
-      </div>
+
+        {divider}
+
+        {/* Section 3 — Recent Events */}
+        {sectionHead('📋 RECENT EVENTS (last 20)')}
+        {data.events.length === 0
+          ? <div style={{ color: '#3A3D4E' }}>No events yet.</div>
+          : data.events.map((row, i) => {
+              const evt = Array.isArray(row) ? row[0] : row;
+              const ts  = Array.isArray(row) ? row[1] : '';
+              return (
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '3px 0', borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                  <span style={{ color: '#52E09C' }}>{evt}</span>
+                  <span style={{ color: '#8B8FA8', fontSize: 10 }}>{fmtDate(ts)}</span>
+                </div>
+              );
+            })
+        }
+
+        {divider}
+
+        {/* Footer */}
+        <div style={{ color: '#3A3D4E', fontSize: 10 }}>
+          🔄 Last updated: {secsAgo === 0 ? 'just now' : `${secsAgo}s ago`}
+          {loading && <span style={{ marginLeft: 8, color: '#52E09C' }}>refreshing…</span>}
+        </div>
+      </>}
     </div>
   );
 }
