@@ -894,31 +894,46 @@ function EmailGate({ onComplete }) {
 }
 
 function StatsPanel({ onClose }) {
-  const [stats, setStats]         = useState(null);
-  const [updatedAt, setUpdatedAt] = useState(null);
+  const [stats,      setStats]      = useState(null);
   const [fetchError, setFetchError] = useState(false);
+  const [lastFetch,  setLastFetch]  = useState(null); // Date of last successful fetch
+  const [secsAgo,    setSecsAgo]    = useState(0);
 
-  useEffect(() => {
+  const fetchStats = () => {
+    setFetchError(false);
     fetch(SHEETS_URL)
       .then(r => r.json())
       .then(data => {
-        const emailRows  = Array.isArray(data.emails) ? data.emails.slice(1) : [];
-        const eventRows  = Array.isArray(data.events) ? data.events.slice(1) : [];
-
-        const matchEvent = (row, name) =>
-          (Array.isArray(row) ? row[1] : row?.event) === name;
-
+        const emailRows = Array.isArray(data.emails) ? data.emails.slice(1) : [];
+        const eventRows = Array.isArray(data.events) ? data.events.slice(1) : [];
         setStats({
           emails:          emailRows.length,
-          conversations:   eventRows.filter(r => matchEvent(r, 'conversation_start')).length,
-          positiveSignals: eventRows.filter(r => matchEvent(r, 'positive_signal')).length,
-          negativeSignals: eventRows.filter(r => matchEvent(r, 'negative_signal')).length,
-          newChats:        eventRows.filter(r => matchEvent(r, 'new_chat')).length,
+          conversations:   eventRows.filter(r => r[0] === 'conversation_start').length,
+          positiveSignals: eventRows.filter(r => r[0] === 'positive_signal').length,
+          negativeSignals: eventRows.filter(r => r[0] === 'negative_signal').length,
+          newChats:        eventRows.filter(r => r[0] === 'new_chat').length,
         });
-        setUpdatedAt('just now');
+        setLastFetch(Date.now());
+        setSecsAgo(0);
       })
       .catch(() => setFetchError(true));
+  };
+
+  // Fetch immediately on open, then every 30 s
+  useEffect(() => {
+    fetchStats();
+    const interval = setInterval(fetchStats, 30000);
+    return () => clearInterval(interval);
   }, []);
+
+  // Tick "seconds ago" counter every second
+  useEffect(() => {
+    if (!lastFetch) return;
+    const tick = setInterval(() => {
+      setSecsAgo(Math.floor((Date.now() - lastFetch) / 1000));
+    }, 1000);
+    return () => clearInterval(tick);
+  }, [lastFetch]);
 
   const rows = stats ? [
     ['📨', 'Total emails collected',  stats.emails],
@@ -947,8 +962,10 @@ function StatsPanel({ onClose }) {
           <span style={{ color: 'var(--accent)', fontWeight: 700 }}>{val}</span>
         </div>
       ))}
-      {updatedAt && (
-        <div style={{ color: '#3A3D4E', fontSize: 10, marginTop: 10 }}>Last updated: {updatedAt}</div>
+      {lastFetch && (
+        <div style={{ color: '#3A3D4E', fontSize: 10, marginTop: 10 }}>
+          🔄 Last updated: {secsAgo === 0 ? 'just now' : `${secsAgo}s ago`}
+        </div>
       )}
     </div>
   );
