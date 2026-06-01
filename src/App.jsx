@@ -175,6 +175,36 @@ function saveReplayEntry(messages) {
   } catch {}
 }
 
+const LAST_CONVO_KEY = 'koda_last_conversation';
+
+function saveLastConversation(messages) {
+  if (messages.length < 2) return;
+  const userMsg = messages.find(m => m.role === 'user');
+  if (!userMsg) return;
+  try {
+    const firstMessage = (typeof userMsg.content === 'string' ? userMsg.content : '').slice(0, 80);
+    localStorage.setItem(LAST_CONVO_KEY, JSON.stringify({
+      messages,
+      timestamp: Date.now(),
+      firstMessage,
+      messageCount: messages.length,
+    }));
+  } catch {}
+}
+
+function loadLastConversation() {
+  try {
+    const raw = localStorage.getItem(LAST_CONVO_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    if (Date.now() - data.timestamp > 24 * 60 * 60 * 1000) {
+      localStorage.removeItem(LAST_CONVO_KEY);
+      return null;
+    }
+    return data;
+  } catch { return null; }
+}
+
 function timeAgo(ts) {
   const mins = Math.floor((Date.now() - ts) / 60000);
   if (mins < 1) return 'just now';
@@ -1225,6 +1255,64 @@ function Footer() {
   );
 }
 
+/* ── Continue banner ────────────────────────────────────────────────── */
+
+function ContinueBanner({ lastConvo, onContinue, onDismiss }) {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setVisible(true), 80); return () => clearTimeout(t); }, []);
+
+  if (!lastConvo) return null;
+
+  const preview = lastConvo.firstMessage
+    ? `"${lastConvo.firstMessage}${lastConvo.firstMessage.length >= 80 ? '…' : ''}"`
+    : 'Previous conversation';
+
+  return (
+    <div style={{
+      marginBottom: 20,
+      background: 'var(--surface)', borderRadius: 12,
+      borderLeft: '3px solid var(--accent)',
+      border: '1px solid var(--border)', borderLeftWidth: 3, borderLeftColor: 'var(--accent)',
+      padding: '14px 16px',
+      opacity: visible ? 1 : 0,
+      transform: visible ? 'translateY(0)' : 'translateY(-8px)',
+      transition: 'opacity 0.3s ease, transform 0.3s ease',
+    }}>
+      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)', marginBottom: 5 }}>
+        💬 Continue where you left off
+      </div>
+      <div style={{ fontSize: 12.5, color: 'var(--text-muted)', marginBottom: 12, lineHeight: 1.5 }}>
+        {preview}
+        <span style={{ color: 'var(--text-faint)', marginLeft: 6 }}>· {lastConvo.messageCount} messages</span>
+      </div>
+      <div style={{ display: 'flex', gap: 8 }}>
+        <button
+          onClick={onContinue}
+          style={{
+            padding: '7px 16px', borderRadius: 999, border: 'none',
+            background: 'var(--accent)', color: 'var(--send-text)',
+            fontSize: 12.5, fontWeight: 700, cursor: 'pointer',
+            fontFamily: "'Inter', sans-serif",
+          }}
+        >
+          Continue →
+        </button>
+        <button
+          onClick={onDismiss}
+          style={{
+            padding: '7px 14px', borderRadius: 999,
+            border: '1px solid var(--border)', background: 'transparent',
+            color: 'var(--text-muted)', fontSize: 12.5, cursor: 'pointer',
+            fontFamily: "'Inter', sans-serif",
+          }}
+        >
+          Start fresh
+        </button>
+      </div>
+    </div>
+  );
+}
+
 /* ── Landing ────────────────────────────────────────────────────────── */
 
 function AddToHomeScreenButton({ theme }) {
@@ -1304,7 +1392,7 @@ function AddToHomeScreenButton({ theme }) {
   );
 }
 
-function Landing({ onChipClick, onSubmit, theme }) {
+function Landing({ onChipClick, onSubmit, theme, lastConvo, onContinueConvo, onDismissConvo }) {
   const [val, setVal] = useState('');
   const ref = useRef(null);
   const go  = () => { if (val.trim()) onSubmit(val.trim()); };
@@ -1355,6 +1443,9 @@ function Landing({ onChipClick, onSubmit, theme }) {
         }}>
           Instant answers{' · '}Always free{' · '}No account needed
         </p>
+
+        {/* Continue banner */}
+        <ContinueBanner lastConvo={lastConvo} onContinue={onContinueConvo} onDismiss={onDismissConvo} />
 
         {/* Chips */}
         <div className="land-chips" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 20 }}>
@@ -2049,6 +2140,14 @@ export default function App() {
   const [showReplays,      setShowReplays]      = useState(false);
   const [showInstallBanner, setShowInstallBanner] = useState(false);
   const installPromptRef = useRef(null);
+  const [lastConvo, setLastConvo] = useState(() => loadLastConversation());
+
+  // Save conversation when leaving the page
+  useEffect(() => {
+    const handler = () => { if (messages.length > 1) saveLastConversation(messages); };
+    window.addEventListener('beforeunload', handler);
+    return () => window.removeEventListener('beforeunload', handler);
+  }, [messages]);
 
   // ── PWA install prompt
   useEffect(() => {
@@ -2237,7 +2336,10 @@ export default function App() {
   };
 
   const reset = () => {
-    if (messages.length > 1) saveReplayEntry(messages);
+    if (messages.length > 1) {
+      saveReplayEntry(messages);
+      saveLastConversation(messages);
+    }
     logToSheets('event', { event: 'new_chat', data: {} });
     setView('landing');
     setMessages([]);
@@ -2317,6 +2419,18 @@ export default function App() {
             }}
             onSubmit={text => sendMessage(text)}
             theme={theme}
+            lastConvo={lastConvo}
+            onContinueConvo={() => {
+              const saved = lastConvo;
+              localStorage.removeItem(LAST_CONVO_KEY);
+              setLastConvo(null);
+              setMessages(saved.messages);
+              setView('chat');
+            }}
+            onDismissConvo={() => {
+              localStorage.removeItem(LAST_CONVO_KEY);
+              setLastConvo(null);
+            }}
           />
         ) : (
           <Chat messages={messages} loading={loading} onSend={text => sendMessage(text)} onReset={reset} attachment={attachment} setAttachment={setAttachment} adminMode={isAdminMode} />
