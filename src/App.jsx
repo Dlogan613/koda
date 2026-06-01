@@ -1621,8 +1621,147 @@ function Chat({ messages, loading, onSend, onReset, attachment, setAttachment, a
 
 /* ── Guide page ─────────────────────────────────────────────────────── */
 
+/* ── Related guides data ─────────────────────────────────────────────── */
+
+const GUIDE_META = {
+  'how-to-fix-wifi-on-iphone':              { emoji: '📶', title: 'How to Fix WiFi on iPhone' },
+  'computer-running-slow-fix':              { emoji: '🐢', title: 'Why Is My Computer So Slow?' },
+  'how-to-recover-hacked-account':          { emoji: '🔐', title: 'How to Recover a Hacked Account' },
+  'printer-not-printing-fix':               { emoji: '🖨️', title: 'Printer Not Printing? How to Fix It' },
+  'iphone-storage-full-fix':                { emoji: '📱', title: 'iPhone Storage Full: What to Delete' },
+  'app-keeps-crashing-fix':                 { emoji: '💥', title: 'App Keeps Crashing? Here\'s What to Do' },
+  'how-to-spot-email-scam':                 { emoji: '🎣', title: 'How to Spot a Phishing Email' },
+  'how-to-remove-virus-from-computer':      { emoji: '🦠', title: 'How to Remove a Virus from Your Computer' },
+  'reset-apple-id-password':                { emoji: '🔑', title: 'How to Reset Your Apple ID Password' },
+  'cancel-iphone-subscription':             { emoji: '💳', title: 'How to Cancel a Subscription on iPhone' },
+  'transfer-iphone-photos':                 { emoji: '🖼️', title: 'How to Transfer Photos from iPhone' },
+  'clear-iphone-storage':                   { emoji: '📦', title: 'How to Free Up Space on iPhone' },
+  'connect-bluetooth-headphones':           { emoji: '🎧', title: 'How to Connect Bluetooth Headphones' },
+  'share-wifi-password':                    { emoji: '📶', title: 'How to Share Your WiFi Password' },
+  'stop-spam-calls':                        { emoji: '📵', title: 'How to Stop Spam Calls' },
+  'update-windows':                         { emoji: '🪟', title: 'How to Update Windows' },
+  'fix-phone-battery-drain':                { emoji: '🔋', title: 'Why Is My Phone Battery Draining Fast?' },
+  'set-up-new-iphone':                      { emoji: '📱', title: 'How to Set Up a New iPhone' },
+  'how-to-screenshot':                      { emoji: '📸', title: 'How to Take a Screenshot on Any Device' },
+  'how-to-clear-cache':                     { emoji: '🧹', title: 'How to Clear Cache on Any Device' },
+  'how-to-update-iphone':                   { emoji: '⬆️', title: 'How to Update Your iPhone' },
+  'how-to-factory-reset-android':           { emoji: '🔄', title: 'How to Factory Reset an Android Phone' },
+  'how-to-factory-reset-iphone':            { emoji: '📵', title: 'How to Factory Reset an iPhone' },
+  'how-to-download-apps':                   { emoji: '⬇️', title: 'How to Download Apps on iPhone & Android' },
+  'how-to-use-airdrop':                     { emoji: '📡', title: 'How to Use AirDrop' },
+  'how-to-change-wifi-password':            { emoji: '🔒', title: 'How to Change Your WiFi Password' },
+  'how-to-record-screen':                   { emoji: '🎥', title: 'How to Record Your Screen' },
+  'how-to-find-mac-address':                { emoji: '🌐', title: 'How to Find Your MAC Address' },
+  'how-to-turn-off-location':               { emoji: '📍', title: 'How to Turn Off Location Services' },
+  'how-to-backup-iphone':                   { emoji: '☁️', title: 'How to Back Up Your iPhone' },
+  'how-to-recover-deleted-photos':          { emoji: '🖼️', title: 'How to Recover Deleted Photos' },
+  'how-to-reset-network-settings':          { emoji: '📡', title: 'How to Reset Network Settings' },
+  'how-to-use-google-maps-offline':         { emoji: '🗺️', title: 'How to Use Google Maps Offline' },
+  'how-to-block-a-number':                  { emoji: '🚫', title: 'How to Block a Number' },
+  'how-to-set-up-two-factor-authentication':{ emoji: '🔒', title: 'How to Set Up Two-Factor Authentication' },
+  'how-to-fix-frozen-phone':                { emoji: '🧊', title: 'How to Fix a Frozen Phone' },
+  'how-to-manage-notifications':            { emoji: '🔔', title: 'How to Manage Notifications' },
+  'how-to-use-hotspot':                     { emoji: '📶', title: 'How to Set Up a Mobile Hotspot' },
+};
+
+const RELATED_MAP = {
+  'how-to-fix-wifi-on-iphone':              ['how-to-reset-network-settings', 'how-to-change-wifi-password', 'how-to-use-hotspot'],
+  'computer-running-slow-fix':              ['how-to-clear-cache', 'update-windows', 'how-to-remove-virus-from-computer'],
+  'how-to-recover-hacked-account':          ['reset-apple-id-password', 'how-to-set-up-two-factor-authentication', 'how-to-spot-email-scam'],
+  'printer-not-printing-fix':               ['computer-running-slow-fix', 'update-windows', 'connect-bluetooth-headphones'],
+  'iphone-storage-full-fix':                ['clear-iphone-storage', 'how-to-backup-iphone', 'transfer-iphone-photos'],
+  'app-keeps-crashing-fix':                 ['how-to-update-iphone', 'how-to-clear-cache', 'how-to-fix-frozen-phone'],
+  'how-to-spot-email-scam':                 ['how-to-recover-hacked-account', 'how-to-remove-virus-from-computer', 'how-to-set-up-two-factor-authentication'],
+  'how-to-remove-virus-from-computer':      ['how-to-spot-email-scam', 'how-to-recover-hacked-account', 'update-windows'],
+  'reset-apple-id-password':                ['how-to-set-up-two-factor-authentication', 'how-to-recover-hacked-account', 'how-to-block-a-number'],
+  'cancel-iphone-subscription':             ['reset-apple-id-password', 'app-keeps-crashing-fix', 'how-to-update-iphone'],
+  'transfer-iphone-photos':                 ['how-to-use-airdrop', 'how-to-backup-iphone', 'clear-iphone-storage'],
+  'clear-iphone-storage':                   ['iphone-storage-full-fix', 'how-to-backup-iphone', 'transfer-iphone-photos'],
+  'connect-bluetooth-headphones':           ['how-to-fix-wifi-on-iphone', 'how-to-reset-network-settings', 'how-to-use-airdrop'],
+  'share-wifi-password':                    ['how-to-fix-wifi-on-iphone', 'how-to-change-wifi-password', 'how-to-reset-network-settings'],
+  'stop-spam-calls':                        ['how-to-block-a-number', 'how-to-manage-notifications', 'how-to-spot-email-scam'],
+  'update-windows':                         ['computer-running-slow-fix', 'how-to-remove-virus-from-computer', 'how-to-clear-cache'],
+  'fix-phone-battery-drain':                ['clear-iphone-storage', 'how-to-manage-notifications', 'how-to-turn-off-location'],
+  'set-up-new-iphone':                      ['how-to-backup-iphone', 'transfer-iphone-photos', 'how-to-update-iphone'],
+  'how-to-screenshot':                      ['how-to-record-screen', 'how-to-use-airdrop', 'how-to-backup-iphone'],
+  'how-to-clear-cache':                     ['computer-running-slow-fix', 'update-windows', 'how-to-update-iphone'],
+  'how-to-update-iphone':                   ['set-up-new-iphone', 'how-to-backup-iphone', 'how-to-factory-reset-iphone'],
+  'how-to-factory-reset-android':           ['how-to-backup-iphone', 'how-to-reset-network-settings', 'how-to-update-iphone'],
+  'how-to-factory-reset-iphone':            ['how-to-backup-iphone', 'set-up-new-iphone', 'how-to-update-iphone'],
+  'how-to-download-apps':                   ['app-keeps-crashing-fix', 'cancel-iphone-subscription', 'how-to-update-iphone'],
+  'how-to-use-airdrop':                     ['transfer-iphone-photos', 'how-to-screenshot', 'how-to-backup-iphone'],
+  'how-to-change-wifi-password':            ['how-to-fix-wifi-on-iphone', 'share-wifi-password', 'how-to-reset-network-settings'],
+  'how-to-record-screen':                   ['how-to-screenshot', 'how-to-use-airdrop', 'transfer-iphone-photos'],
+  'how-to-find-mac-address':                ['how-to-fix-wifi-on-iphone', 'how-to-reset-network-settings', 'how-to-change-wifi-password'],
+  'how-to-turn-off-location':               ['fix-phone-battery-drain', 'how-to-manage-notifications', 'how-to-block-a-number'],
+  'how-to-backup-iphone':                   ['how-to-recover-deleted-photos', 'transfer-iphone-photos', 'iphone-storage-full-fix'],
+  'how-to-recover-deleted-photos':          ['how-to-backup-iphone', 'transfer-iphone-photos', 'clear-iphone-storage'],
+  'how-to-reset-network-settings':          ['how-to-fix-wifi-on-iphone', 'how-to-change-wifi-password', 'connect-bluetooth-headphones'],
+  'how-to-use-google-maps-offline':         ['how-to-fix-wifi-on-iphone', 'how-to-use-hotspot', 'fix-phone-battery-drain'],
+  'how-to-block-a-number':                  ['stop-spam-calls', 'how-to-manage-notifications', 'how-to-turn-off-location'],
+  'how-to-set-up-two-factor-authentication':['reset-apple-id-password', 'how-to-recover-hacked-account', 'how-to-block-a-number'],
+  'how-to-fix-frozen-phone':                ['app-keeps-crashing-fix', 'how-to-update-iphone', 'how-to-factory-reset-iphone'],
+  'how-to-manage-notifications':            ['fix-phone-battery-drain', 'how-to-turn-off-location', 'stop-spam-calls'],
+  'how-to-use-hotspot':                     ['how-to-fix-wifi-on-iphone', 'how-to-change-wifi-password', 'how-to-use-google-maps-offline'],
+};
+
+const DEFAULT_RELATED = ['how-to-fix-wifi-on-iphone', 'fix-phone-battery-drain', 'how-to-clear-cache'];
+
+function RelatedGuides({ slug }) {
+  const related = (RELATED_MAP[slug] || DEFAULT_RELATED).filter(s => s !== slug).slice(0, 3);
+  if (related.length === 0) return null;
+
+  return (
+    <div style={{ background: '#0F1117', padding: '0 24px 12px' }}>
+      <div style={{ maxWidth: 720, margin: '0 auto' }}>
+        <h2 style={{
+          fontSize: 19, fontWeight: 700, color: '#F0F0F0',
+          letterSpacing: '-0.3px', marginBottom: 16, paddingTop: 8,
+        }}>
+          Related Guides
+        </h2>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: 12,
+        }}>
+          {related.map(s => {
+            const meta = GUIDE_META[s];
+            if (!meta) return null;
+            return (
+              <a
+                key={s}
+                href={`/guides/${s}`}
+                style={{
+                  display: 'flex', flexDirection: 'column', gap: 8,
+                  background: '#1A1D27', border: '1px solid #2A2D3A',
+                  borderRadius: 12, padding: '16px 16px 14px',
+                  textDecoration: 'none', transition: 'border-color 0.18s, background 0.18s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = '#52E09C'; e.currentTarget.style.background = 'rgba(82,224,156,0.04)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = '#2A2D3A'; e.currentTarget.style.background = '#1A1D27'; }}
+              >
+                <span style={{ fontSize: 22, lineHeight: 1 }}>{meta.emoji}</span>
+                <span style={{ fontSize: 13.5, fontWeight: 600, color: '#F0F0F0', lineHeight: 1.35 }}>{meta.title}</span>
+                <span style={{ fontSize: 12, color: '#52E09C', fontWeight: 600, marginTop: 'auto' }}>Read guide →</span>
+              </a>
+            );
+          })}
+        </div>
+        <style>{`
+          @media (max-width: 600px) {
+            .rg-grid { grid-template-columns: 1fr !important; }
+          }
+        `}</style>
+      </div>
+    </div>
+  );
+}
+
 function GuidePage({ slug }) {
-  const [bodyHtml, setBodyHtml] = useState('');
+  const [bodyHtml,   setBodyHtml]   = useState('');
+  const [ctaHtml,    setCtaHtml]    = useState('');
+  const [footerHtml, setFooterHtml] = useState('');
   const [guideStyles, setGuideStyles] = useState('');
 
   useEffect(() => {
@@ -1634,6 +1773,14 @@ function GuidePage({ slug }) {
         document.title = doc.title;
         const styleEl = doc.querySelector('style');
         setGuideStyles(styleEl?.textContent || '');
+
+        // Extract CTA and footer so we can inject related guides before the CTA
+        const cta    = doc.querySelector('.cta-box');
+        const footer = doc.querySelector('footer');
+        setCtaHtml(cta    ? cta.outerHTML    : '');
+        setFooterHtml(footer ? footer.outerHTML : '');
+        if (cta)    cta.remove();
+        if (footer) footer.remove();
         setBodyHtml(doc.body.innerHTML);
       })
       .catch(() => {
@@ -1653,6 +1800,14 @@ function GuidePage({ slug }) {
     <>
       <style>{guideStyles}</style>
       <div dangerouslySetInnerHTML={{ __html: bodyHtml }} />
+      <RelatedGuides slug={slug} />
+      {ctaHtml && (
+        <div style={{ background: '#0F1117', padding: '0 24px 52px' }}>
+          <div style={{ maxWidth: 720, margin: '0 auto' }}
+               dangerouslySetInnerHTML={{ __html: ctaHtml }} />
+        </div>
+      )}
+      <div dangerouslySetInnerHTML={{ __html: footerHtml }} />
     </>
   );
 }
