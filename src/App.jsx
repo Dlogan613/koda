@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-const API_KEY = import.meta.env.VITE_API_KEY;
+// API calls go through /api/chat serverless proxy — key is never in the browser
 
 const SYSTEM_PROMPT = `You are Koda, an expert AI technology assistant. You help people with ANYTHING that involves a device, the internet, or technology — whether something is broken OR they just need help doing something they don't know how to do.
 
@@ -651,14 +651,9 @@ function getErrorMessage(error) {
 
 async function generateQuickReplies(history) {
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/chat', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': API_KEY,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 150,
@@ -1908,14 +1903,9 @@ export default function App() {
       }
 
       const [res] = await Promise.all([
-        fetch('https://api.anthropic.com/v1/messages', {
+        fetch('/api/chat', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-api-key': API_KEY,
-            'anthropic-version': '2023-06-01',
-            'anthropic-dangerous-direct-browser-access': 'true',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             model: isAdminMode ? 'claude-sonnet-4-20250514' : 'claude-haiku-4-5-20251001',
             max_tokens: isAdminMode ? 1200 : 600,
