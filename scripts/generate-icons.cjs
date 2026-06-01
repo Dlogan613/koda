@@ -21,10 +21,11 @@ function generateIcon(size) {
   ctx.fill();
 
   ctx.fillStyle = 'white';
-  ctx.font = `900 ${size * 0.55}px Arial Black, Arial`;
+  ctx.font = `900 ${size * 0.62}px Arial Black, Arial`;
   ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText('K', size / 2, size / 2 + size * 0.03);
+  ctx.textBaseline = 'alphabetic';
+  const textY = size * 0.5 + size * 0.22;
+  ctx.fillText('K', size / 2, textY);
 
   return canvas.toBuffer('image/png');
 }
