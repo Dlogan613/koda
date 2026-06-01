@@ -573,7 +573,6 @@ html.admin-active body { background: #050810; }
   font-size: 13px;
   color: var(--text-muted);
   font-family: 'Inter', sans-serif;
-  flex-shrink: 0;
 }
 .k-footer-inner {
   max-width: 680px;
@@ -1401,8 +1400,8 @@ function Landing({ onChipClick, onSubmit, theme, lastConvo, onContinueConvo, onD
   return (
     <>
     <div className="land-wrap" style={{
-      flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center',
-      justifyContent: 'flex-start', padding: '40px 24px 40px', overflowY: 'auto',
+      display: 'flex', flexDirection: 'column', alignItems: 'center',
+      justifyContent: 'flex-start', padding: '40px 24px 40px',
     }}>
       <div style={{ width: '100%', maxWidth: 680 }}>
 
@@ -2391,7 +2390,10 @@ export default function App() {
   };
 
   const chatApp = (
-    <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', background: 'var(--bg)' }}>
+    <div style={{
+      ...(view === 'landing' ? { minHeight: '100dvh' } : { height: '100dvh' }),
+      display: 'flex', flexDirection: 'column', background: 'var(--bg)',
+    }}>
 
       {/* Header */}
       <header style={{
