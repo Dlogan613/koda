@@ -1803,10 +1803,10 @@ function RelatedGuides({ slug }) {
   if (related.length === 0) return null;
 
   return (
-    <div style={{ background: '#0F1117', padding: '0 24px 12px' }}>
+    <div style={{ background: 'var(--bg)', padding: '0 24px 12px' }}>
       <div style={{ maxWidth: 720, margin: '0 auto' }}>
         <h2 style={{
-          fontSize: 19, fontWeight: 700, color: '#F0F0F0',
+          fontSize: 19, fontWeight: 700, color: 'var(--text)',
           letterSpacing: '-0.3px', marginBottom: 16, paddingTop: 8,
         }}>
           Related Guides
@@ -1825,16 +1825,16 @@ function RelatedGuides({ slug }) {
                 href={`/guides/${s}`}
                 style={{
                   display: 'flex', flexDirection: 'column', gap: 8,
-                  background: '#1A1D27', border: '1px solid #2A2D3A',
+                  background: 'var(--surface)', border: '1px solid var(--border)',
                   borderRadius: 12, padding: '16px 16px 14px',
                   textDecoration: 'none', transition: 'border-color 0.18s, background 0.18s',
                 }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = '#52E09C'; e.currentTarget.style.background = 'rgba(82,224,156,0.04)'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = '#2A2D3A'; e.currentTarget.style.background = '#1A1D27'; }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'var(--accent-glow)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'var(--surface)'; }}
               >
                 <span style={{ fontSize: 22, lineHeight: 1 }}>{meta.emoji}</span>
-                <span style={{ fontSize: 13.5, fontWeight: 600, color: '#F0F0F0', lineHeight: 1.35 }}>{meta.title}</span>
-                <span style={{ fontSize: 12, color: '#52E09C', fontWeight: 600, marginTop: 'auto' }}>Read guide →</span>
+                <span style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--text)', lineHeight: 1.35 }}>{meta.title}</span>
+                <span style={{ fontSize: 12, color: 'var(--accent)', fontWeight: 600, marginTop: 'auto' }}>Read guide →</span>
               </a>
             );
           })}
@@ -1947,38 +1947,38 @@ function DailyLimitScreen() {
 function PrivacyPage() {
   useEffect(() => { document.title = 'Privacy Policy & Terms | Koda'; }, []);
 
-  const pg   = { background: '#0F1117', minHeight: '100vh', fontFamily: "'Inter', -apple-system, sans-serif", color: '#F0F0F0' };
-  const hdr  = { background: '#0F1117', borderBottom: '1px solid #2A2D3A', padding: '0 24px', height: 60, display: 'flex', alignItems: 'center' };
-  const lBox = { width: 32, height: 32, borderRadius: 10, background: 'linear-gradient(135deg, #52E09C 0%, #2DB87A 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0A1A12', fontWeight: 800, fontSize: 15, boxShadow: '0 0 12px rgba(82,224,156,0.3)', flexShrink: 0 };
+  const pg   = { background: 'var(--bg)', minHeight: '100vh', fontFamily: "'Inter', -apple-system, sans-serif", color: 'var(--text)' };
+  const hdr  = { background: 'var(--bg)', borderBottom: '1px solid var(--border)', padding: '0 24px', height: 60, display: 'flex', alignItems: 'center' };
+  const lBox = { width: 32, height: 32, borderRadius: 10, background: 'var(--logo-g)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--logo-text)', fontWeight: 800, fontSize: 15, boxShadow: '0 0 12px var(--accent-border)', flexShrink: 0 };
   const lnk  = { display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none' };
   const wrap = { maxWidth: 720, margin: '0 auto', padding: '52px 24px 80px' };
-  const crumb= { fontSize: 13, color: '#8B8FA8', marginBottom: 32 };
-  const h1   = { fontSize: 38, fontWeight: 800, color: '#F0F0F0', letterSpacing: '-1px', lineHeight: 1.15, marginBottom: 6 };
-  const meta = { fontSize: 13, color: '#8B8FA8', marginBottom: 32, display: 'block' };
-  const h2   = { fontSize: 18, fontWeight: 800, color: '#F0F0F0', margin: '44px 0 12px', letterSpacing: '-0.2px', textAlign: 'left' };
-  const p    = { fontSize: 15, color: '#C0C3D4', lineHeight: 1.75, marginBottom: 14, textAlign: 'left' };
+  const crumb= { fontSize: 13, color: 'var(--text-muted)', marginBottom: 32 };
+  const h1   = { fontSize: 38, fontWeight: 800, color: 'var(--text)', letterSpacing: '-1px', lineHeight: 1.15, marginBottom: 6 };
+  const meta = { fontSize: 13, color: 'var(--text-muted)', marginBottom: 32, display: 'block' };
+  const h2   = { fontSize: 18, fontWeight: 800, color: 'var(--text)', margin: '44px 0 12px', letterSpacing: '-0.2px', textAlign: 'left' };
+  const p    = { fontSize: 15, color: 'var(--text-mid)', lineHeight: 1.75, marginBottom: 14, textAlign: 'left' };
   const ul   = { paddingLeft: 20, marginBottom: 14, textAlign: 'left' };
-  const li   = { fontSize: 15, color: '#C0C3D4', lineHeight: 1.7, marginBottom: 8 };
-  const div1 = { border: 'none', borderTop: '1px solid #2A2D3A', margin: '56px 0' };
-  const cta  = { background: '#1A1D27', border: '1px solid #2A2D3A', borderRadius: 16, padding: 36, textAlign: 'center', marginTop: 56 };
-  const ctaB = { display: 'inline-flex', alignItems: 'center', gap: 8, background: '#52E09C', color: '#0A1A12', fontWeight: 700, fontSize: 15, padding: '14px 28px', borderRadius: 999, boxShadow: '0 0 20px rgba(82,224,156,0.3)', textDecoration: 'none' };
-  const ftr  = { background: '#0D1117', borderTop: '1px solid rgba(255,255,255,0.06)', padding: 24, fontSize: 13, color: '#8B8FA8' };
+  const li   = { fontSize: 15, color: 'var(--text-mid)', lineHeight: 1.7, marginBottom: 8 };
+  const div1 = { border: 'none', borderTop: '1px solid var(--border)', margin: '56px 0' };
+  const cta  = { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, padding: 36, textAlign: 'center', marginTop: 56 };
+  const ctaB = { display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--accent)', color: 'var(--send-text)', fontWeight: 700, fontSize: 15, padding: '14px 28px', borderRadius: 999, boxShadow: '0 0 20px var(--accent-border)', textDecoration: 'none' };
+  const ftr  = { background: 'var(--bg)', borderTop: '1px solid var(--footer-border)', padding: 24, fontSize: 13, color: 'var(--text-muted)' };
   const fIn  = { maxWidth: 720, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap' };
   const fLnk = { display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', justifyContent: 'center' };
-  const muted= { color: '#8B8FA8', textDecoration: 'none' };
-  const mint = { color: '#52E09C' };
-  const sep  = { color: '#3A3D4E' };
+  const muted= { color: 'var(--text-muted)', textDecoration: 'none' };
+  const mint = { color: 'var(--accent)' };
+  const sep  = { color: 'var(--text-faint)' };
 
   // Table of contents link style
-  const tocA = { color: '#52E09C', textDecoration: 'none', fontSize: 14, lineHeight: 2 };
-  const tocSub = { color: '#8B8FA8', textDecoration: 'none', fontSize: 13.5, lineHeight: 1.9, paddingLeft: 16, display: 'block' };
+  const tocA = { color: 'var(--accent)', textDecoration: 'none', fontSize: 14, lineHeight: 2 };
+  const tocSub = { color: 'var(--text-muted)', textDecoration: 'none', fontSize: 13.5, lineHeight: 1.9, paddingLeft: 16, display: 'block' };
 
   return (
     <div style={pg}>
       <header style={hdr}>
         <a href="https://kodahelp.com" style={lnk}>
           <div style={lBox}>K</div>
-          <span style={{ fontSize: 16, fontWeight: 700, color: '#F0F0F0', letterSpacing: '-0.35px' }}>Koda</span>
+          <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.35px' }}>Koda</span>
         </a>
       </header>
 
@@ -1989,8 +1989,8 @@ function PrivacyPage() {
         </div>
 
         {/* ── Table of Contents ── */}
-        <div style={{ background: '#1A1D27', border: '1px solid #2A2D3A', borderRadius: 12, padding: '20px 24px', marginBottom: 48 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: '#52E09C', letterSpacing: '0.08em', marginBottom: 12 }}>CONTENTS</div>
+        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: '20px 24px', marginBottom: 48 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--accent)', letterSpacing: '0.08em', marginBottom: 12 }}>CONTENTS</div>
           <div>
             <a href="#privacy" style={tocA}>Privacy Policy</a>
             <a href="#collect" style={tocSub}>Information We Collect</a>
@@ -2066,8 +2066,8 @@ function PrivacyPage() {
 
         {/* CTA */}
         <div style={cta}>
-          <h2 style={{ margin: '0 0 10px', fontSize: 22, fontWeight: 800, color: '#F0F0F0' }}>Got a tech problem? Ask Koda.</h2>
-          <p style={{ margin: '0 0 24px', fontSize: 15, color: '#8B8FA8' }}>Free AI tech support — no account needed.</p>
+          <h2 style={{ margin: '0 0 10px', fontSize: 22, fontWeight: 800, color: 'var(--text)' }}>Got a tech problem? Ask Koda.</h2>
+          <p style={{ margin: '0 0 24px', fontSize: 15, color: 'var(--text-muted)' }}>Free AI tech support — no account needed.</p>
           <a href="https://kodahelp.com" style={ctaB}>Talk to Koda &rarr;</a>
         </div>
       </div>
@@ -2097,39 +2097,55 @@ function PrivacyPage() {
 
 export default function App() {
   // ── Theme — follow system by default; persist manual override separately
-  const THEME_OVERRIDE_KEY = 'koda-theme-override';
+  const THEME_KEY        = 'koda_theme';
+  const THEME_MANUAL_KEY = 'koda_theme_manual';
+
   const getSystemTheme = () =>
     window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 
+  const applyThemeClass = (t) => {
+    document.documentElement.classList.remove('dark', 'light');
+    document.documentElement.classList.add(t);
+  };
+
   const [theme, setTheme] = useState(() => {
     try {
-      const override = localStorage.getItem(THEME_OVERRIDE_KEY);
-      const t = override ?? getSystemTheme();
-      document.documentElement.className = t;
+      let t = localStorage.getItem(THEME_KEY);
+      if (!t) {
+        t = getSystemTheme();
+        try { localStorage.setItem(THEME_KEY, t); } catch {}
+      }
+      applyThemeClass(t);
       return t;
     } catch { return 'dark'; }
   });
 
   // Apply theme class to <html> whenever theme changes
   useEffect(() => {
-    document.documentElement.className = theme;
+    applyThemeClass(theme);
   }, [theme]);
 
   // Follow system theme changes unless the user has set a manual override
   useEffect(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
     const handler = (e) => {
-      if (!localStorage.getItem(THEME_OVERRIDE_KEY))
-        setTheme(e.matches ? 'dark' : 'light');
+      if (!localStorage.getItem(THEME_MANUAL_KEY)) {
+        const sys = e.matches ? 'dark' : 'light';
+        try { localStorage.setItem(THEME_KEY, sys); } catch {}
+        setTheme(sys);
+      }
     };
     mq.addEventListener('change', handler);
     return () => mq.removeEventListener('change', handler);
   }, []);
 
-  // Manual toggle — save as override so system changes no longer auto-apply
+  // Manual toggle — set manual flag so system changes no longer auto-apply
   const toggleTheme = () => setTheme(t => {
     const next = t === 'dark' ? 'light' : 'dark';
-    try { localStorage.setItem(THEME_OVERRIDE_KEY, next); } catch {}
+    try {
+      localStorage.setItem(THEME_KEY, next);
+      localStorage.setItem(THEME_MANUAL_KEY, 'true');
+    } catch {}
     return next;
   });
 
@@ -2390,26 +2406,8 @@ export default function App() {
           <OnlineIndicator adminMode={isAdminMode} />
 
           {/* Theme toggle */}
-          <button className="k-theme-btn" onClick={toggleTheme} title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
-            {theme === 'dark' ? (
-              /* Sun icon */
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="5"/>
-                <line x1="12" y1="1" x2="12" y2="3"/>
-                <line x1="12" y1="21" x2="12" y2="23"/>
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                <line x1="1" y1="12" x2="3" y2="12"/>
-                <line x1="21" y1="12" x2="23" y2="12"/>
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-              </svg>
-            ) : (
-              /* Moon icon */
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-              </svg>
-            )}
+          <button className="k-theme-btn" onClick={toggleTheme} title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'} style={{ fontSize: 16 }}>
+            {theme === 'dark' ? '☀️' : '🌙'}
           </button>
 
           {view === 'chat' && (
