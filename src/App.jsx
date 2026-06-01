@@ -1947,124 +1947,144 @@ function DailyLimitScreen() {
 function PrivacyPage() {
   useEffect(() => { document.title = 'Privacy Policy & Terms | Koda'; }, []);
 
-  const s = {
-    page:    { background: '#0F1117', minHeight: '100vh', fontFamily: "'Inter', -apple-system, sans-serif", color: '#F0F0F0' },
-    header:  { background: '#0F1117', borderBottom: '1px solid #2A2D3A', padding: '0 24px', height: 60, display: 'flex', alignItems: 'center' },
-    logoBox: { width: 32, height: 32, borderRadius: 10, background: 'linear-gradient(135deg, #52E09C 0%, #2DB87A 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0A1A12', fontWeight: 800, fontSize: 15, boxShadow: '0 0 12px rgba(82,224,156,0.3)', flexShrink: 0 },
-    logo:    { display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none' },
-    logoTxt: { fontSize: 16, fontWeight: 700, color: '#F0F0F0', letterSpacing: '-0.35px' },
-    wrap:    { maxWidth: 720, margin: '0 auto', padding: '52px 24px 80px' },
-    crumb:   { fontSize: 13, color: '#8B8FA8', marginBottom: 28 },
-    h1:      { fontSize: 38, fontWeight: 800, color: '#F0F0F0', letterSpacing: '-1px', lineHeight: 1.15, marginBottom: 8 },
-    meta:    { fontSize: 13, color: '#8B8FA8', marginBottom: 40 },
-    h2:      { fontSize: 21, fontWeight: 700, color: '#F0F0F0', margin: '40px 0 14px', letterSpacing: '-0.3px' },
-    h3:      { fontSize: 15, fontWeight: 600, color: '#F0F0F0', margin: '20px 0 8px' },
-    p:       { fontSize: 15, color: '#C0C3D4', lineHeight: 1.75, marginBottom: 14 },
-    ul:      { paddingLeft: 20, marginBottom: 14 },
-    li:      { fontSize: 15, color: '#C0C3D4', lineHeight: 1.7, marginBottom: 6 },
-    divider: { border: 'none', borderTop: '1px solid #2A2D3A', margin: '52px 0' },
-    cta:     { background: '#1A1D27', border: '1px solid #2A2D3A', borderRadius: 16, padding: 36, textAlign: 'center', marginTop: 52 },
-    ctaBtn:  { display: 'inline-flex', alignItems: 'center', gap: 8, background: '#52E09C', color: '#0A1A12', fontWeight: 700, fontSize: 15, padding: '14px 28px', borderRadius: 999, boxShadow: '0 0 20px rgba(82,224,156,0.3)', textDecoration: 'none' },
-    footer:  { background: '#0D1117', borderTop: '1px solid rgba(255,255,255,0.06)', padding: 24, fontSize: 13, color: '#8B8FA8' },
-    fInner:  { maxWidth: 720, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap' },
-    fLinks:  { display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', justifyContent: 'center' },
-    a:       { color: '#8B8FA8', textDecoration: 'none' },
-  };
+  const pg   = { background: '#0F1117', minHeight: '100vh', fontFamily: "'Inter', -apple-system, sans-serif", color: '#F0F0F0' };
+  const hdr  = { background: '#0F1117', borderBottom: '1px solid #2A2D3A', padding: '0 24px', height: 60, display: 'flex', alignItems: 'center' };
+  const lBox = { width: 32, height: 32, borderRadius: 10, background: 'linear-gradient(135deg, #52E09C 0%, #2DB87A 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0A1A12', fontWeight: 800, fontSize: 15, boxShadow: '0 0 12px rgba(82,224,156,0.3)', flexShrink: 0 };
+  const lnk  = { display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none' };
+  const wrap = { maxWidth: 720, margin: '0 auto', padding: '52px 24px 80px' };
+  const crumb= { fontSize: 13, color: '#8B8FA8', marginBottom: 32 };
+  const h1   = { fontSize: 38, fontWeight: 800, color: '#F0F0F0', letterSpacing: '-1px', lineHeight: 1.15, marginBottom: 6 };
+  const meta = { fontSize: 13, color: '#8B8FA8', marginBottom: 32, display: 'block' };
+  const h2   = { fontSize: 18, fontWeight: 800, color: '#F0F0F0', margin: '44px 0 12px', letterSpacing: '-0.2px', textAlign: 'left' };
+  const p    = { fontSize: 15, color: '#C0C3D4', lineHeight: 1.75, marginBottom: 14, textAlign: 'left' };
+  const ul   = { paddingLeft: 20, marginBottom: 14, textAlign: 'left' };
+  const li   = { fontSize: 15, color: '#C0C3D4', lineHeight: 1.7, marginBottom: 8 };
+  const div1 = { border: 'none', borderTop: '1px solid #2A2D3A', margin: '56px 0' };
+  const cta  = { background: '#1A1D27', border: '1px solid #2A2D3A', borderRadius: 16, padding: 36, textAlign: 'center', marginTop: 56 };
+  const ctaB = { display: 'inline-flex', alignItems: 'center', gap: 8, background: '#52E09C', color: '#0A1A12', fontWeight: 700, fontSize: 15, padding: '14px 28px', borderRadius: 999, boxShadow: '0 0 20px rgba(82,224,156,0.3)', textDecoration: 'none' };
+  const ftr  = { background: '#0D1117', borderTop: '1px solid rgba(255,255,255,0.06)', padding: 24, fontSize: 13, color: '#8B8FA8' };
+  const fIn  = { maxWidth: 720, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap' };
+  const fLnk = { display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', justifyContent: 'center' };
+  const muted= { color: '#8B8FA8', textDecoration: 'none' };
+  const mint = { color: '#52E09C' };
+  const sep  = { color: '#3A3D4E' };
+
+  // Table of contents link style
+  const tocA = { color: '#52E09C', textDecoration: 'none', fontSize: 14, lineHeight: 2 };
+  const tocSub = { color: '#8B8FA8', textDecoration: 'none', fontSize: 13.5, lineHeight: 1.9, paddingLeft: 16, display: 'block' };
 
   return (
-    <div style={s.page}>
-      <header style={s.header}>
-        <a href="https://kodahelp.com" style={s.logo}>
-          <div style={s.logoBox}>K</div>
-          <span style={s.logoTxt}>Koda</span>
+    <div style={pg}>
+      <header style={hdr}>
+        <a href="https://kodahelp.com" style={lnk}>
+          <div style={lBox}>K</div>
+          <span style={{ fontSize: 16, fontWeight: 700, color: '#F0F0F0', letterSpacing: '-0.35px' }}>Koda</span>
         </a>
       </header>
 
-      <div style={s.wrap}>
-        <div style={s.crumb}>
-          <a href="https://kodahelp.com" style={s.a}>Home</a>
+      <div style={wrap}>
+        <div style={crumb}>
+          <a href="https://kodahelp.com" style={muted}>Home</a>
           {' › '}Privacy &amp; Terms
         </div>
 
+        {/* ── Table of Contents ── */}
+        <div style={{ background: '#1A1D27', border: '1px solid #2A2D3A', borderRadius: 12, padding: '20px 24px', marginBottom: 48 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: '#52E09C', letterSpacing: '0.08em', marginBottom: 12 }}>CONTENTS</div>
+          <div>
+            <a href="#privacy" style={tocA}>Privacy Policy</a>
+            <a href="#collect" style={tocSub}>Information We Collect</a>
+            <a href="#use" style={tocSub}>How We Use Your Information</a>
+            <a href="#donot" style={tocSub}>We Do Not</a>
+            <a href="#storage" style={tocSub}>Data Storage</a>
+            <a href="#rights" style={tocSub}>Your Rights</a>
+            <a href="#contact-privacy" style={tocSub}>Contact</a>
+          </div>
+          <div style={{ marginTop: 8 }}>
+            <a href="#terms" style={tocA}>Terms of Service</a>
+          </div>
+        </div>
+
         {/* ── Privacy Policy ── */}
-        <h1 style={s.h1}>Privacy Policy</h1>
-        <p style={s.meta}>Last updated: May 2026</p>
+        <h1 id="privacy" style={h1}>Privacy Policy</h1>
+        <span style={meta}>Last updated: May 2026</span>
 
-        <p style={s.p}>Koda (&ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo;) operates kodahelp.com. This page explains what information we collect, how we use it, and your rights.</p>
+        <p style={p}>Koda (&ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo;) operates kodahelp.com. This page explains what information we collect, how we use it, and your rights.</p>
 
-        <h2 style={s.h2}>Information We Collect</h2>
-        <ul style={s.ul}>
-          <li style={s.li}><strong>Email address:</strong> When you start using Koda, we ask for your email address. We use this to understand our user base and may contact you about important updates to the service.</li>
-          <li style={s.li}><strong>Usage data:</strong> We collect anonymized data about how you use Koda, including which features you use and how often. This helps us improve the product.</li>
-          <li style={s.li}><strong>Conversation data:</strong> Your conversations with Koda are processed by Anthropic&rsquo;s Claude AI. We do not store the full content of your conversations permanently.</li>
+        <h2 id="collect" style={h2}>Information We Collect</h2>
+        <ul style={ul}>
+          <li style={li}><strong>Email address:</strong> When you start using Koda, we ask for your email address. We use this to understand our user base and may contact you about important updates to the service.</li>
+          <li style={li}><strong>Usage data:</strong> We collect anonymized data about how you use Koda, including which features you use and how often. This helps us improve the product.</li>
+          <li style={li}><strong>Conversation data:</strong> Your conversations with Koda are processed by Anthropic&rsquo;s Claude AI. We do not store the full content of your conversations permanently.</li>
         </ul>
 
-        <h2 style={s.h2}>How We Use Your Information</h2>
-        <ul style={s.ul}>
-          <li style={s.li}>To provide and improve the Koda service</li>
-          <li style={s.li}>To understand how people use Koda</li>
-          <li style={s.li}>To contact you about important updates (we will never spam you)</li>
+        <h2 id="use" style={h2}>How We Use Your Information</h2>
+        <ul style={ul}>
+          <li style={li}>To provide and improve the Koda service</li>
+          <li style={li}>To understand how people use Koda</li>
+          <li style={li}>To contact you about important updates (we will never spam you)</li>
         </ul>
 
-        <h2 style={s.h2}>We Do Not</h2>
-        <ul style={s.ul}>
-          <li style={s.li}>Sell your data to third parties</li>
-          <li style={s.li}>Share your email with advertisers</li>
-          <li style={s.li}>Store your full conversation history permanently</li>
+        <h2 id="donot" style={h2}>We Do Not</h2>
+        <ul style={ul}>
+          <li style={li}>Sell your data to third parties</li>
+          <li style={li}>Share your email with advertisers</li>
+          <li style={li}>Store your full conversation history permanently</li>
         </ul>
 
-        <h2 style={s.h2}>Data Storage</h2>
-        <p style={s.p}>Your email is stored securely in Google Sheets accessible only to Koda&rsquo;s administrator. Usage analytics are stored anonymously.</p>
+        <h2 id="storage" style={h2}>Data Storage</h2>
+        <p style={p}>Your email is stored securely in Google Sheets accessible only to Koda&rsquo;s administrator. Usage analytics are stored anonymously.</p>
 
-        <h2 style={s.h2}>Your Rights</h2>
-        <p style={s.p}>You can request deletion of your data at any time by emailing <a href="mailto:dltorah8@gmail.com" style={{ color: '#52E09C' }}>dltorah8@gmail.com</a>.</p>
+        <h2 id="rights" style={h2}>Your Rights</h2>
+        <p style={p}>You can request deletion of your data at any time by emailing <a href="mailto:dltorah8@gmail.com" style={mint}>dltorah8@gmail.com</a>.</p>
 
-        <h2 style={s.h2}>Contact</h2>
-        <p style={s.p}>For any privacy questions: <a href="mailto:dltorah8@gmail.com" style={{ color: '#52E09C' }}>dltorah8@gmail.com</a></p>
+        <h2 id="contact-privacy" style={h2}>Contact</h2>
+        <p style={p}>For any privacy questions: <a href="mailto:dltorah8@gmail.com" style={mint}>dltorah8@gmail.com</a></p>
 
-        <hr style={s.divider} />
+        <hr style={div1} />
 
         {/* ── Terms of Service ── */}
-        <h1 style={s.h1}>Terms of Service</h1>
+        <h1 id="terms" style={h1}>Terms of Service</h1>
+        <span style={meta}>Effective: May 2026</span>
 
-        <p style={s.p}>By using Koda you agree to these terms.</p>
+        <p style={p}>By using Koda you agree to these terms.</p>
 
-        <h2 style={s.h2}>Use of Service</h2>
-        <p style={s.p}>Koda is a free AI-powered tech support assistant. You may use it for personal, non-commercial tech help. You agree not to misuse the service, attempt to bypass usage limits, or use it for any illegal purpose.</p>
+        <h2 style={h2}>Use of Service</h2>
+        <p style={p}>Koda is a free AI-powered tech support assistant. You may use it for personal, non-commercial tech help. You agree not to misuse the service, attempt to bypass usage limits, or use it for any illegal purpose.</p>
 
-        <h2 style={s.h2}>Limitations</h2>
-        <p style={s.p}>Koda is an AI assistant and may make mistakes. Always verify important technical steps before following them. We are not liable for any damage resulting from following Koda&rsquo;s advice.</p>
+        <h2 style={h2}>Limitations</h2>
+        <p style={p}>Koda is an AI assistant and may make mistakes. Always verify important technical steps before following them. We are not liable for any damage resulting from following Koda&rsquo;s advice.</p>
 
-        <h2 style={s.h2}>Availability</h2>
-        <p style={s.p}>We provide Koda free of charge and may change, limit, or discontinue the service at any time.</p>
+        <h2 style={h2}>Availability</h2>
+        <p style={p}>We provide Koda free of charge and may change, limit, or discontinue the service at any time.</p>
 
-        <h2 style={s.h2}>Changes</h2>
-        <p style={s.p}>We may update these terms at any time. Continued use of Koda means you accept any changes.</p>
+        <h2 style={h2}>Changes</h2>
+        <p style={p}>We may update these terms at any time. Continued use of Koda means you accept any changes.</p>
 
-        <h2 style={s.h2}>Contact</h2>
-        <p style={s.p}><a href="mailto:dltorah8@gmail.com" style={{ color: '#52E09C' }}>dltorah8@gmail.com</a></p>
+        <h2 style={h2}>Contact</h2>
+        <p style={p}><a href="mailto:dltorah8@gmail.com" style={mint}>dltorah8@gmail.com</a></p>
 
         {/* CTA */}
-        <div style={s.cta}>
+        <div style={cta}>
           <h2 style={{ margin: '0 0 10px', fontSize: 22, fontWeight: 800, color: '#F0F0F0' }}>Got a tech problem? Ask Koda.</h2>
           <p style={{ margin: '0 0 24px', fontSize: 15, color: '#8B8FA8' }}>Free AI tech support — no account needed.</p>
-          <a href="https://kodahelp.com" style={s.ctaBtn}>Talk to Koda &rarr;</a>
+          <a href="https://kodahelp.com" style={ctaB}>Talk to Koda &rarr;</a>
         </div>
       </div>
 
-      <footer style={s.footer}>
-        <div style={s.fInner}>
+      <footer style={ftr}>
+        <div style={fIn}>
           <span>&copy; 2025 Koda &nbsp;&middot;&nbsp; Built with ❤️ to help people with tech</span>
-          <div style={s.fLinks}>
-            <a href="https://kodahelp.com/guides" style={s.a}>All Guides</a>
-            <span style={{ color: '#3A3D4E' }}>&middot;</span>
-            <a href="https://kodahelp.com/guides/how-to-fix-wifi-on-iphone.html" style={s.a}>WiFi Help</a>
-            <span style={{ color: '#3A3D4E' }}>&middot;</span>
-            <a href="https://kodahelp.com/guides/reset-apple-id-password.html" style={s.a}>iPhone Help</a>
-            <span style={{ color: '#3A3D4E' }}>&middot;</span>
-            <a href="mailto:dltorah8@gmail.com" style={s.a}>Contact</a>
-            <span style={{ color: '#3A3D4E' }}>&middot;</span>
-            <a href="/privacy" style={s.a}>Privacy</a>
+          <div style={fLnk}>
+            <a href="https://kodahelp.com/guides" style={muted}>All Guides</a>
+            <span style={sep}>&middot;</span>
+            <a href="https://kodahelp.com/guides/how-to-fix-wifi-on-iphone.html" style={muted}>WiFi Help</a>
+            <span style={sep}>&middot;</span>
+            <a href="https://kodahelp.com/guides/reset-apple-id-password.html" style={muted}>iPhone Help</a>
+            <span style={sep}>&middot;</span>
+            <a href="mailto:dltorah8@gmail.com" style={muted}>Contact</a>
+            <span style={sep}>&middot;</span>
+            <a href="/privacy" style={muted}>Privacy</a>
           </div>
           <span>Free AI tech support &nbsp;&middot;&nbsp; No account needed</span>
         </div>
