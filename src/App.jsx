@@ -796,6 +796,19 @@ function EmailGate({ onComplete }) {
       localStorage.setItem('koda_user_email', email.trim());
       localStorage.setItem('koda_email_given', 'true');
     } catch {}
+
+    // Fire-and-forget — send email to Google Sheets
+    fetch('https://script.google.com/macros/s/PASTE_YOUR_SCRIPT_ID_HERE/exec', {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: email.trim(),
+        timestamp: new Date().toISOString(),
+        source: 'kodahelp.com',
+      }),
+    }).catch(() => {});
+
     onComplete();
   };
 
