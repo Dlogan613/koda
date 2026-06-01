@@ -1215,7 +1215,7 @@ function Footer() {
           <span className="k-footer-sep">&middot;</span>
           <a href="/guides/reset-apple-id-password">iPhone Help</a>
           <span className="k-footer-sep">&middot;</span>
-          <a href="mailto:hello@kodahelp.com">Contact</a>
+          <a href="mailto:dltorah8@gmail.com">Contact</a>
           <span className="k-footer-sep">&middot;</span>
           <a href="/privacy">Privacy</a>
         </div>
@@ -1771,10 +1771,10 @@ function PrivacyPage() {
         <p style={s.p}>Your email is stored securely in Google Sheets accessible only to Koda&rsquo;s administrator. Usage analytics are stored anonymously.</p>
 
         <h2 style={s.h2}>Your Rights</h2>
-        <p style={s.p}>You can request deletion of your data at any time by emailing <a href="mailto:hello@kodahelp.com" style={{ color: '#52E09C' }}>hello@kodahelp.com</a>.</p>
+        <p style={s.p}>You can request deletion of your data at any time by emailing <a href="mailto:dltorah8@gmail.com" style={{ color: '#52E09C' }}>dltorah8@gmail.com</a>.</p>
 
         <h2 style={s.h2}>Contact</h2>
-        <p style={s.p}>For any privacy questions: <a href="mailto:hello@kodahelp.com" style={{ color: '#52E09C' }}>hello@kodahelp.com</a></p>
+        <p style={s.p}>For any privacy questions: <a href="mailto:dltorah8@gmail.com" style={{ color: '#52E09C' }}>dltorah8@gmail.com</a></p>
 
         <hr style={s.divider} />
 
@@ -1796,7 +1796,7 @@ function PrivacyPage() {
         <p style={s.p}>We may update these terms at any time. Continued use of Koda means you accept any changes.</p>
 
         <h2 style={s.h2}>Contact</h2>
-        <p style={s.p}><a href="mailto:hello@kodahelp.com" style={{ color: '#52E09C' }}>hello@kodahelp.com</a></p>
+        <p style={s.p}><a href="mailto:dltorah8@gmail.com" style={{ color: '#52E09C' }}>dltorah8@gmail.com</a></p>
 
         {/* CTA */}
         <div style={s.cta}>
@@ -1816,7 +1816,7 @@ function PrivacyPage() {
             <span style={{ color: '#3A3D4E' }}>&middot;</span>
             <a href="https://kodahelp.com/guides/reset-apple-id-password.html" style={s.a}>iPhone Help</a>
             <span style={{ color: '#3A3D4E' }}>&middot;</span>
-            <a href="mailto:hello@kodahelp.com" style={s.a}>Contact</a>
+            <a href="mailto:dltorah8@gmail.com" style={s.a}>Contact</a>
             <span style={{ color: '#3A3D4E' }}>&middot;</span>
             <a href="/privacy" style={s.a}>Privacy</a>
           </div>
