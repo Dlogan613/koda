@@ -807,7 +807,7 @@ function EmailGate({ onComplete }) {
         localStorage.setItem('koda_emails', JSON.stringify([...existing, email.trim()]));
       }
       localStorage.setItem('koda_user_email', email.trim());
-      localStorage.setItem('koda_email_given', 'true');
+      localStorage.setItem('koda_email_v2', 'true');
     } catch {}
 
     logToSheets('email', { email: email.trim(), source: 'kodahelp.com' });
@@ -996,7 +996,7 @@ function AdminPanel() {
   const clearEmails = () => {
     localStorage.removeItem('koda_emails');
     localStorage.removeItem('koda_user_email');
-    localStorage.removeItem('koda_email_given');
+    localStorage.removeItem('koda_email_v2');
     setEmails([]);
   };
 
@@ -1690,7 +1690,7 @@ export default function App() {
   const [attachment,  setAttachment]  = useState(null);
   const [savedPing,   setSavedPing]   = useState(false);
   const [usageCount,  setUsageCount]  = useState(() => getUsage().count);
-  const [emailGiven,  setEmailGiven]  = useState(() => !!localStorage.getItem('koda_email_given'));
+  const [emailGiven,  setEmailGiven]  = useState(() => !!localStorage.getItem('koda_email_v2'));
   const [isAdminMode, setIsAdminMode] = useState(() => localStorage.getItem('koda_admin') === 'true');
   const [showStats,        setShowStats]        = useState(false);
   const [showReplays,      setShowReplays]      = useState(false);
