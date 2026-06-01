@@ -1976,22 +1976,31 @@ export default function App() {
       </main>
 
       {/* Admin floating buttons */}
-      {isAdminMode && (
-        <div style={{ position: 'fixed', bottom: 88, right: 20, display: 'flex', flexDirection: 'column', gap: 8, zIndex: 300 }}>
-          <button onClick={() => { setShowReplays(false); setShowStats(s => !s); }} style={{
-            background: '#0A0C14', border: '1px solid #FFD700', borderRadius: 999,
-            color: '#FFD700', fontSize: 12.5, fontWeight: 600, padding: '7px 14px',
-            cursor: 'pointer', fontFamily: "'Inter', sans-serif",
-            boxShadow: '0 2px 12px rgba(255,215,0,0.2)',
-          }}>📊 Stats</button>
-          <button onClick={() => { setShowStats(false); setShowReplays(r => !r); }} style={{
-            background: '#0A0C14', border: '1px solid #FFD700', borderRadius: 999,
-            color: '#FFD700', fontSize: 12.5, fontWeight: 600, padding: '7px 14px',
-            cursor: 'pointer', fontFamily: "'Inter', sans-serif",
-            boxShadow: '0 2px 12px rgba(255,215,0,0.2)',
-          }}>💬 Replays</button>
-        </div>
-      )}
+      {isAdminMode && (() => {
+        const isDark = theme !== 'light';
+        const btnStyle = {
+          background:  isDark ? '#1A1D27' : '#ffffff',
+          border:      isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid rgba(0,0,0,0.12)',
+          color:       isDark ? '#C0C4D6' : '#374151',
+          boxShadow:   isDark ? '0 2px 12px rgba(0,0,0,0.3)' : '0 2px 8px rgba(0,0,0,0.1)',
+          borderRadius: 999, fontSize: 12.5, fontWeight: 600,
+          padding: '7px 14px', cursor: 'pointer', fontFamily: "'Inter', sans-serif",
+        };
+        // Gold overrides when admin theme is active
+        const adminStyle = {
+          ...btnStyle,
+          border: '1px solid #FFD700',
+          color: '#FFD700',
+          boxShadow: '0 2px 12px rgba(255,215,0,0.2)',
+        };
+        const s = isAdmin ? adminStyle : btnStyle;
+        return (
+          <div style={{ position: 'fixed', bottom: 88, right: 20, display: 'flex', flexDirection: 'column', gap: 8, zIndex: 300 }}>
+            <button onClick={() => { setShowReplays(false); setShowStats(v => !v); }} style={s}>📊 Stats</button>
+            <button onClick={() => { setShowStats(false); setShowReplays(v => !v); }} style={s}>💬 Replays</button>
+          </div>
+        );
+      })()}
 
       {/* Admin panels */}
       {isAdminMode && showStats   && <StatsPanel   onClose={() => setShowStats(false)} />}
