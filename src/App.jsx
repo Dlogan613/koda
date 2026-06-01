@@ -1828,7 +1828,7 @@ function DailyLimitScreen() {
           fontSize: 26, fontWeight: 800, color: '#FFFFFF',
           letterSpacing: '-0.5px', lineHeight: 1.2, marginBottom: 12,
         }}>
-          You've used Koda 3 times today
+          You've used Koda 5 times today
         </h1>
         <p style={{ fontSize: 16, color: '#8B8FA8', lineHeight: 1.7, marginBottom: 16 }}>
           Koda is free and we want to keep it that way.<br />Come back tomorrow for more help!
@@ -2140,7 +2140,7 @@ export default function App() {
     setAttachment(null);
 
     if (history.length === 0) {
-      if (!isAdminMode && usageCount >= 3) {
+      if (!isAdminMode && usageCount >= 5) {
         setLoading(false);
         setMessages([]);
         setView('landing');
@@ -2304,7 +2304,7 @@ export default function App() {
 
       {/* Main */}
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-        {!isAdminMode && view === 'landing' && usageCount >= 3 ? (
+        {!isAdminMode && view === 'landing' && usageCount >= 5 ? (
           <DailyLimitScreen />
         ) : !isAdminMode && view === 'landing' && !emailGiven ? (
           <EmailGate onComplete={() => setEmailGiven(true)} />
