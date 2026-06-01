@@ -2096,58 +2096,65 @@ function PrivacyPage() {
 /* ── App root ───────────────────────────────────────────────────────── */
 
 export default function App() {
-  // ── Theme — follow system by default; persist manual override separately
+  // ── Theme — CSS: :root = dark (default), :root.light = light override
   const THEME_KEY        = 'koda_theme';
   const THEME_MANUAL_KEY = 'koda_theme_manual';
 
-  const getSystemTheme = () =>
-    window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-
-  const applyThemeClass = (t) => {
-    document.documentElement.classList.remove('dark', 'light');
-    document.documentElement.classList.add(t);
-  };
-
-  const [theme, setTheme] = useState(() => {
+  const [isDarkMode, setIsDarkMode] = useState(() => {
     try {
-      let t = localStorage.getItem(THEME_KEY);
-      if (!t) {
-        t = getSystemTheme();
-        try { localStorage.setItem(THEME_KEY, t); } catch {}
+      const savedTheme  = localStorage.getItem(THEME_KEY);
+      const systemDark  = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialDark = savedTheme ? savedTheme === 'dark' : systemDark;
+      if (!savedTheme) {
+        try { localStorage.setItem(THEME_KEY, initialDark ? 'dark' : 'light'); } catch {}
       }
-      applyThemeClass(t);
-      return t;
-    } catch { return 'dark'; }
+      // Apply immediately on first paint
+      if (initialDark) {
+        document.documentElement.classList.remove('light');
+      } else {
+        document.documentElement.classList.add('light');
+      }
+      return initialDark;
+    } catch { return true; }
   });
 
-  // Apply theme class to <html> whenever theme changes
+  // Keep root class in sync for all setState paths (e.g. system theme change)
   useEffect(() => {
-    applyThemeClass(theme);
-  }, [theme]);
+    if (isDarkMode) {
+      document.documentElement.classList.remove('light');
+    } else {
+      document.documentElement.classList.add('light');
+    }
+  }, [isDarkMode]);
 
   // Follow system theme changes unless the user has set a manual override
   useEffect(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
     const handler = (e) => {
       if (!localStorage.getItem(THEME_MANUAL_KEY)) {
-        const sys = e.matches ? 'dark' : 'light';
-        try { localStorage.setItem(THEME_KEY, sys); } catch {}
-        setTheme(sys);
+        const dark = e.matches;
+        try { localStorage.setItem(THEME_KEY, dark ? 'dark' : 'light'); } catch {}
+        setIsDarkMode(dark);
       }
     };
     mq.addEventListener('change', handler);
     return () => mq.removeEventListener('change', handler);
   }, []);
 
-  // Manual toggle — set manual flag so system changes no longer auto-apply
-  const toggleTheme = () => setTheme(t => {
-    const next = t === 'dark' ? 'light' : 'dark';
+  // Manual toggle — apply to DOM immediately, then update React state
+  const toggleTheme = () => {
+    const next = !isDarkMode;
+    if (next) {
+      document.documentElement.classList.remove('light');
+    } else {
+      document.documentElement.classList.add('light');
+    }
     try {
-      localStorage.setItem(THEME_KEY, next);
+      localStorage.setItem(THEME_KEY, next ? 'dark' : 'light');
       localStorage.setItem(THEME_MANUAL_KEY, 'true');
     } catch {}
-    return next;
-  });
+    setIsDarkMode(next);
+  };
 
   // ── Conversation state — restore from localStorage on mount
   const [messages, setMessages] = useState(() => {
@@ -2406,8 +2413,8 @@ export default function App() {
           <OnlineIndicator adminMode={isAdminMode} />
 
           {/* Theme toggle */}
-          <button className="k-theme-btn" onClick={toggleTheme} title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'} style={{ fontSize: 16 }}>
-            {theme === 'dark' ? '☀️' : '🌙'}
+          <button className="k-theme-btn" onClick={toggleTheme} title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'} style={{ fontSize: 16 }}>
+            {isDarkMode ? '☀️' : '🌙'}
           </button>
 
           {view === 'chat' && (
@@ -2436,7 +2443,7 @@ export default function App() {
               sendMessage(p.prompt);
             }}
             onSubmit={text => sendMessage(text)}
-            theme={theme}
+            theme={isDarkMode ? 'dark' : 'light'}
             lastConvo={lastConvo}
             onContinueConvo={() => {
               const saved = lastConvo;
@@ -2457,7 +2464,7 @@ export default function App() {
 
       {/* Admin floating buttons */}
       {isAdminMode && (() => {
-        const isDark = theme !== 'light';
+        const isDark = isDarkMode;
         const btnStyle = {
           background:  isDark ? '#1A1D27' : '#ffffff',
           border:      isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid rgba(0,0,0,0.12)',
