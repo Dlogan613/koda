@@ -69,6 +69,19 @@ const PROBLEMS = [
   { id: 8, icon: '🆘', label: 'Something Else',          prompt: "I have a different tech problem I need help with." },
 ];
 
+/* ── Google Sheets analytics ────────────────────────────────────────── */
+
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyw22gY49rRkJKn1zkmw6NwgPRzRGnGxclRyEH2adhw-t5oeT8WumrQZib4QMgLpLJkZQ/exec';
+
+const logToSheets = (type, data) => {
+  fetch(SHEETS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type, timestamp: new Date().toISOString(), ...data }),
+  }).catch(() => {});
+};
+
 /* ── Daily usage limit ──────────────────────────────────────────────── */
 
 const USAGE_KEY = 'koda_usage';
@@ -797,17 +810,7 @@ function EmailGate({ onComplete }) {
       localStorage.setItem('koda_email_given', 'true');
     } catch {}
 
-    // Fire-and-forget — send email to Google Sheets
-    fetch('https://script.google.com/macros/s/PASTE_YOUR_SCRIPT_ID_HERE/exec', {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: email.trim(),
-        timestamp: new Date().toISOString(),
-        source: 'kodahelp.com',
-      }),
-    }).catch(() => {});
+    logToSheets('email', { email: email.trim(), source: 'kodahelp.com' });
 
     onComplete();
   };
@@ -891,59 +894,62 @@ function EmailGate({ onComplete }) {
 }
 
 function StatsPanel({ onClose }) {
-  const today = new Date().toISOString().slice(0, 10);
+  const [stats, setStats]         = useState(null);
+  const [updatedAt, setUpdatedAt] = useState(null);
+  const [fetchError, setFetchError] = useState(false);
 
-  const convsToday = (() => {
-    try { const u = JSON.parse(localStorage.getItem(USAGE_KEY) || '{}'); return u.date === today ? u.count : 0; } catch { return 0; }
-  })();
+  useEffect(() => {
+    fetch(SHEETS_URL)
+      .then(r => r.json())
+      .then(data => {
+        const emailRows  = Array.isArray(data.emails) ? data.emails.slice(1) : [];
+        const eventRows  = Array.isArray(data.events) ? data.events.slice(1) : [];
 
-  const { pos, neg } = (() => {
-    try {
-      const log = loadLog();
-      return { pos: log.filter(e => e.signal === 'positive').length, neg: log.filter(e => e.signal === 'negative').length };
-    } catch { return { pos: 0, neg: 0 }; }
-  })();
+        const matchEvent = (row, name) =>
+          (Array.isArray(row) ? row[1] : row?.event) === name;
 
-  const topChip = (() => {
-    try {
-      const s = JSON.parse(localStorage.getItem('koda_chip_stats') || '{}');
-      const top = Object.entries(s).sort((a, b) => b[1] - a[1])[0];
-      return top ? `${top[0]} (${top[1]}x)` : 'None yet';
-    } catch { return 'None yet'; }
-  })();
+        setStats({
+          emails:          emailRows.length,
+          conversations:   eventRows.filter(r => matchEvent(r, 'conversation_start')).length,
+          positiveSignals: eventRows.filter(r => matchEvent(r, 'positive_signal')).length,
+          negativeSignals: eventRows.filter(r => matchEvent(r, 'negative_signal')).length,
+          newChats:        eventRows.filter(r => matchEvent(r, 'new_chat')).length,
+        });
+        setUpdatedAt('just now');
+      })
+      .catch(() => setFetchError(true));
+  }, []);
 
-  const totalEmails = (() => {
-    try { return JSON.parse(localStorage.getItem('koda_emails') || '[]').length; } catch { return 0; }
-  })();
-
-  const interactionsToday = (() => {
-    try {
-      const log = loadLog();
-      return log.filter(e => new Date(e.timestamp).toISOString().slice(0, 10) === today).length;
-    } catch { return 0; }
-  })();
-
-  const rows = [
-    ['📨', 'Emails collected (total)', totalEmails],
-    ['📊', 'Interactions today', interactionsToday],
-    ['💬', 'Conversations today', convsToday],
-    ['👍', 'Positive signals (all time)', pos],
-    ['👎', 'Negative signals (all time)', neg],
-    ['🔥', 'Most clicked chip', topChip],
-  ];
+  const rows = stats ? [
+    ['📨', 'Total emails collected',  stats.emails],
+    ['💬', 'Total conversations',     stats.conversations],
+    ['👍', 'Positive signals',        stats.positiveSignals],
+    ['👎', 'Negative signals',        stats.negativeSignals],
+    ['🔄', 'New chats started',       stats.newChats],
+  ] : [];
 
   return (
     <div className="k-slide-panel">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-        <span style={{ color: 'var(--accent)', fontWeight: 700, fontSize: 11, letterSpacing: '0.08em' }}>📊 LIVE STATS</span>
+        <span style={{ color: 'var(--accent)', fontWeight: 700, fontSize: 11, letterSpacing: '0.08em' }}>📊 GLOBAL STATS</span>
         <button onClick={onClose} style={{ background: 'none', border: '1px solid var(--accent)', borderRadius: 6, color: 'var(--accent)', padding: '3px 12px', cursor: 'pointer', fontFamily: 'inherit', fontSize: 11 }}>Close</button>
       </div>
+
+      {!stats && !fetchError && (
+        <div style={{ color: '#8B8FA8', fontSize: 12 }}>Loading…</div>
+      )}
+      {fetchError && (
+        <div style={{ color: '#ff6b6b', fontSize: 12 }}>Could not load stats. Check connection.</div>
+      )}
       {rows.map(([icon, label, val]) => (
         <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
           <span style={{ color: '#8B8FA8' }}>{icon} {label}</span>
           <span style={{ color: 'var(--accent)', fontWeight: 700 }}>{val}</span>
         </div>
       ))}
+      {updatedAt && (
+        <div style={{ color: '#3A3D4E', fontSize: 10, marginTop: 10 }}>Last updated: {updatedAt}</div>
+      )}
     </div>
   );
 }
@@ -1792,6 +1798,7 @@ export default function App() {
         setUsageCount(newCount);
       }
       window.plausible?.('Chat Started');
+      logToSheets('event', { event: 'conversation_start', data: { chip: 'typed' } });
     }
 
     // Detect implicit signal and log it
@@ -1800,8 +1807,8 @@ export default function App() {
     if (signal) {
       const topic = (history.find(m => m.role === 'user')?.content ?? userContent).slice(0, 80);
       appendLog({ timestamp: Date.now(), signal, topic, conversationLength: updated.length });
-      if (signal === 'positive') window.plausible?.('Problem Solved');
-      if (signal === 'negative') window.plausible?.('Problem Not Solved');
+      if (signal === 'positive') { window.plausible?.('Problem Solved');   logToSheets('event', { event: 'positive_signal', data: {} }); }
+      if (signal === 'negative') { window.plausible?.('Problem Not Solved'); logToSheets('event', { event: 'negative_signal', data: {} }); }
     }
 
     // Prepend adaptive note to system prompt when the data warrants it
@@ -1883,6 +1890,7 @@ export default function App() {
 
   const reset = () => {
     if (messages.length > 1) saveReplayEntry(messages);
+    logToSheets('event', { event: 'new_chat', data: {} });
     setView('landing');
     setMessages([]);
     setAttachment(null);
