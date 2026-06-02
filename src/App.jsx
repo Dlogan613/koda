@@ -564,29 +564,50 @@ html.admin-active {
 }
 html.admin-active body { background: #050810; }
 
-/* ── Landing footer ── */
+/* ── Footer ── */
 .k-footer {
   width: 100%;
-  background: var(--bg);
   border-top: 1px solid var(--footer-border);
-  padding: 24px;
-  font-size: 13px;
-  color: var(--text-muted);
+  padding: 24px 32px;
+  font-size: 12px;
+  color: #8B8FA8;
   font-family: 'Inter', sans-serif;
 }
 .k-footer-inner {
-  max-width: 680px;
+  max-width: 960px;
   margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   align-items: center;
   gap: 16px;
-  flex-wrap: wrap;
 }
-.k-footer a { color: var(--text-muted); text-decoration: none; }
-.k-footer a:hover { color: var(--accent); }
+.k-footer-brand { display: flex; flex-direction: column; gap: 5px; }
+.k-footer-brand-row { display: flex; align-items: center; gap: 7px; }
+.k-footer-logo {
+  width: 24px; height: 24px; border-radius: 7px; flex-shrink: 0;
+  background: var(--logo-g);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--logo-text); font-weight: 800; font-size: 12px;
+  font-family: 'Inter', sans-serif;
+}
+.k-footer-brand-name { font-size: 13px; font-weight: 700; color: var(--text); }
+.k-footer-brand-sub  { font-size: 12px; color: #8B8FA8; }
+.k-footer-links { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.k-footer-links-row { display: flex; align-items: center; gap: 10px; }
+.k-footer a { color: #8B8FA8; text-decoration: none; }
+.k-footer a:hover { color: #A0A4B8; }
 .k-footer-sep { color: var(--text-faint); }
-@media (max-width: 600px) { .k-footer-inner { flex-direction: column; text-align: center; gap: 12px; } }
+.k-footer-legal { text-align: right; display: flex; flex-direction: column; gap: 4px; }
+@media (max-width: 640px) {
+  .k-footer { padding: 24px 20px; }
+  .k-footer-inner {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 16px;
+  }
+  .k-footer-brand { align-items: center; }
+  .k-footer-legal { text-align: center; }
+}
 
 /* ── Slide-up panel ── */
 @keyframes slideUp {
@@ -1236,19 +1257,38 @@ function Footer() {
   return (
     <footer className="k-footer">
       <div className="k-footer-inner">
-        <span>&copy; 2025 Koda &nbsp;&middot;&nbsp; Built with ❤️ to help people with tech</span>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
-          <a href="/guides">All Guides</a>
-          <span className="k-footer-sep">&middot;</span>
-          <a href="/guides/how-to-fix-wifi-on-iphone.html">WiFi Help</a>
-          <span className="k-footer-sep">&middot;</span>
-          <a href="/guides/reset-apple-id-password">iPhone Help</a>
-          <span className="k-footer-sep">&middot;</span>
-          <a href="mailto:dltorah8@gmail.com">Contact</a>
-          <span className="k-footer-sep">&middot;</span>
-          <a href="/privacy">Privacy</a>
+
+        {/* Left — Brand */}
+        <div className="k-footer-brand">
+          <div className="k-footer-brand-row">
+            <div className="k-footer-logo">K</div>
+            <span className="k-footer-brand-name">Koda</span>
+          </div>
+          <span className="k-footer-brand-sub">Free AI tech support &middot; Always improving</span>
         </div>
-        <span>Free AI tech support &nbsp;&middot;&nbsp; No account needed &nbsp;&middot;&nbsp; Always improving</span>
+
+        {/* Center — Links */}
+        <div className="k-footer-links">
+          <div className="k-footer-links-row">
+            <a href="/guides">All Guides</a>
+            <span className="k-footer-sep">&middot;</span>
+            <a href="/guides/how-to-fix-wifi-on-iphone.html">WiFi Help</a>
+            <span className="k-footer-sep">&middot;</span>
+            <a href="/guides/reset-apple-id-password">iPhone Help</a>
+          </div>
+          <div className="k-footer-links-row">
+            <a href="mailto:dltorah8@gmail.com">Contact</a>
+            <span className="k-footer-sep">&middot;</span>
+            <a href="/privacy">Privacy</a>
+          </div>
+        </div>
+
+        {/* Right — Legal */}
+        <div className="k-footer-legal">
+          <span>&copy; 2026 Koda</span>
+          <span>Built with ❤️ to help people with tech</span>
+        </div>
+
       </div>
     </footer>
   );
